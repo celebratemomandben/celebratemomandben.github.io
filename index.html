@@ -50,6 +50,7 @@
         .video-player { width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
         .video-player iframe { position: absolute; width: 100%; height: 100%; border: none; top:0; left:0; }
 
+        /* CHAT SYSTEM */
         #chatMessages { height: 400px; overflow-y: auto; margin: 10px 0; padding-right: 10px; scrollbar-width: thin; scrollbar-color: #cbd5e0 transparent; }
         #chatMessages::-webkit-scrollbar { width: 6px; }
         #chatMessages::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 10px; }
@@ -65,30 +66,21 @@
         .review-user { font-weight: 700; font-size: 0.8rem; color: #333; }
         .review-text { font-size: 0.85rem; line-height: 1.4; color: #444; }
 
-        /* FIXED: POLL BUTTONS - UNIFORM HEIGHT & CENTERED */
-        .selection-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
-            gap: 10px; 
-        }
+        /* VOTE BUTTONS FIX */
+        .selection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
         .vote-card input { display: none; }
         .vote-card label { 
             display: flex; align-items: center; justify-content: center; 
-            height: 50px; /* Fixed height to prevent stretching */
-            padding: 5px 10px; 
+            height: 50px; padding: 5px 10px; 
             background: #fff; border-radius: 10px; text-align: center; 
             cursor: pointer; border: 2px solid #eee; font-size: 0.8rem; 
             font-weight: 800; transition: all 0.2s ease;
-            overflow: hidden;
             line-height: 1.1;
         }
-        .vote-card input:checked + label { 
-            background: var(--primary) !important; color: white !important; 
-            border-color: var(--primary) !important; 
-        }
+        .vote-card input:checked + label { background: var(--primary) !important; color: white !important; border-color: var(--primary) !important; }
         
-        .voter-tag { background: #e0eafc; padding: 2px 8px; border-radius: 10px; margin: 2px; font-size: 0.7rem; color: var(--primary); display: inline-block; font-weight: bold; }
-        .rank-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; }
+        .voter-tag { background: #e0f2fe; padding: 2px 8px; border-radius: 10px; margin: 2px; font-size: 0.7rem; color: var(--primary); display: inline-block; font-weight: bold; border: 1px solid #bae6fd; }
+        .rank-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -173,7 +165,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getDatabase, ref, onValue, set, get, child, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-  const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyAByJd5SpzqtK7LAA80I-nONrXQqhgG2uQ",
   authDomain: "celebratemomandben.firebaseapp.com",
   projectId: "celebratemomandben",
@@ -182,6 +174,7 @@
   appId: "1:567044784692:web:dba496160575757517c061",
   measurementId: "G-6H8FYLXRG8"
 };
+
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
@@ -191,7 +184,7 @@
     { name: "Cheyenne Mountain Zoo", vidId: "qOkrFI00o9k", cost: "$35+", web: "https://www.cmzoo.org", phone: "719-633-9925", desc: "Feed giraffes on a mountain.", reviews: [{u:"Lisa K.", t:"Feeding giraffes is an experience.", s:5}, {u:"Tom H.", t:"Very steep! Wear good shoes.", s:5}] },
     { name: "Seven Falls", vidId: "3oBjVHj4iTk", cost: "$25+", web: "https://www.sevenfalls.com", phone: "855-923-7272", desc: "Waterfalls in a dramatic box canyon.", reviews: [{u:"Rick B.", t:"The night lighting is magical.", s:5}, {u:"Amy W.", t:"224 stairs is worth it.", s:4}] },
     { name: "Santa's Workshop", vidId: "T-cNRxYanxU", cost: "$35", web: "https://santas-colo.com", phone: "719-684-9432", desc: "Vintage theme park.", reviews: [{u:"Chris P.", t:"Kids under 8 will love every second.", s:5}, {u:"Jane S.", t:"Nostalgic and fun.", s:4}] },
-    { name: "Olympic Museum", vidId: "0QHfykjuoYk", cost: "$25+", web: "https://usopm.org", phone: "719-497-1234", desc: "Interactive athlete games.", reviews: [{u:"Kevin V.", t:"The tech is world-class.", s:5}, {u:"Sports Nut", t:"Very accessible.", s:5}] },
+    { name: "Olympic Museum", vidId: "0QHfykjuoYk", cost: "$25+", web: "https://usopm.org", phone: "719-497-1234", desc: "Interactive sports museum.", reviews: [{u:"Kevin V.", t:"The tech is world-class.", s:5}, {u:"Sports Nut", t:"Very accessible.", s:5}] },
     { name: "Manitou Penny Arcade", vidId: "fDsdIW5v-RE", cost: "Pay-per-play", web: "https://manitousprings.org", phone: "719-685-5089", desc: "400+ vintage games.", reviews: [{u:"Retro Kid", t:"Penny games still exist!", s:5}, {u:"Traveler", t:"Bring $20 in quarters.", s:5}] },
     { name: "Royal Gorge Bridge", vidId: "J1prZgmo67g", cost: "$35+", web: "https://royalgorgebridge.com", phone: "719-275-7507", desc: "Highest US suspension bridge.", reviews: [{u:"Adrenaline Fan", t:"Walking across is thrilling.", s:5}, {u:"Photographer", t:"Amazing views.", s:5}] },
     { name: "Cave of the Winds", vidId: "8DWiM4ap9JY", cost: "$29+", web: "https://caveofthewinds.com", phone: "719-685-5444", desc: "Cave tours & cliff swings.", reviews: [{u:"Darkness Lover", t:"Lantern tour is spooky.", s:5}, {u:"The Swing", t:"Genuinely terrifying.", s:4}] },
@@ -204,11 +197,7 @@
 
   locations.forEach((l, i) => { 
     picker.innerHTML += `<option value="${i}">${l.name}</option>`; 
-    pollOptions.innerHTML += `
-        <div class="vote-card">
-            <input type="checkbox" class="vote-check" id="v-${i}" value="${l.name}">
-            <label for="v-${i}">${l.name}</label>
-        </div>`;
+    pollOptions.innerHTML += `<div class="vote-card"><input type="checkbox" class="vote-check" id="v-${i}" value="${l.name}"><label for="v-${i}">${l.name}</label></div>`;
   });
 
   window.onload = () => { if(localStorage.getItem('family_voterName')) unlockApp(); };
@@ -249,7 +238,7 @@
   };
 
   window.setReply = (id, user, room) => {
-    replyToId = id; replyRoom = room;
+    replyToId = id; replyRoom = room || "General";
     document.getElementById('replyingToBar').style.display = "flex";
     document.getElementById('replyText').innerText = `Replying to ${user}...`;
     document.getElementById('contextLock').disabled = true; document.getElementById('chatInput').focus();
@@ -267,17 +256,29 @@
 
   onValue(ref(db, 'globalChat'), (snap) => {
     const chatBox = document.getElementById('chatMessages'); chatBox.innerHTML = "";
-    let msgs = []; snap.forEach(c => { let d = c.val(); d.id = c.key; msgs.push(d); });
-    msgs.sort((a,b) => b.time - a.time);
-    let lastRoom = "";
-    msgs.forEach(d => {
-        if (!d.parentId) {
-            if(d.room !== lastRoom) { chatBox.innerHTML += `<div class="chat-header">${d.room.toUpperCase()}</div>`; lastRoom = d.room; }
-            chatBox.innerHTML += `<div class="chat-msg"><strong>${d.user}:</strong> ${d.msg}<span class="reply-btn" onclick="setReply('${d.id}', '${d.user}', '${d.room}')">reply</span></div>`;
-            msgs.filter(r => r.parentId === d.id).reverse().forEach(r => {
-                chatBox.innerHTML += `<div class="chat-msg is-reply"><strong>${r.user}:</strong> ${r.msg}</div>`;
+    let msgs = []; 
+    snap.forEach(c => { 
+        let d = c.val(); 
+        if(d) { d.id = c.key; msgs.push(d); } 
+    });
+    msgs.sort((a,b) => (a.time || 0) - (b.time || 0)); 
+    let groups = {};
+    msgs.forEach(m => { 
+        let rName = m.room || "General"; 
+        if(!groups[rName]) groups[rName] = []; 
+        groups[rName].push(m); 
+    });
+    
+    Object.keys(groups).reverse().forEach(room => {
+        chatBox.innerHTML += `<div class="chat-header">${room.toUpperCase()}</div>`;
+        groups[room].filter(m => !m.parentId).forEach(m => {
+            const userName = m.user || "GUEST";
+            const messageText = m.msg || "...";
+            chatBox.innerHTML += `<div class="chat-msg"><strong>${userName}:</strong> ${messageText}<span class="reply-btn" onclick="setReply('${m.id}', '${userName}', '${room}')">reply</span></div>`;
+            groups[room].filter(r => r.parentId === m.id).forEach(r => {
+                chatBox.innerHTML += `<div class="chat-msg is-reply"><strong>${r.user || "GUEST"}:</strong> ${r.msg || "..."}</div>`;
             });
-        }
+        });
     });
   });
 
@@ -291,18 +292,17 @@
     const data = snap.val() || {}; const counts = {}; const supporters = {};
     locations.forEach(l => { counts[l.name] = 0; supporters[l.name] = []; });
     Object.entries(data).forEach(([u, l]) => { 
-        l.forEach(p => { 
-            if(counts[p] !== undefined) { counts[p]++; supporters[p].push(u); } 
-        });
+        if(l && Array.isArray(l)) {
+            l.forEach(p => { if(counts[p] !== undefined) { counts[p]++; supporters[p].push(u); } });
+        }
     });
     const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
     let h = ""; let rank = 0, lastV = -1;
     for(let i=0; i<sorted.length; i++){
         const n = sorted[i][0]; const v = sorted[i][1];
-        if(v===0) continue;
+        if(!n || v===0) continue;
         if(v!==lastV){ rank++; lastV=v; } if(rank > 5) break;
-        // Robust check to fix 'toUpperCase' error
-        if(n && typeof n === 'string') h += `<div style="margin-bottom:8px;"><span class="rank-badge">RANK ${rank}</span><strong>${n.toUpperCase()}</strong> (${v})<br>${supporters[n].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
+        h += `<div style="margin-bottom:8px;"><span class="rank-badge">RANK ${rank}</span><strong>${n.toUpperCase()}</strong> (${v})<br>${supporters[n].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
     }
     document.getElementById('voterDetails').innerHTML = h || "Voting in progress...";
     myChart.data.labels = sorted.map(e => e[0]); myChart.data.datasets[0].data = sorted.map(e => e[1]); myChart.update();
