@@ -128,12 +128,60 @@ input[type="text"], input[type="password"], select {
     text-transform: uppercase; 
     letter-spacing: 0.5px;
 }
+/* Cooler Countdown Styling */
+.countdown-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+.time-unit {
+    background: #1a1a1a;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 10px;
+    min-width: 50px;
+    box-shadow: 0 4px 15px rgba(0, 131, 184, 0.3);
+    border-bottom: 3px solid var(--primary);
+}
+.time-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 900;
+    line-height: 1;
+}
+.time-label {
+    display: block;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: var(--primary);
+    font-weight: 700;
+}
+#countdown { animation: pulse 2s infinite; }
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="countdown">🚀 INITIALIZING...</div>
+    <div id="countdown" class="countdown-container">
+    <div class="time-unit">
+        <span class="time-value" id="cd-d">00</span>
+        <span class="time-label">Days</span>
+    </div>
+    <div class="time-unit">
+        <span class="time-value" id="cd-h">00</span>
+        <span class="time-label">Hrs</span>
+    </div>
+    <div class="time-unit">
+        <span class="time-value" id="cd-m">00</span>
+        <span class="time-label">Min</span>
+    </div>
+</div>
     <h1 class="main-title">COLORADO SPRINGS '26</h1>
     <div id="userHubBanner" class="user-hub-banner"></div>
 
@@ -148,7 +196,7 @@ input[type="text"], input[type="password"], select {
     <div class="auth-container" id="authBox">
         <h2 style="margin:0 0 15px 0">Family Login</h2>
         <input type="text" id="voterName" class="auth-input" placeholder="FIRST NAME">
-        <input type="password" id="voterPass" class="auth-input" placeholder="PASSCODE: ROCKIES">
+        <input type="password" id="voterPass" class="auth-input" placeholder="ENTER PASSCODE(ALL Cases allowed)">
         <button onclick="unlockApp()" class="btn-unlock">UNLOCK HUB</button>
     </div>
 
@@ -255,12 +303,26 @@ input[type="text"], input[type="password"], select {
   window.onload = () => { if(localStorage.getItem('family_voterName')) unlockApp(); };
   window.logout = () => { localStorage.clear(); location.reload(); };
 
-  function updateCountdown() {
-      const diff = new Date("May 23, 2026").getTime() - new Date().getTime();
-      const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000);
-      document.getElementById('countdown').innerText = `🚀 ${d}d ${h}h UNTIL COLORADO!`;
-  }
-  setInterval(updateCountdown, 60000); updateCountdown();
+ function updateCountdown() {
+    const target = new Date("May 23, 2026 00:00:00").getTime();
+    const now = new Date().getTime();
+    const diff = target - now;
+
+    if (diff <= 0) {
+        document.getElementById('countdown').innerHTML = "🚀 COLORADO TIME!";
+        return;
+    }
+
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    document.getElementById('cd-d').innerText = d.toString().padStart(2, '0');
+    document.getElementById('cd-h').innerText = h.toString().padStart(2, '0');
+    document.getElementById('cd-m').innerText = m.toString().padStart(2, '0');
+}
+setInterval(updateCountdown, 60000); 
+updateCountdown();
 
   window.unlockApp = async function() {
     const nInput = (document.getElementById('voterName').value.trim().toUpperCase()) || localStorage.getItem('family_voterName');
