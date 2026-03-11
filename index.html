@@ -101,6 +101,56 @@
 
         /* Specific style for the new Tag dropdown in chat */
         #chatTagPicker { width: 100%; font-size: 0.8rem !important; padding: 8px; border-color: var(--primary); border-width: 2px; background: white; margin: 0 0 10px 0; }
+/* Add to your <style> section */
+.chart-module { 
+    grid-area: chart; 
+    min-height: 300px; /* Ensures enough space on mobile */
+}
+
+@media (min-width: 1100px) {
+    .chart-module { min-height: auto; }
+}
+/* Update your .chart-module section in <style> */
+.chart-module { 
+    grid-area: chart; 
+    height: 350px; /* Use a fixed height instead of min-height */
+    width: 100%;
+    position: relative; /* Required for responsive Chart.js */
+}
+
+/* Ensure the canvas doesn't overflow its rounded card */
+.chart-module canvas {
+    max-height: 100% !important;
+    max-width: 100% !important;
+}
+
+@media (max-width: 1100px) {
+    .chart-module { 
+        height: 450px; /* Slightly taller on mobile for better label spacing */
+    }
+}
+/* Update your .chart-module section in <style> */
+.chart-module { 
+    grid-area: chart; 
+    width: 100%;
+    aspect-ratio: 16 / 9; /* Matches typical bento item proportions */
+    position: relative; 
+    box-sizing: border-box; /* Ensures padding stays inside the box */
+}
+
+/* Fix for mobile: make it taller so labels don't squash */
+@media (max-width: 1100px) {
+    .chart-module { 
+        aspect-ratio: 1 / 1.2; /* Taller square-ish shape for phones */
+    }
+}
+
+/* Ensure the canvas fills the container exactly */
+.chart-module canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+}
     </style>
 </head>
 <body>
@@ -184,7 +234,7 @@
 
         <div class="bento-item chart-module">
             <h2 style="text-align:center; margin-top:0;">📊 FAMILY RANKING</h2>
-            <canvas id="voteChart" height="120"></canvas>
+            <canvas id="voteChart"></canvas>
         </div>
     </div>
 </div>
@@ -365,7 +415,55 @@
   });
 
   const ctx = document.getElementById('voteChart').getContext('2d');
-  let myChart = new Chart(ctx, { type: 'bar', data: { labels: [], datasets: [{ label: 'Votes', data: [], backgroundColor: 'rgba(0, 131, 184, 0.7)', borderRadius: 10 }] }, options: { indexAxis: 'y', plugins: { legend: { display: false } } } });
+// Replace your existing myChart initialization
+// Locate your myChart initialization and update the options block:
+let myChart = new Chart(ctx, { 
+    type: 'bar', 
+    data: { 
+        labels: [], 
+        datasets: [{ 
+            label: 'Votes', 
+            data: [], 
+            backgroundColor: 'rgba(0, 131, 184, 0.7)', 
+            borderRadius: 10 
+        }] 
+    }, 
+    options: { 
+        indexAxis: 'y', 
+        responsive: true,
+        maintainAspectRatio: false, /* Let CSS aspect-ratio handle the size */
+        plugins: { 
+            legend: { display: false } 
+        },
+        scales: {
+            x: {
+                beginAtZero: true,
+                suggestedMax: 3, 
+                ticks: { 
+                    stepSize: 1,
+                    precision: 0 
+                }
+            },
+            y: {
+                ticks: {
+                    autoSkip: false,
+                    font: {
+                        size: 11,
+                        weight: '600'
+                    }
+                }
+            }
+        },
+        layout: {
+            padding: {
+                left: 10,
+                right: 20,
+                top: 10,
+                bottom: 10
+            }
+        }
+    } 
+});
 </script>
 </body>
 </html>
