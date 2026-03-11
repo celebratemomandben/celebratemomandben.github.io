@@ -24,10 +24,27 @@
         .user-hub-banner { text-align: center; font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 5px; display: none; text-transform: uppercase; }
 
         .auth-container { max-width: 450px; margin: 0 auto 20px auto; background: var(--glass); padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .auth-input, input[type="text"], input[type="password"], select { 
-            padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin: 5px; width: 85%; 
-            text-transform: uppercase; font-size: 16px !important; 
-        }
+/* Keeps login and selectors uppercase, but lets chat be natural */
+.auth-input, #voterName, #voterPass, select { 
+    text-transform: uppercase; 
+}
+
+/* Base styles for all inputs */
+input[type="text"], input[type="password"], select { 
+    padding: 12px; 
+    border-radius: 8px; 
+    border: 1px solid #ddd; 
+    margin: 5px; 
+    width: 85%; 
+    font-size: 16px !important; 
+}
+
+/* Specific fix for chat input width and case */
+#chatInput { 
+    text-transform: none !important; 
+    width: auto; 
+    flex-grow: 1; 
+}
         .btn-unlock { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 90%; margin-top: 10px; }
         
         .user-controls { display: none; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 25px; }
@@ -66,7 +83,7 @@
         .review-user { font-weight: 700; font-size: 0.8rem; color: #333; }
         .review-text { font-size: 0.85rem; line-height: 1.4; color: #444; }
 
-        /* VOTE BUTTONS FIX */
+        /* VOTE BUTTONS */
         .selection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
         .vote-card input { display: none; }
         .vote-card label { 
@@ -81,6 +98,36 @@
         
         .voter-tag { background: #e0f2fe; padding: 2px 8px; border-radius: 10px; margin: 2px; font-size: 0.7rem; color: var(--primary); display: inline-block; font-weight: bold; border: 1px solid #bae6fd; }
         .rank-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; font-weight: 900; }
+    /* Standard message indentation under the room header */
+.chat-msg { 
+    font-size: 0.85rem; 
+    padding: 10px 0 10px 15px; /* Added left padding for global indent */
+    border-bottom: 1px solid #f0f0f0; 
+    position: relative;
+}
+
+/* Deeper indentation for replies (nested comments) */
+.is-reply { 
+    margin-left: 35px; /* Pushes replies further right */
+    border-left: 3px solid var(--primary); 
+    padding-left: 15px; 
+    background: rgba(0,0,0,0.02); 
+    margin-top: 4px; 
+    border-radius: 0 8px 8px 0; 
+}
+
+/* Ensure the header stands out as the anchor point */
+.chat-header { 
+    background: #edf2f7; 
+    padding: 8px 12px; 
+    font-size: 0.75rem; 
+    font-weight: 800; 
+    border-radius: 8px; 
+    margin: 20px 0 10px 0; 
+    color: #2d3748; 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+}
     </style>
 </head>
 <body>
@@ -94,7 +141,7 @@
         <a class="logout-link" onclick="logout()">LOGOUT / RESET DEVICE</a>
         <div class="how-to-blurb">
             Research locations, chat with family, and select 3–5 picks. 
-            <br>Update picks upon return!(buttons turn solid blue when selected!)
+            <br>Update picks upon return! (buttons turn solid blue when selected!)
         </div>
     </div>
 
@@ -107,7 +154,7 @@
 
     <div class="bento-grid" id="appBody">
         <div class="bento-item video-module">
-            <label style="font-weight: 800; color: var(--primary); font-size: 0.9rem; display: block; margin-bottom: 8px;">RESEARCH DESTINATIONS:</label>
+            <label style="font-weight: 800; color: var(--primary); font-size: 0.9rem; display: block; margin-bottom: 8px;">Step 1: EXPLORE DESTINATIONS (Click below dropdown)</label>
             <select id="locPicker" onchange="loadLoc(this.value)"></select>
             <div class="video-player">
                 <iframe id="mainPlayer" src="" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -129,7 +176,7 @@
         </div>
 
         <div class="bento-item chat-module">
-            <h3 style="margin:0;">💬 FAMILY CHAT</h3>
+            <h3 style="margin:0;">STEP 2:  💬 CHAT ABOUT FAMILY TRIP</h3>
             <div id="chatMessages"></div>
             <div id="replyingToBar">
                 <span id="replyText">Replying to...</span>
@@ -145,7 +192,7 @@
         </div>
 
         <div class="bento-item poll-module">
-            <h3 style="text-align:center; margin-top:0;">🗳️ VOTE (CHOOSE 3-5)</h3>
+            <h3 style="text-align:center; margin-top:0;">STEP 3: 🗳️ VOTE (CHOOSE 3-5)</h3>
             <div id="pollOptions" class="selection-grid"></div>
             <button onclick="submitVotes()" style="width:100%; background:#2ecc71; color:white; border:none; padding:15px; border-radius:15px; font-weight:800; margin-top:10px; cursor:pointer; font-size:1.1rem;">UPDATE MY PICKS</button>
         </div>
@@ -164,20 +211,24 @@
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, onValue, set, get, child, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+  import { getDatabase, ref, onValue, set, get, child, push, serverTimestamp, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAByJd5SpzqtK7LAA80I-nONrXQqhgG2uQ",
-  authDomain: "celebratemomandben.firebaseapp.com",
-  projectId: "celebratemomandben",
-  storageBucket: "celebratemomandben.firebasestorage.app",
-  messagingSenderId: "567044784692",
-  appId: "1:567044784692:web:dba496160575757517c061",
-  measurementId: "G-6H8FYLXRG8"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyAByJd5SpzqtK7LAA80I-nONrXQqhgG2uQ",
+    authDomain: "celebratemomandben.firebaseapp.com",
+    projectId: "celebratemomandben",
+    storageBucket: "celebratemomandben.firebasestorage.app",
+    messagingSenderId: "567044784692",
+    appId: "1:567044784692:web:dba496160575757517c061",
+    measurementId: "G-6H8FYLXRG8"
+  };
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
+
+  let editId = null;
+  let replyToId = null;
+  let replyRoom = "General";
 
   const locations = [
     { name: "Garden of the Gods", vidId: "D-ZDwccPNcg", cost: "Free", web: "https://gardenofgods.com", phone: "719-634-6666", desc: "Red rock spires. Best at sunrise.", reviews: [{u:"Sarah M.", t:"Breathtaking views and easy paved paths.", s:5}, {u:"Mike D.", t:"Sunrise is a must.", s:5}] },
@@ -192,7 +243,7 @@ const firebaseConfig = {
     { name: "Territory Days Fest", vidId: "_AZMHsejSQ4", cost: "Free", web: "https://shopoldcoloradocity.com", phone: "719-577-4112", desc: "Street fair May 23-25.", reviews: [{u:"Street Foodie", t:"Best turkey legs ever.", s:5}, {u:"Local", t:"Use the free shuttle bus.", s:4}] }
   ];
 
-  let currentLoc = locations[0], replyToId = null, replyRoom = "General";
+  let currentLoc = locations[0];
   const picker = document.getElementById('locPicker');
   const pollOptions = document.getElementById('pollOptions');
 
@@ -212,7 +263,7 @@ const firebaseConfig = {
   setInterval(updateCountdown, 60000); updateCountdown();
 
   window.unlockApp = async function() {
-    const nInput = document.getElementById('voterName').value.trim().toUpperCase() || localStorage.getItem('family_voterName');
+    const nInput = (document.getElementById('voterName').value.trim().toUpperCase()) || localStorage.getItem('family_voterName');
     const pInput = document.getElementById('voterPass').value.trim().toLowerCase();
     if (nInput && (pInput === "rockies" || localStorage.getItem('family_voterPass'))) {
         localStorage.setItem('family_voterName', nInput); localStorage.setItem('family_voterPass', "rockies");
@@ -238,6 +289,8 @@ const firebaseConfig = {
     document.getElementById('reviewSection').innerHTML = loc.reviews.map(r => `<div class="review-card"><div class="review-meta"><span class="review-user">${r.u}</span><span class="review-stars">${"★".repeat(r.s)}</span></div><div class="review-text">"${r.t}"</div></div>`).join('');
   };
 
+  /* --- CHAT FUNCTIONS --- */
+
   window.setReply = (id, user, room) => {
     replyToId = id; replyRoom = room || "General";
     document.getElementById('replyingToBar').style.display = "flex";
@@ -245,23 +298,85 @@ const firebaseConfig = {
     document.getElementById('contextLock').disabled = true; document.getElementById('chatInput').focus();
   };
 
-  window.cancelReply = () => { replyToId = null; document.getElementById('replyingToBar').style.display = "none"; document.getElementById('contextLock').disabled = false; };
+  window.editMsg = (id, oldMsg) => {
+    editId = id;
+    const input = document.getElementById('chatInput');
+    input.value = oldMsg;
+    input.style.border = "2px solid var(--gold)";
+    input.focus();
+    document.getElementById('replyingToBar').style.display = "flex";
+    document.getElementById('replyText').innerText = `Editing message...`;
+  };
 
-  window.sendChat = () => {
-    const m = document.getElementById('chatInput').value.trim();
-    if(m) {
-        push(ref(db, 'globalChat'), { user: localStorage.getItem('family_voterName'), msg: m, room: replyToId ? replyRoom : (document.getElementById('contextLock').checked ? currentLoc.name : "General"), time: serverTimestamp(), parentId: replyToId });
-        document.getElementById('chatInput').value = ""; cancelReply();
+  window.deleteMsg = (id) => {
+    if(confirm("Delete this message permanently?")) {
+        remove(ref(db, `globalChat/${id}`));
     }
   };
 
+  window.cancelReply = () => { 
+    replyToId = null; 
+    editId = null;
+    document.getElementById('replyingToBar').style.display = "none"; 
+    document.getElementById('contextLock').disabled = false; 
+    document.getElementById('chatInput').style.border = "1px solid #ddd";
+  };
+
+  window.sendChat = () => {
+    const m = document.getElementById('chatInput').value.trim();
+    if(!m) return;
+
+    if (editId) {
+        update(ref(db, `globalChat/${editId}`), { msg: m });
+    } else {
+        push(ref(db, 'globalChat'), { 
+            user: localStorage.getItem('family_voterName'), 
+            msg: m, 
+            room: replyToId ? replyRoom : (document.getElementById('contextLock').checked ? currentLoc.name : "General"), 
+            time: serverTimestamp(), 
+            parentId: replyToId 
+        });
+    }
+    document.getElementById('chatInput').value = ""; 
+    cancelReply();
+  };
+
+  // Helper function to handle rendering with Admin/Owner logic
+  function renderMessage(m, room, container, currentUser, allMsgs) {
+    const isOwner = (m.user === currentUser);
+    const isAdmin = (currentUser === "CHUCK");
+    const canManage = isOwner || isAdmin;
+    const indentClass = m.parentId ? 'is-reply' : '';
+    
+    const actions = canManage ? `
+        <span class="reply-btn" style="color:var(--accent)" onclick="deleteMsg('${m.id}')">delete</span>
+        <span class="reply-btn" onclick="editMsg('${m.id}', '${m.msg.replace(/'/g, "\\'")}')">edit</span>
+    ` : '';
+    
+    const replyBtn = !m.parentId ? `<span class="reply-btn" onclick="setReply('${m.id}', '${m.user}', '${room}')">reply</span>` : '';
+
+    container.innerHTML += `
+        <div class="chat-msg ${indentClass}">
+            <strong>${m.user}:</strong> ${m.msg}
+            ${replyBtn}
+            ${actions}
+        </div>`;
+
+    allMsgs.filter(r => r.parentId === m.id).forEach(r => {
+        renderMessage(r, room, container, currentUser, allMsgs);
+    });
+  }
+
   onValue(ref(db, 'globalChat'), (snap) => {
-    const chatBox = document.getElementById('chatMessages'); chatBox.innerHTML = "";
+    const chatBox = document.getElementById('chatMessages'); 
+    chatBox.innerHTML = "";
+    const currentUser = localStorage.getItem('family_voterName');
     let msgs = []; 
     snap.forEach(c => { 
         let d = c.val(); 
         if(d) { d.id = c.key; msgs.push(d); } 
     });
+    
     msgs.sort((a,b) => (a.time || 0) - (b.time || 0)); 
     let groups = {};
     msgs.forEach(m => { 
@@ -272,16 +387,14 @@ const firebaseConfig = {
     
     Object.keys(groups).reverse().forEach(room => {
         chatBox.innerHTML += `<div class="chat-header">${room.toUpperCase()}</div>`;
-        groups[room].filter(m => !m.parentId).forEach(m => {
-            const userName = m.user || "GUEST";
-            const messageText = m.msg || "...";
-            chatBox.innerHTML += `<div class="chat-msg"><strong>${userName}:</strong> ${messageText}<span class="reply-btn" onclick="setReply('${m.id}', '${userName}', '${room}')">reply</span></div>`;
-            groups[room].filter(r => r.parentId === m.id).forEach(r => {
-                chatBox.innerHTML += `<div class="chat-msg is-reply"><strong>${r.user || "GUEST"}:</strong> ${r.msg || "..."}</div>`;
-            });
+        const roomMsgs = groups[room];
+        roomMsgs.filter(m => !m.parentId).forEach(m => {
+            renderMessage(m, room, chatBox, currentUser, roomMsgs);
         });
     });
   });
+
+  /* --- POLL FUNCTIONS --- */
 
   window.submitVotes = function() {
     const v = Array.from(document.querySelectorAll('.vote-check:checked')).map(cb => cb.value);
