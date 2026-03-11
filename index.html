@@ -56,6 +56,7 @@
         .vote-card label { display: block; padding: 10px; background: #fff; border-radius: 10px; text-align: center; cursor: pointer; border: 2px solid #eee; font-size: 0.8rem; font-weight: bold; }
         .vote-card input:checked + label { background: var(--primary); color: white; border-color: var(--primary); }
         .voter-tag { background: #e0eafc; padding: 2px 8px; border-radius: 10px; margin: 2px; font-size: 0.7rem; color: var(--primary); display: inline-block; font-weight: bold; }
+        .rank-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; }
     </style>
 </head>
 <body>
@@ -69,9 +70,8 @@
     <div class="user-controls" id="userControls">
         <a class="logout-link" onclick="logout()">LOGOUT / RESET DEVICE</a>
         <div class="how-to-blurb">
-            <strong>How to use:</strong> Watch the videos and check the info cards below to research. 
-            Discuss ideas in the chat (tag them to a specific location to stay organized!). 
-            Finally, select 3–5 favorites and click Update to see the live leaderboard!
+            <strong>How to use:</strong> Watch the videos and check the info cards to research. 
+            Discuss in the chat. Select 3–5 favorites and click Update. The <strong>Top Supporters</strong> list shows who is championing the leading 5 choices (including ties!).
         </div>
     </div>
 
@@ -125,7 +125,7 @@
         </div>
 
         <div class="bento-item voters-module">
-            <h3 style="margin-top:0;">👥 TOP SUPPORTERS</h3>
+            <h3 style="margin-top:0;">👥 TOP SUPPORTERS (RANKS 1-5)</h3>
             <div id="voterDetails" style="font-size:0.8rem;"></div>
         </div>
 
@@ -140,7 +140,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getDatabase, ref, onValue, set, get, child, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
- const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyAByJd5SpzqtK7LAA80I-nONrXQqhgG2uQ",
   authDomain: "celebratemomandben.firebaseapp.com",
   projectId: "celebratemomandben",
@@ -302,12 +302,34 @@
     const data = snap.val() || {}; const counts = {}; const supporters = {};
     locations.forEach(l => { counts[l.name] = 0; supporters[l.name] = []; });
     Object.entries(data).forEach(([u, l]) => { l.forEach(p => { counts[p]++; supporters[p].push(u); })});
+    
+    // SORTING & TIE-BREAKING LOGIC FOR TOP 5
     const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+    
     let h = "";
-    for(let i=0; i<3; i++) {
-        if(sorted[i] && sorted[i][1]>0) h += `<div style="margin-bottom:8px;"><strong>#1 ${sorted[i][0].toUpperCase()}</strong><br>${supporters[sorted[i][0]].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
+    let currentRank = 0;
+    let lastVoteCount = -1;
+    let displayedRanks = 0;
+
+    for(let i = 0; i < sorted.length; i++) {
+        const [name, voteCount] = sorted[i];
+        if (voteCount === 0) continue;
+
+        if (voteCount !== lastVoteCount) {
+            currentRank++;
+            lastVoteCount = voteCount;
+        }
+
+        if (currentRank > 5) break;
+
+        h += `<div style="margin-bottom:8px;">
+                <span class="rank-badge">RANK ${currentRank}</span> 
+                <strong>${name.toUpperCase()}</strong> (${voteCount} votes)<br>
+                ${supporters[name].map(p => `<span class="voter-tag">${p}</span>`).join("")}
+              </div>`;
     }
-    document.getElementById('voterDetails').innerHTML = h || "Voting in progress...";
+
+    document.getElementById('voterDetails').innerHTML = h || "Waiting for votes...";
     myChart.data.labels = sorted.map(e => e[0]);
     myChart.data.datasets[0].data = sorted.map(e => e[1]);
     myChart.update();
