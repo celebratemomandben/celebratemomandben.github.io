@@ -8,15 +8,28 @@
     <style>
         :root {
             --primary: #0083B8; --accent: #D9534F; --bg: #f0f4f8;
-            --glass: rgba(255, 255, 255, 0.9); --gold: #f39c12;
+            --glass: rgba(255, 255, 255, 0.75); --gold: #f39c12;
             --active-bg: #e0f2fe;
         }
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: radial-gradient(circle at top left, #e0eafc, #cfdef3); 
-            margin: 0; padding: clamp(10px, 2vw, 20px); color: #2d3436;
-            -webkit-tap-highlight-color: transparent; 
-        }
+body { 
+    font-family: 'Inter', sans-serif; 
+    /* NEW: Animated shifting gradient background */
+    background: linear-gradient(-45deg, #cfdef3, #e0eafc, #e3eeff, #f3e7e9); 
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    
+    margin: 0; 
+    padding: clamp(10px, 2vw, 20px); 
+    color: #2d3436;
+    -webkit-tap-highlight-color: transparent; 
+}
+
+/* The keyframes that make the background slowly pan back and forth */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
         .container { max-width: 1300px; margin: auto; }
         
         .main-title { text-align: center; font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 900; margin: 10px 0 5px 0; letter-spacing: 1px; color: #1a1a1a; }
@@ -240,7 +253,24 @@
 .vote-card:nth-child(9) input:checked + label { background: #e84393 !important; border-color: #e84393 !important; color: white !important; } /* Royal Gorge Railroad - Pink */
 .vote-card:nth-child(10) input:checked + label { background: #f1c40f !important; border-color: #f1c40f !important; color: #333 !important; }  /* Cave of the Winds - Yellow (Dark Text) */
 .vote-card:nth-child(11) input:checked + label { background: #3498db !important; border-color: #3498db !important; color: white !important; } /* Territory Days - Light Blue */
-    </style>
+.bento-item { 
+    background: var(--glass); 
+    backdrop-filter: blur(16px); /* Increased blur */
+    -webkit-backdrop-filter: blur(16px); /* For Safari support */
+    border: 1px solid rgba(255, 255, 255, 0.6); /* Adds a crisp frosted edge */
+    border-radius: 20px; 
+    padding: 20px; 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1); /* Deeper shadow for lift */
+    overflow: hidden; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Prepares for hover effect */
+}
+
+/* NEW: Makes the boxes float up slightly when hovered */
+.bento-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+}
+</style>
 </head>
 <body>
 
@@ -570,40 +600,8 @@ window.toggleChatFullscreen = () => {
     set(ref(db, `userVotes/${localStorage.getItem('family_voterName')}`), v); alert("VOTES UPDATED!");
   }
 
-  onValue(ref(db, 'userVotes'), (snap) => {
-    const data = snap.val() || {}; const counts = {}; const supporters = {};
-    locations.forEach(l => { counts[l.name] = 0; supporters[l.name] = []; });
-    Object.entries(data).forEach(([u, l]) => { if(l && Array.isArray(l)) { l.forEach(p => { if(counts[p] !== undefined) { counts[p]++; supporters[p].push(u); } }); } });
-    const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
-    let h = ""; let rank = 0, lastV = -1;
-    for(let i=0; i<sorted.length; i++){
-        const n = sorted[i][0]; const v = sorted[i][1]; if(!n || v===0) continue;
-        if(v!==lastV){ rank++; lastV=v; } if(rank > 5) break;
-        if(n && typeof n === 'string') {
-            h += `<div style="margin-bottom:8px;"><span class="rank-badge">RANK ${rank}</span><strong>${n.toUpperCase()}</strong> (${v})<br>${supporters[n].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
-        }
-    }
-    document.getElementById('voterDetails').innerHTML = h || "Voting in progress...";
-    myChart.data.labels = sorted.map(e => e[0]); 
-    myChart.data.datasets[0].data = sorted.map(e => e[1]); 
-    // Dynamically assign the exact color based on the location name
-    myChart.data.datasets[0].backgroundColor = sorted.map(e => locationColors[e[0]]);
-    myChart.data.datasets[0].hoverBackgroundColor = sorted.map(e => locationColors[e[0]]);
-    myChart.update();
-  });
-
-  const ctx = document.getElementById('voteChart').getContext('2d');
-  
-  // Define an array of your exact theme colors to use for the top 5 bars
-  const themeColors = [
-      'rgba(0, 131, 184, 0.85)',   // 1st Place: Primary Blue
-      'rgba(243, 156, 18, 0.85)',  // 2nd Place: Gold
-      'rgba(46, 204, 113, 0.85)',  // 3rd Place: Green
-      'rgba(217, 83, 79, 0.85)',   // 4th Place: Accent Red
-      'rgba(52, 152, 219, 0.85)'   // 5th Place: Light Blue
-  ];
-  
-  // Fully solid colors for when a user hovers over a bar
+ 
+    // Fully solid colors for when a user hovers over a bar
   const hoverColors = [
       'rgba(0, 131, 184, 1)',   
       'rgba(243, 156, 18, 1)',  
@@ -611,7 +609,12 @@ window.toggleChatFullscreen = () => {
       'rgba(217, 83, 79, 1)',   
       'rgba(52, 152, 219, 1)'   
   ];
+  
 
+  const ctx = document.getElementById('voteChart').getContext('2d');
+
+ 
+  
   let myChart = new Chart(ctx, { 
     type: 'bar', 
     data: { 
@@ -619,15 +622,15 @@ window.toggleChatFullscreen = () => {
         datasets: [{ 
             label: 'Total Votes', 
             data: [], 
-            backgroundColor: themeColors, 
-            hoverBackgroundColor: hoverColors,
-            borderRadius: 8, // Rounds the ends of the bars
+            backgroundColor: [], // Starts empty, gets filled dynamically
+            hoverBackgroundColor: [], 
+            borderRadius: 8, 
             borderSkipped: false,
-            barPercentage: 0.75 // Makes the bars slightly sleeker
+            barPercentage: 0.75 
         }] 
     }, 
     options: { 
-        indexAxis: 'y', // Keeps it a horizontal bar chart
+        indexAxis: 'y', 
         responsive: true,
         maintainAspectRatio: false,
         plugins: { 
@@ -646,7 +649,7 @@ window.toggleChatFullscreen = () => {
                 beginAtZero: true,
                 suggestedMax: 3, 
                 grid: {
-                    color: 'rgba(0,0,0,0.05)', // Super subtle vertical lines
+                    color: 'rgba(0,0,0,0.05)', 
                     drawBorder: false
                 },
                 ticks: { 
@@ -658,7 +661,7 @@ window.toggleChatFullscreen = () => {
             },
             y: {
                 grid: {
-                    display: false, // Hides horizontal lines for a cleaner look
+                    display: false, 
                     drawBorder: false
                 },
                 ticks: {
@@ -672,6 +675,30 @@ window.toggleChatFullscreen = () => {
             padding: { left: 5, right: 15, top: 10, bottom: 5 }
         }
     } 
+  });
+
+  // 2. THEN tell Firebase to update it whenever votes come in
+  onValue(ref(db, 'userVotes'), (snap) => {
+    const data = snap.val() || {}; const counts = {}; const supporters = {};
+    locations.forEach(l => { counts[l.name] = 0; supporters[l.name] = []; });
+    Object.entries(data).forEach(([u, l]) => { if(l && Array.isArray(l)) { l.forEach(p => { if(counts[p] !== undefined) { counts[p]++; supporters[p].push(u); } }); } });
+    const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
+    let h = ""; let rank = 0, lastV = -1;
+    for(let i=0; i<sorted.length; i++){
+        const n = sorted[i][0]; const v = sorted[i][1]; if(!n || v===0) continue;
+        if(v!==lastV){ rank++; lastV=v; } if(rank > 5) break;
+        if(n && typeof n === 'string') {
+            h += `<div style="margin-bottom:8px;"><span class="rank-badge">RANK ${rank}</span><strong>${n.toUpperCase()}</strong> (${v})<br>${supporters[n].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
+        }
+    }
+    document.getElementById('voterDetails').innerHTML = h || "Voting in progress...";
+    
+    // Update the chart with the new data and dynamic colors!
+    myChart.data.labels = sorted.map(e => e[0]); 
+    myChart.data.datasets[0].data = sorted.map(e => e[1]); 
+    myChart.data.datasets[0].backgroundColor = sorted.map(e => locationColors[e[0]]);
+    myChart.data.datasets[0].hoverBackgroundColor = sorted.map(e => locationColors[e[0]]);
+    myChart.update();
   });
 
 </script>
