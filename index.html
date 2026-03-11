@@ -416,19 +416,26 @@
     pollOptions.innerHTML += `<div class="vote-card"><input type="checkbox" class="vote-check" id="v-${i}" value="${l.name}"><label for="v-${i}">${l.name}</label></div>`;
   });
 
-  window.onload = () => { 
+ window.onload = () => { 
       const savedName = localStorage.getItem('family_voterName');
+      const isSameSession = sessionStorage.getItem('celebrated'); // Checks if they were just here
+
       if (savedName) {
-          // Pre-fill their info
-          document.getElementById('voterName').value = savedName;
-          document.getElementById('voterPass').value = localStorage.getItem('family_voterPass');
-          
-          // Change the login button to a friendly Welcome Back button
-          const btn = document.querySelector('.btn-unlock');
-          btn.innerText = `WELCOME BACK, ${savedName}! (ENTER HUB)`;
-          btn.style.background = "#2ecc71"; // Make it green so it looks like a "Go" button
+          if (isSameSession) {
+              // They just refreshed the page. Skip the button and auto-load the hub!
+              unlockApp();
+          } else {
+              // They closed the browser and came back later. Show the Welcome Back button!
+              document.getElementById('voterName').value = savedName;
+              document.getElementById('voterPass').value = localStorage.getItem('family_voterPass');
+              
+              const btn = document.querySelector('.btn-unlock');
+              btn.innerText = `WELCOME BACK, ${savedName}! (ENTER HUB)`;
+              btn.style.background = "#2ecc71"; // Makes it green
+          }
       } 
   };
+  
   window.logout = () => { localStorage.clear(); location.reload(); };
 
   function updateCountdown() {
