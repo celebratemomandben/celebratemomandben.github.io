@@ -11,25 +11,25 @@
             --glass: rgba(255, 255, 255, 0.75); --gold: #f39c12;
             --active-bg: #e0f2fe;
         }
-body { 
-    font-family: 'Inter', sans-serif; 
-    /* NEW: Animated shifting gradient background */
-    background: linear-gradient(-45deg, #cfdef3, #e0eafc, #e3eeff, #f3e7e9); 
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
-    
-    margin: 0; 
-    padding: clamp(10px, 2vw, 20px); 
-    color: #2d3436;
-    -webkit-tap-highlight-color: transparent; 
-}
+        body { 
+            font-family: 'Inter', sans-serif; 
+            /* NEW: Animated shifting gradient background */
+            background: linear-gradient(-45deg, #cfdef3, #e0eafc, #e3eeff, #f3e7e9); 
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            
+            margin: 0; 
+            padding: clamp(10px, 2vw, 20px); 
+            color: #2d3436;
+            -webkit-tap-highlight-color: transparent; 
+        }
 
-/* The keyframes that make the background slowly pan back and forth */
-@keyframes gradientBG {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
+        /* The keyframes that make the background slowly pan back and forth */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         .container { max-width: 1300px; margin: auto; }
         
         .main-title { text-align: center; font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 900; margin: 10px 0 5px 0; letter-spacing: 1px; color: #1a1a1a; }
@@ -134,143 +134,138 @@ body {
             height: 100% !important;
         }
         /* Fullscreen Chat Modifier */
-/* Fullscreen Chat Modifier */
-.fullscreen-chat {
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    width: 100vw !important;
-    height: 100dvh !important; /* Better for mobile screens */
-    box-sizing: border-box !important; /* Keeps padding from pushing content off-screen */
-    max-width: none !important;
-    z-index: 10000;
-    margin: 0 !important;
-    border-radius: 0 !important;
-    display: flex;
-    flex-direction: column;
-    background: var(--bg); /* Solid background hides the rest of the app better */
-}
+        .fullscreen-chat {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            width: 100vw !important;
+            height: 100dvh !important; 
+            box-sizing: border-box !important; 
+            max-width: none !important;
+            z-index: 10000;
+            margin: 0 !important;
+            border-radius: 0 !important;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg); 
+        }
 
-.fullscreen-chat #chatMessages {
-    flex-grow: 1;
-    height: 0 !important; /* Forces the scrolling to stay within this box */
-    max-height: none;
-    overflow-y: auto;
-}
-.chat-header { 
-    background: linear-gradient(135deg, var(--primary), #005b82); 
-    color: #ffffff; 
-    padding: 8px 14px; 
-    font-size: 0.8rem; 
-    font-weight: 800; 
-    border-radius: 8px; 
-    margin: 20px 0 10px 0; 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
-    box-shadow: 0 4px 10px rgba(0, 131, 184, 0.25);
-    position: sticky; /* Optional: keeps the header visible while scrolling its messages */
-    top: 0;
-    z-index: 2;
-}
-/* Firefox Scrollbar */
-#chatMessages { 
-    height: 400px; 
-    overflow-y: auto; 
-    margin: 10px 0; 
-    padding-right: 10px; 
-    scrollbar-width: auto; 
-    scrollbar-color: var(--primary) #e2e8f0; 
-}
+        .fullscreen-chat #chatMessages {
+            flex-grow: 1;
+            height: 0 !important; 
+            max-height: none;
+            overflow-y: auto;
+        }
+        .chat-header { 
+            background: linear-gradient(135deg, var(--primary), #005b82); 
+            color: #ffffff; 
+            padding: 8px 14px; 
+            font-size: 0.8rem; 
+            font-weight: 800; 
+            border-radius: 8px; 
+            margin: 20px 0 10px 0; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            box-shadow: 0 4px 10px rgba(0, 131, 184, 0.25);
+            position: sticky; 
+            top: 0;
+            z-index: 2;
+        }
+        /* Firefox Scrollbar */
+        #chatMessages { 
+            height: 400px; 
+            overflow-y: auto; 
+            margin: 10px 0; 
+            padding-right: 10px; 
+            scrollbar-width: auto; 
+            scrollbar-color: var(--primary) #e2e8f0; 
+        }
 
-/* Chrome, Edge, and Safari Scrollbar */
-#chatMessages::-webkit-scrollbar { 
-    width: 10px; /* Widened from 6px to 10px */
-}
+        /* Chrome, Edge, and Safari Scrollbar */
+        #chatMessages::-webkit-scrollbar { 
+            width: 10px; 
+        }
 
-#chatMessages::-webkit-scrollbar-track { 
-    background: #e2e8f0; /* Adds a light gray track behind the scrollbar */
-    border-radius: 10px; 
-}
+        #chatMessages::-webkit-scrollbar-track { 
+            background: #e2e8f0; 
+            border-radius: 10px; 
+        }
 
-#chatMessages::-webkit-scrollbar-thumb { 
-    background: var(--primary); /* Uses your bright primary blue */
-    border-radius: 10px; 
-    border: 2px solid #e2e8f0; /* Adds a little breathing room inside the track */
-}
+        #chatMessages::-webkit-scrollbar-thumb { 
+            background: var(--primary); 
+            border-radius: 10px; 
+            border: 2px solid #e2e8f0; 
+        }
 
-#chatMessages::-webkit-scrollbar-thumb:hover { 
-    background: #005b82; /* Darkens slightly when the user hovers over it */
-}
-/* Celebration Animations */
-@keyframes fall {
-    to { transform: translateY(110vh) rotate(360deg); }
-}
-@keyframes popIn {
-    0% { transform: scale(0.5); opacity: 0; }
-    80% { transform: scale(1.05); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
-}
-/* Update Picks Button Animation */
-.btn-update-picks {
-    width: 100%;
-    background: #2ecc71;
-    color: white;
-    border: none;
-    padding: 15px;
-    border-radius: 15px;
-    font-weight: 800;
-    margin-top: 10px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    /* The 3D shadow effect */
-    box-shadow: 0 6px 0 #27ae60, 0 10px 20px rgba(46, 204, 113, 0.4);
-    /* Bouncy transition */
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
+        #chatMessages::-webkit-scrollbar-thumb:hover { 
+            background: #005b82; 
+        }
+        /* Celebration Animations */
+        @keyframes fall {
+            to { transform: translateY(110vh) rotate(360deg); }
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        /* Update Picks Button Animation */
+        .btn-update-picks {
+            width: 100%;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-weight: 800;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            box-shadow: 0 6px 0 #27ae60, 0 10px 20px rgba(46, 204, 113, 0.4);
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
 
-/* When hovering over the button */
-.btn-update-picks:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 0 #27ae60, 0 15px 25px rgba(46, 204, 113, 0.5);
-    background: #34d878;
-}
+        .btn-update-picks:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #27ae60, 0 15px 25px rgba(46, 204, 113, 0.5);
+            background: #34d878;
+        }
 
-/* When actively clicking the button */
-.btn-update-picks:active {
-    transform: translateY(4px); /* Pushes the button down */
-    box-shadow: 0 2px 0 #27ae60, 0 5px 10px rgba(46, 204, 113, 0.3); /* Flattens the shadow */
-}
-/* 11 Unique Colors for Checked Vote Buttons */
-.vote-card:nth-child(1) input:checked + label { background: #0083B8 !important; border-color: #0083B8 !important; color: white !important; } /* Garden of the Gods - Primary Blue */
-.vote-card:nth-child(2) input:checked + label { background: #f39c12 !important; border-color: #f39c12 !important; color: white !important; } /* Pikes Peak - Gold */
-.vote-card:nth-child(3) input:checked + label { background: #2ecc71 !important; border-color: #2ecc71 !important; color: white !important; } /* Zoo - Green */
-.vote-card:nth-child(4) input:checked + label { background: #D9534F !important; border-color: #D9534F !important; color: white !important; } /* Seven Falls - Red */
-.vote-card:nth-child(5) input:checked + label { background: #9b59b6 !important; border-color: #9b59b6 !important; color: white !important; } /* Santa's Workshop - Purple */
-.vote-card:nth-child(6) input:checked + label { background: #e67e22 !important; border-color: #e67e22 !important; color: white !important; } /* Olympic Museum - Orange */
-.vote-card:nth-child(7) input:checked + label { background: #1abc9c !important; border-color: #1abc9c !important; color: white !important; } /* Penny Arcade - Teal */
-.vote-card:nth-child(8) input:checked + label { background: #34495e !important; border-color: #34495e !important; color: white !important; } /* Royal Gorge Bridge - Navy */
-.vote-card:nth-child(9) input:checked + label { background: #e84393 !important; border-color: #e84393 !important; color: white !important; } /* Royal Gorge Railroad - Pink */
-.vote-card:nth-child(10) input:checked + label { background: #f1c40f !important; border-color: #f1c40f !important; color: #333 !important; }  /* Cave of the Winds - Yellow (Dark Text) */
-.vote-card:nth-child(11) input:checked + label { background: #3498db !important; border-color: #3498db !important; color: white !important; } /* Territory Days - Light Blue */
-.bento-item { 
-    background: var(--glass); 
-    backdrop-filter: blur(16px); /* Increased blur */
-    -webkit-backdrop-filter: blur(16px); /* For Safari support */
-    border: 1px solid rgba(255, 255, 255, 0.6); /* Adds a crisp frosted edge */
-    border-radius: 20px; 
-    padding: 20px; 
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1); /* Deeper shadow for lift */
-    overflow: hidden; 
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Prepares for hover effect */
-}
+        .btn-update-picks:active {
+            transform: translateY(4px); 
+            box-shadow: 0 2px 0 #27ae60, 0 5px 10px rgba(46, 204, 113, 0.3); 
+        }
+        /* 11 Unique Colors for Checked Vote Buttons */
+        .vote-card:nth-child(1) input:checked + label { background: #0083B8 !important; border-color: #0083B8 !important; color: white !important; } 
+        .vote-card:nth-child(2) input:checked + label { background: #f39c12 !important; border-color: #f39c12 !important; color: white !important; } 
+        .vote-card:nth-child(3) input:checked + label { background: #2ecc71 !important; border-color: #2ecc71 !important; color: white !important; } 
+        .vote-card:nth-child(4) input:checked + label { background: #D9534F !important; border-color: #D9534F !important; color: white !important; } 
+        .vote-card:nth-child(5) input:checked + label { background: #9b59b6 !important; border-color: #9b59b6 !important; color: white !important; } 
+        .vote-card:nth-child(6) input:checked + label { background: #e67e22 !important; border-color: #e67e22 !important; color: white !important; } 
+        .vote-card:nth-child(7) input:checked + label { background: #1abc9c !important; border-color: #1abc9c !important; color: white !important; } 
+        .vote-card:nth-child(8) input:checked + label { background: #34495e !important; border-color: #34495e !important; color: white !important; } 
+        .vote-card:nth-child(9) input:checked + label { background: #e84393 !important; border-color: #e84393 !important; color: white !important; } 
+        .vote-card:nth-child(10) input:checked + label { background: #f1c40f !important; border-color: #f1c40f !important; color: #333 !important; } 
+        .vote-card:nth-child(11) input:checked + label { background: #3498db !important; border-color: #3498db !important; color: white !important; } 
+        
+        .bento-item { 
+            background: var(--glass); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.6); 
+            border-radius: 20px; 
+            padding: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
 
-/* NEW: Makes the boxes float up slightly when hovered */
-.bento-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 45px rgba(0,0,0,0.15);
-}
-</style>
+        .bento-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.15);
+        }
+    </style>
 </head>
 <body>
 
@@ -321,12 +316,12 @@ body {
             </div>
         </div>
 
-<div class="bento-item chat-module">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-shrink: 0;">
-        <span class="step-header" style="margin-bottom: 0;">Step 2: 💬 CHAT WITH FAM!</span>
-        <button id="fsToggleBtn" onclick="toggleChatFullscreen()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); line-height: 1;" title="Toggle Fullscreen">⛶</button>
-    </div>
-    <div id="chatMessages"></div>
+        <div class="bento-item chat-module">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-shrink: 0;">
+                <span class="step-header" style="margin-bottom: 0;">Step 2: 💬 CHAT WITH FAM!</span>
+                <button id="fsToggleBtn" onclick="toggleChatFullscreen()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); line-height: 1;" title="Toggle Fullscreen">⛶</button>
+            </div>
+            <div id="chatMessages"></div>
             <div id="replyingToBar">
                 <span id="replyText">Replying to...</span>
                 <span onclick="cancelReply()" style="cursor:pointer; font-weight:bold;">✕</span>
@@ -346,7 +341,7 @@ body {
         <div class="bento-item poll-module">
             <span class="step-header">Step 3: 🗳️ VOTE (CHOOSE 3-5)</span>
             <div id="pollOptions" class="selection-grid"></div>
-           <button onclick="submitVotes()" class="btn-update-picks">UPDATE MY PICKS</button>
+            <button onclick="submitVotes()" class="btn-update-picks">UPDATE MY PICKS</button>
         </div>
 
         <div class="bento-item voters-module">
@@ -438,7 +433,7 @@ body {
   }
   setInterval(updateCountdown, 60000); updateCountdown();
 
- window.playCelebration = (force = false) => {
+  window.playCelebration = (force = false) => {
     // Only play once per session so it doesn't get annoying on refresh, UNLESS forced
     if (!force && sessionStorage.getItem('celebrated')) return;
     sessionStorage.setItem('celebrated', 'true');
@@ -447,8 +442,7 @@ body {
     const overlay = document.createElement('div');
     overlay.style.cssText = "position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:99999; pointer-events:none; overflow:hidden; display:flex; justify-content:center; align-items:center; flex-direction:column; background:rgba(255,255,255,0.85); backdrop-filter:blur(8px); transition:opacity 1s;";
     
-    // --- NEW: Play the Audio ---
-    // Note: You will need to replace the placeholder URL below with a direct link to your MP3 file!
+    // --- Play the Audio ---
     const audio = new Audio('celebratesong.mp3');
     
     // We use a .catch() here because modern browsers sometimes block audio from playing automatically 
@@ -464,7 +458,7 @@ body {
     document.body.appendChild(overlay);
 
     // Generate falling emojis (caps, diplomas, drinks, beaches)
-const confettiItems = [
+    const confettiItems = [
         '🎓', '🎉', '🥂', '🏔️', /* Mountains for CO */
         '🌲', '📜', '🍾', '✈️', 
         '👨‍🎓', /* Ben */ '🌴', /* Mom relaxing */ 
@@ -497,20 +491,26 @@ const confettiItems = [
         overlay.appendChild(el);
     }
 
-    // Fade out and remove after 4 seconds (and stop the audio)
+    // Fade out and remove after 4 seconds (and safely fade the audio)
     setTimeout(() => {
         overlay.style.opacity = '0';
-        // Fade out the audio volume smoothly over 1 second
+        
+        // Safely fade out the audio volume so it doesn't drop below 0
         let fadeAudio = setInterval(() => {
-            if (audio.volume > 0.1) audio.volume -= 0.1;
-            else { clearInterval(fadeAudio); audio.pause(); }
+            if (audio.volume >= 0.1) {
+                audio.volume -= 0.1;
+            } else {
+                audio.volume = 0;
+                clearInterval(fadeAudio);
+                audio.pause();
+            }
         }, 100);
 
         setTimeout(() => overlay.remove(), 1000);
     }, 4000);
   };
 
-window.unlockApp = async function() {
+  window.unlockApp = async function() {
     const nInput = (document.getElementById('voterName').value.trim().toUpperCase()) || localStorage.getItem('family_voterName');
     const pInput = document.getElementById('voterPass').value.trim().toLowerCase();
     
@@ -543,7 +543,7 @@ window.unlockApp = async function() {
     } else {
         alert("Please enter your name and the correct passcode.");
     }
-}
+  }
 
   window.loadLoc = (i) => {
     const loc = locations[i]; currentLoc = loc;
@@ -606,20 +606,19 @@ window.unlockApp = async function() {
     allMsgs.filter(r => r.parentId === m.id).forEach(r => { renderMessage(r, room, container, currentUser, allMsgs); });
   }
 
-
-
-window.toggleChatFullscreen = () => {
+  window.toggleChatFullscreen = () => {
     const chatModule = document.querySelector('.chat-module');
     const btn = document.getElementById('fsToggleBtn');
     
     chatModule.classList.toggle('fullscreen-chat');
     
     if (chatModule.classList.contains('fullscreen-chat')) {
-        btn.innerHTML = '✖'; // Switch to Close 'X'
+        btn.innerHTML = '✖'; 
     } else {
-        btn.innerHTML = '⛶'; // Switch back to expand icon
+        btn.innerHTML = '⛶'; 
     }
-};
+  };
+
   onValue(ref(db, 'globalChat'), (snap) => {
     const chatBox = document.getElementById('chatMessages'); chatBox.innerHTML = "";
     const currentUser = localStorage.getItem('family_voterName');
@@ -645,24 +644,14 @@ window.toggleChatFullscreen = () => {
     // 🎉 NEW: Force the celebration animation and song to play!
     playCelebration(true);
     
-    // Let them know it worked
-    alert("VOTES UPDATED!");
+    // Let them know it worked (Delayed slightly so it doesn't block the music from starting!)
+    setTimeout(() => {
+        alert("VOTES UPDATED!");
+    }, 150);
   }
 
- 
-    // Fully solid colors for when a user hovers over a bar
-  const hoverColors = [
-      'rgba(0, 131, 184, 1)',   
-      'rgba(243, 156, 18, 1)',  
-      'rgba(46, 204, 113, 1)',  
-      'rgba(217, 83, 79, 1)',   
-      'rgba(52, 152, 219, 1)'   
-  ];
-  
-
+  // 1. Build the blank chart FIRST
   const ctx = document.getElementById('voteChart').getContext('2d');
-
- 
   
   let myChart = new Chart(ctx, { 
     type: 'bar', 
