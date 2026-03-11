@@ -228,6 +228,18 @@
     transform: translateY(4px); /* Pushes the button down */
     box-shadow: 0 2px 0 #27ae60, 0 5px 10px rgba(46, 204, 113, 0.3); /* Flattens the shadow */
 }
+/* 11 Unique Colors for Checked Vote Buttons */
+.vote-card:nth-child(1) input:checked + label { background: #0083B8 !important; border-color: #0083B8 !important; color: white !important; } /* Garden of the Gods - Primary Blue */
+.vote-card:nth-child(2) input:checked + label { background: #f39c12 !important; border-color: #f39c12 !important; color: white !important; } /* Pikes Peak - Gold */
+.vote-card:nth-child(3) input:checked + label { background: #2ecc71 !important; border-color: #2ecc71 !important; color: white !important; } /* Zoo - Green */
+.vote-card:nth-child(4) input:checked + label { background: #D9534F !important; border-color: #D9534F !important; color: white !important; } /* Seven Falls - Red */
+.vote-card:nth-child(5) input:checked + label { background: #9b59b6 !important; border-color: #9b59b6 !important; color: white !important; } /* Santa's Workshop - Purple */
+.vote-card:nth-child(6) input:checked + label { background: #e67e22 !important; border-color: #e67e22 !important; color: white !important; } /* Olympic Museum - Orange */
+.vote-card:nth-child(7) input:checked + label { background: #1abc9c !important; border-color: #1abc9c !important; color: white !important; } /* Penny Arcade - Teal */
+.vote-card:nth-child(8) input:checked + label { background: #34495e !important; border-color: #34495e !important; color: white !important; } /* Royal Gorge Bridge - Navy */
+.vote-card:nth-child(9) input:checked + label { background: #e84393 !important; border-color: #e84393 !important; color: white !important; } /* Royal Gorge Railroad - Pink */
+.vote-card:nth-child(10) input:checked + label { background: #f1c40f !important; border-color: #f1c40f !important; color: #333 !important; }  /* Cave of the Winds - Yellow (Dark Text) */
+.vote-card:nth-child(11) input:checked + label { background: #3498db !important; border-color: #3498db !important; color: white !important; } /* Territory Days - Light Blue */
     </style>
 </head>
 <body>
@@ -339,6 +351,20 @@
   let editId = null;
   let replyToId = null;
   let replyRoom = "General";
+
+  const locationColors = {
+      "Garden of the Gods": "#0083B8",
+      "Pikes Peak Cog Railway": "#f39c12",
+      "Cheyenne Mountain Zoo": "#2ecc71",
+      "Seven Falls": "#D9534F",
+      "Santa's Workshop": "#9b59b6",
+      "Olympic Museum": "#e67e22",
+      "Manitou Penny Arcade": "#1abc9c",
+      "Royal Gorge Bridge": "#34495e",
+      "Royal Gorge Railroad": "#e84393",
+      "Cave of the Winds": "#f1c40f",
+      "Territory Days Fest": "#3498db"
+  };
 
   const locations = [
     { name: "Garden of the Gods", vidId: "mhMQFx-D_74", cost: "Free", web: "https://gardenofgods.com", phone: "719-634-6666", desc: "Red rock spires. Best at sunrise.", reviews: [{u:"Sarah M.", t:"Breathtaking views and easy paved paths.", s:5}, {u:"Mike D.", t:"Sunrise is a must.", s:5}] },
@@ -558,57 +584,96 @@ window.toggleChatFullscreen = () => {
         }
     }
     document.getElementById('voterDetails').innerHTML = h || "Voting in progress...";
-    myChart.data.labels = sorted.map(e => e[0]); myChart.data.datasets[0].data = sorted.map(e => e[1]); myChart.update();
+    myChart.data.labels = sorted.map(e => e[0]); 
+    myChart.data.datasets[0].data = sorted.map(e => e[1]); 
+    // Dynamically assign the exact color based on the location name
+    myChart.data.datasets[0].backgroundColor = sorted.map(e => locationColors[e[0]]);
+    myChart.data.datasets[0].hoverBackgroundColor = sorted.map(e => locationColors[e[0]]);
+    myChart.update();
   });
 
   const ctx = document.getElementById('voteChart').getContext('2d');
+  
+  // Define an array of your exact theme colors to use for the top 5 bars
+  const themeColors = [
+      'rgba(0, 131, 184, 0.85)',   // 1st Place: Primary Blue
+      'rgba(243, 156, 18, 0.85)',  // 2nd Place: Gold
+      'rgba(46, 204, 113, 0.85)',  // 3rd Place: Green
+      'rgba(217, 83, 79, 0.85)',   // 4th Place: Accent Red
+      'rgba(52, 152, 219, 0.85)'   // 5th Place: Light Blue
+  ];
+  
+  // Fully solid colors for when a user hovers over a bar
+  const hoverColors = [
+      'rgba(0, 131, 184, 1)',   
+      'rgba(243, 156, 18, 1)',  
+      'rgba(46, 204, 113, 1)',  
+      'rgba(217, 83, 79, 1)',   
+      'rgba(52, 152, 219, 1)'   
+  ];
+
   let myChart = new Chart(ctx, { 
     type: 'bar', 
     data: { 
         labels: [], 
         datasets: [{ 
-            label: 'Votes', 
+            label: 'Total Votes', 
             data: [], 
-            backgroundColor: 'rgba(0, 131, 184, 0.7)', 
-            borderRadius: 10 
+            backgroundColor: themeColors, 
+            hoverBackgroundColor: hoverColors,
+            borderRadius: 8, // Rounds the ends of the bars
+            borderSkipped: false,
+            barPercentage: 0.75 // Makes the bars slightly sleeker
         }] 
     }, 
     options: { 
-        indexAxis: 'y', 
+        indexAxis: 'y', // Keeps it a horizontal bar chart
         responsive: true,
         maintainAspectRatio: false,
         plugins: { 
-            legend: { display: false } 
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: 'rgba(0,0,0,0.8)',
+                titleFont: { family: 'Inter', size: 13 },
+                bodyFont: { family: 'Inter', size: 14, weight: 'bold' },
+                padding: 10,
+                cornerRadius: 8,
+                displayColors: false
+            }
         },
         scales: {
             x: {
                 beginAtZero: true,
                 suggestedMax: 3, 
+                grid: {
+                    color: 'rgba(0,0,0,0.05)', // Super subtle vertical lines
+                    drawBorder: false
+                },
                 ticks: { 
                     stepSize: 1,
-                    precision: 0 
+                    precision: 0,
+                    font: { family: 'Inter', size: 12, weight: '600' },
+                    color: '#718096'
                 }
             },
             y: {
+                grid: {
+                    display: false, // Hides horizontal lines for a cleaner look
+                    drawBorder: false
+                },
                 ticks: {
                     autoSkip: false,
-                    font: {
-                        size: 11,
-                        weight: '600'
-                    }
+                    font: { family: 'Inter', size: 11, weight: '700' },
+                    color: '#2d3748'
                 }
             }
         },
         layout: {
-            padding: {
-                left: 10,
-                right: 20,
-                top: 10,
-                bottom: 10
-            }
+            padding: { left: 5, right: 15, top: 10, bottom: 5 }
         }
     } 
   });
+
 </script>
 </body>
 </html>
