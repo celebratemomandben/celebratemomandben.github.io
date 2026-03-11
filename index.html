@@ -120,6 +120,30 @@
             width: 100% !important;
             height: 100% !important;
         }
+        /* Fullscreen Chat Modifier */
+/* Fullscreen Chat Modifier */
+.fullscreen-chat {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100dvh !important; /* Better for mobile screens */
+    box-sizing: border-box !important; /* Keeps padding from pushing content off-screen */
+    max-width: none !important;
+    z-index: 10000;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg); /* Solid background hides the rest of the app better */
+}
+
+.fullscreen-chat #chatMessages {
+    flex-grow: 1;
+    height: 0 !important; /* Forces the scrolling to stay within this box */
+    max-height: none;
+    overflow-y: auto;
+}
     </style>
 </head>
 <body>
@@ -171,9 +195,12 @@
             </div>
         </div>
 
-        <div class="bento-item chat-module">
-            <span class="step-header">Step 2: 💬 CHAT WITH FAM!</span>
-            <div id="chatMessages"></div>
+<div class="bento-item chat-module">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-shrink: 0;">
+        <span class="step-header" style="margin-bottom: 0;">Step 2: 💬 CHAT WITH FAM!</span>
+        <button id="fsToggleBtn" onclick="toggleChatFullscreen()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); line-height: 1;" title="Toggle Fullscreen">⛶</button>
+    </div>
+    <div id="chatMessages"></div>
             <div id="replyingToBar">
                 <span id="replyText">Replying to...</span>
                 <span onclick="cancelReply()" style="cursor:pointer; font-weight:bold;">✕</span>
@@ -348,6 +375,18 @@
     allMsgs.filter(r => r.parentId === m.id).forEach(r => { renderMessage(r, room, container, currentUser, allMsgs); });
   }
 
+window.toggleChatFullscreen = () => {
+    const chatModule = document.querySelector('.chat-module');
+    const btn = document.getElementById('fsToggleBtn');
+    
+    chatModule.classList.toggle('fullscreen-chat');
+    
+    if (chatModule.classList.contains('fullscreen-chat')) {
+        btn.innerHTML = '✖'; // Switch to Close 'X'
+    } else {
+        btn.innerHTML = '⛶'; // Switch back to expand icon
+    }
+};
   onValue(ref(db, 'globalChat'), (snap) => {
     const chatBox = document.getElementById('chatMessages'); chatBox.innerHTML = "";
     const currentUser = localStorage.getItem('family_voterName');
