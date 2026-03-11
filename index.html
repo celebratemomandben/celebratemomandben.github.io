@@ -9,6 +9,7 @@
         :root {
             --primary: #0083B8; --accent: #D9534F; --bg: #f0f4f8;
             --glass: rgba(255, 255, 255, 0.9); --gold: #f39c12;
+            --active-bg: #e0f2fe;
         }
         body { 
             font-family: 'Inter', sans-serif; 
@@ -31,6 +32,7 @@
         
         .user-controls { display: none; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 25px; }
         .logout-link { color: var(--accent); cursor: pointer; font-weight: bold; text-decoration: underline; font-size: 0.85rem; }
+        .how-to-blurb { max-width: 600px; font-size: 0.85rem; color: #555; text-align: center; line-height: 1.4; background: rgba(255,255,255,0.4); padding: 10px; border-radius: 10px; }
 
         .bento-grid { display: none; gap: 15px; grid-template-areas: "video" "info" "chat" "poll" "voters" "chart"; }
         .unlocked { display: grid !important; }
@@ -43,33 +45,48 @@
         .chat-module { grid-area: chat; } .poll-module { grid-area: poll; } .voters-module { grid-area: voters; } .chart-module { grid-area: chart; }
 
         .bento-item { background: var(--glass); backdrop-filter: blur(12px); border-radius: 20px; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.05); overflow: hidden; }
-        
+        #locPicker { width: 100%; border: 3px solid var(--primary); background: var(--active-bg); font-weight: 800; margin-bottom: 15px; cursor: pointer; color: var(--primary); }
+
         .video-player { width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
         .video-player iframe { position: absolute; width: 100%; height: 100%; border: none; top:0; left:0; }
 
-        /* CHAT SYSTEM */
-        #chatMessages { 
-            height: 400px; overflow-y: auto; margin: 10px 0; padding-right: 10px;
-            scrollbar-width: thin; scrollbar-color: #cbd5e0 transparent;
-        }
+        #chatMessages { height: 400px; overflow-y: auto; margin: 10px 0; padding-right: 10px; scrollbar-width: thin; scrollbar-color: #cbd5e0 transparent; }
         #chatMessages::-webkit-scrollbar { width: 6px; }
-        #chatMessages::-webkit-scrollbar-track { background: transparent; }
         #chatMessages::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 10px; }
-
         .chat-header { background: #edf2f7; padding: 6px 12px; font-size: 0.7rem; font-weight: bold; border-radius: 20px; margin: 15px 0 8px 0; color: #4a5568; text-transform: uppercase; }
-        .chat-msg { font-size: 0.85rem; padding: 8px 0; border-bottom: 1px solid #f0f0f0; position: relative; }
+        .chat-msg { font-size: 0.85rem; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
         .reply-btn { font-size: 0.7rem; color: var(--primary); cursor: pointer; text-decoration: underline; margin-left: 10px; font-weight: 600; }
         .is-reply { margin-left: 20px; border-left: 3px solid var(--primary); padding-left: 12px; background: rgba(0,0,0,0.02); margin-top: 4px; border-radius: 0 8px 8px 0; }
         #replyingToBar { display: none; background: #fff3cd; padding: 8px 12px; font-size: 0.8rem; border-radius: 10px; margin-bottom: 8px; justify-content: space-between; align-items: center; }
 
-        /* GOOGLE REVIEWS STYLING */
-        .review-card { background: #fff; padding: 12px; border-radius: 10px; margin-top: 10px; border: 1px solid #e1e8ed; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .review-card { background: #fff; padding: 12px; border-radius: 10px; margin-top: 10px; border: 1px solid #e1e8ed; }
         .review-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
-        .review-stars { color: var(--gold); font-size: 0.9rem; letter-spacing: 1px; }
+        .review-stars { color: var(--gold); font-size: 0.9rem; }
         .review-user { font-weight: 700; font-size: 0.8rem; color: #333; }
         .review-text { font-size: 0.85rem; line-height: 1.4; color: #444; }
 
-        /* VOTING & STATS */
+        /* FIXED: POLL BUTTONS - UNIFORM HEIGHT & CENTERED */
+        .selection-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+            gap: 10px; 
+        }
+        .vote-card input { display: none; }
+        .vote-card label { 
+            display: flex; align-items: center; justify-content: center; 
+            height: 50px; /* Fixed height to prevent stretching */
+            padding: 5px 10px; 
+            background: #fff; border-radius: 10px; text-align: center; 
+            cursor: pointer; border: 2px solid #eee; font-size: 0.8rem; 
+            font-weight: 800; transition: all 0.2s ease;
+            overflow: hidden;
+            line-height: 1.1;
+        }
+        .vote-card input:checked + label { 
+            background: var(--primary) !important; color: white !important; 
+            border-color: var(--primary) !important; 
+        }
+        
         .voter-tag { background: #e0eafc; padding: 2px 8px; border-radius: 10px; margin: 2px; font-size: 0.7rem; color: var(--primary); display: inline-block; font-weight: bold; }
         .rank-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; }
     </style>
@@ -83,6 +100,9 @@
 
     <div class="user-controls" id="userControls">
         <a class="logout-link" onclick="logout()">LOGOUT / RESET DEVICE</a>
+        <div class="how-to-blurb">
+            Research locations, chat with family, and select 3–5 picks. Buttons turn solid blue when selected!
+        </div>
     </div>
 
     <div class="auth-container" id="authBox">
@@ -94,7 +114,7 @@
 
     <div class="bento-grid" id="appBody">
         <div class="bento-item video-module">
-            <label style="font-weight: 800; color: var(--primary); font-size: 0.9rem; display: block; margin-bottom: 8px;">SELECT A LOCATION TO RESEARCH:</label>
+            <label style="font-weight: 800; color: var(--primary); font-size: 0.9rem; display: block; margin-bottom: 8px;">RESEARCH DESTINATIONS:</label>
             <select id="locPicker" onchange="loadLoc(this.value)"></select>
             <div class="video-player">
                 <iframe id="mainPlayer" src="" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -110,7 +130,7 @@
             <div id="costArea" style="font-weight:bold; color:var(--primary); margin: 10px 0; font-size:1rem;"></div>
             <p id="infoDesc" style="font-size:0.9rem; color: #555;"></p>
             <div style="margin-top:15px; border-top: 1px solid #eee; padding-top:10px;">
-                <h4 style="margin:0 0 5px 0; font-size: 0.9rem; color: #666;">Latest Google Reviews:</h4>
+                <h4 style="margin:0 0 5px 0; font-size: 0.9rem; color: #666;">Top Google Reviews:</h4>
                 <div id="reviewSection"></div>
             </div>
         </div>
@@ -133,7 +153,7 @@
 
         <div class="bento-item poll-module">
             <h3 style="text-align:center; margin-top:0;">🗳️ VOTE (CHOOSE 3-5)</h3>
-            <div id="pollOptions" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px;"></div>
+            <div id="pollOptions" class="selection-grid"></div>
             <button onclick="submitVotes()" style="width:100%; background:#2ecc71; color:white; border:none; padding:15px; border-radius:15px; font-weight:800; margin-top:10px; cursor:pointer; font-size:1.1rem;">UPDATE MY PICKS</button>
         </div>
 
@@ -153,7 +173,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getDatabase, ref, onValue, set, get, child, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-const firebaseConfig = {
+  const firebaseConfig = {
   apiKey: "AIzaSyAByJd5SpzqtK7LAA80I-nONrXQqhgG2uQ",
   authDomain: "celebratemomandben.firebaseapp.com",
   projectId: "celebratemomandben",
@@ -162,28 +182,33 @@ const firebaseConfig = {
   appId: "1:567044784692:web:dba496160575757517c061",
   measurementId: "G-6H8FYLXRG8"
 };
-
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
   const locations = [
-    { name: "Garden of the Gods", vidId: "D-ZDwccPNcg", cost: "Free", web: "https://gardenofgods.com", phone: "719-634-6666", desc: "Red rock spires. Best at sunrise.", reviews: [{u:"Sarah M.", t:"Breathtaking views and easy paved paths. Perfect for families!", s:5}, {u:"Mike D.", t:"Sunrise is a must. Parking fills up fast even in May." , s:5}] },
-    { name: "Pikes Peak Cog Railway", vidId: "tBFQgVrZkGI", cost: "$67+", web: "https://www.cograilway.com", phone: "719-685-5401", desc: "Cog train to the 14,115ft summit.", reviews: [{u:"James L.", t:"Legendary donuts at the top. Bring a heavy jacket!" , s:5}, {u:"Emily R.", t:"Smooth ride with views that don't look real.", s:4}] },
-    { name: "Cheyenne Mountain Zoo", vidId: "qOkrFI00o9k", cost: "$35+", web: "https://www.cmzoo.org", phone: "719-633-9925", desc: "Mountain-side zoo. Feed giraffes.", reviews: [{u:"Lisa K.", t:"Feeding the giraffes is an experience you won't forget.", s:5}, {u:"Tom H.", t:"Be ready for a workout. It is very steep!", s:5}] },
-    { name: "Seven Falls", vidId: "3oBjVHj4iTk", cost: "$25+", web: "https://www.sevenfalls.com", phone: "855-923-7272", desc: "Cascading falls in a canyon.", reviews: [{u:"Rick B.", t:"The night lighting makes the falls look magical.", s:5}, {u:"Amy W.", t:"224 stairs is tough but the view is worth it.", s:4}] },
-    { name: "Santa's Workshop", vidId: "T-cNRxYanxU", cost: "$35", web: "https://santas-colo.com", phone: "719-684-9432", desc: "Christmas park in May!", reviews: [{u:"Chris P.", t:"Classic charm. Kids under 8 will love every second.", s:5}, {u:"Jane S.", t:"Nostalgic and fun. A bit pricey but worth it for kids.", s:4}] },
-    { name: "Olympic Museum", vidId: "0QHfykjuoYk", cost: "$25+", web: "https://usopm.org", phone: "719-497-1234", desc: "Interactive athlete games.", reviews: [{u:"Kevin V.", t:"The interactive tech is world-class. Spent 3 hours here.", s:5}, {u:"Sports Nut", t:"Best museum in the Springs. Very accessible.", s:5}] },
-    { name: "Manitou Penny Arcade", vidId: "fDsdIW5v-RE", cost: "Pay-per-play", web: "https://manitousprings.org", phone: "719-685-5089", desc: "400+ vintage games.", reviews: [{u:"Retro Kid", t:"Games from the 1900s that still work for a penny!", s:5}, {u:"Family Traveler", t:"Take $20 in quarters and have a blast.", s:5}] },
-    { name: "Royal Gorge Bridge", vidId: "J1prZgmo67g", cost: "$35+", web: "https://royalgorgebridge.com", phone: "719-275-7507", desc: "Highest US suspension bridge.", reviews: [{u:"Adrenaline Fan", t:"Walking across is thrilling. The gondola is stunning.", s:5}, {u:"Photographer", t:"Amazing views of the canyon floor.", s:5}] },
-    { name: "Cave of the Winds", vidId: "8DWiM4ap9JY", cost: "$29+", web: "https://caveofthewinds.com", phone: "719-685-5444", desc: "Cave tours & cliff swings.", reviews: [{u:"Darkness Lover", t:"Lantern tour is spooky and fun for teens.", s:5}, {u:"The Swing", t:"The cliff swing is genuinely terrifying.", s:4}] },
-    { name: "Territory Days Fest", vidId: "_AZMHsejSQ4", cost: "Free", web: "https://shopoldcoloradocity.com", phone: "719-577-4112", desc: "Street fair May 23-25.", reviews: [{u:"Street Foodie", t:"Best turkey legs and local craft stalls.", s:5}, {u:"Local", t:"Use the free shuttle; parking is impossible.", s:4}] }
+    { name: "Garden of the Gods", vidId: "D-ZDwccPNcg", cost: "Free", web: "https://gardenofgods.com", phone: "719-634-6666", desc: "Red rock spires. Best at sunrise.", reviews: [{u:"Sarah M.", t:"Breathtaking views and easy paved paths.", s:5}, {u:"Mike D.", t:"Sunrise is a must.", s:5}] },
+    { name: "Pikes Peak Cog Railway", vidId: "tBFQgVrZkGI", cost: "$67+", web: "https://www.cograilway.com", phone: "719-685-5401", desc: "Cog train to the summit.", reviews: [{u:"James L.", t:"Legendary donuts at the top!", s:5}, {u:"Emily R.", t:"Views that don't look real.", s:4}] },
+    { name: "Cheyenne Mountain Zoo", vidId: "qOkrFI00o9k", cost: "$35+", web: "https://www.cmzoo.org", phone: "719-633-9925", desc: "Feed giraffes on a mountain.", reviews: [{u:"Lisa K.", t:"Feeding giraffes is an experience.", s:5}, {u:"Tom H.", t:"Very steep! Wear good shoes.", s:5}] },
+    { name: "Seven Falls", vidId: "3oBjVHj4iTk", cost: "$25+", web: "https://www.sevenfalls.com", phone: "855-923-7272", desc: "Waterfalls in a dramatic box canyon.", reviews: [{u:"Rick B.", t:"The night lighting is magical.", s:5}, {u:"Amy W.", t:"224 stairs is worth it.", s:4}] },
+    { name: "Santa's Workshop", vidId: "T-cNRxYanxU", cost: "$35", web: "https://santas-colo.com", phone: "719-684-9432", desc: "Vintage theme park.", reviews: [{u:"Chris P.", t:"Kids under 8 will love every second.", s:5}, {u:"Jane S.", t:"Nostalgic and fun.", s:4}] },
+    { name: "Olympic Museum", vidId: "0QHfykjuoYk", cost: "$25+", web: "https://usopm.org", phone: "719-497-1234", desc: "Interactive athlete games.", reviews: [{u:"Kevin V.", t:"The tech is world-class.", s:5}, {u:"Sports Nut", t:"Very accessible.", s:5}] },
+    { name: "Manitou Penny Arcade", vidId: "fDsdIW5v-RE", cost: "Pay-per-play", web: "https://manitousprings.org", phone: "719-685-5089", desc: "400+ vintage games.", reviews: [{u:"Retro Kid", t:"Penny games still exist!", s:5}, {u:"Traveler", t:"Bring $20 in quarters.", s:5}] },
+    { name: "Royal Gorge Bridge", vidId: "J1prZgmo67g", cost: "$35+", web: "https://royalgorgebridge.com", phone: "719-275-7507", desc: "Highest US suspension bridge.", reviews: [{u:"Adrenaline Fan", t:"Walking across is thrilling.", s:5}, {u:"Photographer", t:"Amazing views.", s:5}] },
+    { name: "Cave of the Winds", vidId: "8DWiM4ap9JY", cost: "$29+", web: "https://caveofthewinds.com", phone: "719-685-5444", desc: "Cave tours & cliff swings.", reviews: [{u:"Darkness Lover", t:"Lantern tour is spooky.", s:5}, {u:"The Swing", t:"Genuinely terrifying.", s:4}] },
+    { name: "Territory Days Fest", vidId: "_AZMHsejSQ4", cost: "Free", web: "https://shopoldcoloradocity.com", phone: "719-577-4112", desc: "Street fair May 23-25.", reviews: [{u:"Street Foodie", t:"Best turkey legs ever.", s:5}, {u:"Local", t:"Use the free shuttle bus.", s:4}] }
   ];
 
   let currentLoc = locations[0], replyToId = null, replyRoom = "General";
   const picker = document.getElementById('locPicker');
+  const pollOptions = document.getElementById('pollOptions');
+
   locations.forEach((l, i) => { 
     picker.innerHTML += `<option value="${i}">${l.name}</option>`; 
-    document.getElementById('pollOptions').innerHTML += `<div style="display:block; padding:10px; background:#fff; border-radius:10px; text-align:center; border:2px solid #eee; font-weight:bold; font-size:0.8rem;"><input type="checkbox" class="vote-check" id="v-${i}" value="${l.name}" style="margin-right:5px;"><label for="v-${i}">${l.name}</label></div>`;
+    pollOptions.innerHTML += `
+        <div class="vote-card">
+            <input type="checkbox" class="vote-check" id="v-${i}" value="${l.name}">
+            <label for="v-${i}">${l.name}</label>
+        </div>`;
   });
 
   window.onload = () => { if(localStorage.getItem('family_voterName')) unlockApp(); };
@@ -197,17 +222,18 @@ const firebaseConfig = {
   setInterval(updateCountdown, 60000); updateCountdown();
 
   window.unlockApp = async function() {
-    const n = document.getElementById('voterName').value.trim().toUpperCase() || localStorage.getItem('family_voterName');
-    if (n && (document.getElementById('voterPass').value === "rockies" || localStorage.getItem('family_voterPass'))) {
-        localStorage.setItem('family_voterName', n); localStorage.setItem('family_voterPass', "rockies");
+    const nInput = document.getElementById('voterName').value.trim().toUpperCase() || localStorage.getItem('family_voterName');
+    const pInput = document.getElementById('voterPass').value.trim().toLowerCase();
+    if (nInput && (pInput === "rockies" || localStorage.getItem('family_voterPass'))) {
+        localStorage.setItem('family_voterName', nInput); localStorage.setItem('family_voterPass', "rockies");
         document.getElementById('appBody').classList.add('unlocked');
         document.getElementById('authBox').style.display = "none";
         document.getElementById('userHubBanner').style.display = "block";
-        document.getElementById('userHubBanner').innerText = `${n}'S TRIP HUB`;
+        document.getElementById('userHubBanner').innerText = `${nInput}'S TRIP HUB`;
         document.getElementById('userControls').style.display = "flex";
         loadLoc(0);
-        const s = await get(child(ref(db), `userVotes/${n}`));
-        if (s.exists()) s.val().forEach(v => { const el = document.querySelector(`.vote-check[value="${v}"]`); if(el) el.checked = true; });
+        const snap = await get(child(ref(db), `userVotes/${nInput}`));
+        if (snap.exists()) snap.val().forEach(v => { const el = document.querySelector(`.vote-check[value="${v}"]`); if(el) el.checked = true; });
     }
   }
 
@@ -219,16 +245,7 @@ const firebaseConfig = {
     document.getElementById('contextName').innerText = loc.name;
     document.getElementById('costArea').innerText = "AVG COST: " + loc.cost;
     document.getElementById('lnkWeb').href = loc.web; document.getElementById('txtPhone').innerText = "📞 " + loc.phone;
-    
-    document.getElementById('reviewSection').innerHTML = loc.reviews.map(r => `
-        <div class="review-card">
-            <div class="review-meta">
-                <span class="review-user">${r.u}</span>
-                <span class="review-stars">${"★".repeat(r.s)}</span>
-            </div>
-            <div class="review-text">"${r.t}"</div>
-        </div>
-    `).join('');
+    document.getElementById('reviewSection').innerHTML = loc.reviews.map(r => `<div class="review-card"><div class="review-meta"><span class="review-user">${r.u}</span><span class="review-stars">${"★".repeat(r.s)}</span></div><div class="review-text">"${r.t}"</div></div>`).join('');
   };
 
   window.setReply = (id, user, room) => {
@@ -250,7 +267,7 @@ const firebaseConfig = {
 
   onValue(ref(db, 'globalChat'), (snap) => {
     const chatBox = document.getElementById('chatMessages'); chatBox.innerHTML = "";
-    let msgs = []; snap.forEach(c => { let d = c.val(); d.id = c.key; d.time = d.time || 0; msgs.push(d); });
+    let msgs = []; snap.forEach(c => { let d = c.val(); d.id = c.key; msgs.push(d); });
     msgs.sort((a,b) => b.time - a.time);
     let lastRoom = "";
     msgs.forEach(d => {
@@ -273,13 +290,19 @@ const firebaseConfig = {
   onValue(ref(db, 'userVotes'), (snap) => {
     const data = snap.val() || {}; const counts = {}; const supporters = {};
     locations.forEach(l => { counts[l.name] = 0; supporters[l.name] = []; });
-    Object.entries(data).forEach(([u, l]) => { l.forEach(p => { if(counts[p] !== undefined) { counts[p]++; supporters[p].push(u); } })});
+    Object.entries(data).forEach(([u, l]) => { 
+        l.forEach(p => { 
+            if(counts[p] !== undefined) { counts[p]++; supporters[p].push(u); } 
+        });
+    });
     const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
     let h = ""; let rank = 0, lastV = -1;
     for(let i=0; i<sorted.length; i++){
-        const [n,v] = sorted[i]; if(v===0) continue;
+        const n = sorted[i][0]; const v = sorted[i][1];
+        if(v===0) continue;
         if(v!==lastV){ rank++; lastV=v; } if(rank > 5) break;
-        h += `<div style="margin-bottom:8px;"><span class="rank-badge">RANK ${rank}</span><strong>${n.toUpperCase()}</strong> (${v})<br>${supporters[n].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
+        // Robust check to fix 'toUpperCase' error
+        if(n && typeof n === 'string') h += `<div style="margin-bottom:8px;"><span class="rank-badge">RANK ${rank}</span><strong>${n.toUpperCase()}</strong> (${v})<br>${supporters[n].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
     }
     document.getElementById('voterDetails').innerHTML = h || "Voting in progress...";
     myChart.data.labels = sorted.map(e => e[0]); myChart.data.datasets[0].data = sorted.map(e => e[1]); myChart.update();
