@@ -610,8 +610,18 @@ window.toggleChatFullscreen = () => {
 
   window.submitVotes = function() {
     const v = Array.from(document.querySelectorAll('.vote-check:checked')).map(cb => cb.value);
+    
+    // Stop them if they didn't pick 3-5 items
     if (v.length < 3 || v.length > 5) return alert("SELECT 3-5 ITEMS!");
-    set(ref(db, `userVotes/${localStorage.getItem('family_voterName')}`), v); alert("VOTES UPDATED!");
+    
+    // Save their votes to Firebase
+    set(ref(db, `userVotes/${localStorage.getItem('family_voterName')}`), v); 
+    
+    // 🎉 NEW: Force the celebration animation and song to play!
+    playCelebration(true);
+    
+    // Let them know it worked
+    alert("VOTES UPDATED!");
   }
 
  
