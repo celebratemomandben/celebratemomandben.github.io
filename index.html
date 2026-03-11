@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Colorado Springs 2026 Family Hub</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -10,7 +10,13 @@
             --primary: #0083B8; --accent: #D9534F; --bg: #f0f4f8;
             --glass: rgba(255, 255, 255, 0.9);
         }
-        body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at top left, #e0eafc, #cfdef3); margin: 0; padding: clamp(10px, 2vw, 20px); color: #2d3436; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: radial-gradient(circle at top left, #e0eafc, #cfdef3); 
+            margin: 0; padding: clamp(10px, 2vw, 20px); color: #2d3436;
+            /* Prevents blue highlight on tap for a cleaner mobile feel */
+            -webkit-tap-highlight-color: transparent; 
+        }
         .container { max-width: 1300px; margin: auto; }
         
         #countdown { text-align: center; font-weight: 800; color: var(--primary); font-size: 1.1rem; margin-bottom: 5px; }
@@ -18,14 +24,22 @@
         .main-title { text-align: center; font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 900; margin: 10px 0 5px 0; letter-spacing: 1px; color: #1a1a1a; }
         .user-hub-banner { text-align: center; font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 5px; display: none; text-transform: uppercase; }
 
+        /* AUTH SECTION */
         .auth-container { max-width: 450px; margin: 0 auto 20px auto; background: var(--glass); padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .auth-input { padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin: 5px; width: 85%; text-transform: uppercase; }
+        
+        /* FIXED: Font-size 16px prevents iOS auto-zoom on focus */
+        .auth-input, input[type="text"], input[type="password"], select { 
+            padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin: 5px; width: 85%; 
+            text-transform: uppercase; font-size: 16px !important; 
+        }
+        
         .btn-unlock { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 90%; margin-top: 10px; }
         
         .user-controls { display: none; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 25px; }
         .logout-link { color: var(--accent); cursor: pointer; font-weight: bold; text-decoration: underline; font-size: 0.85rem; }
         .how-to-blurb { max-width: 600px; font-size: 0.85rem; color: #555; text-align: center; line-height: 1.4; background: rgba(255,255,255,0.4); padding: 10px; border-radius: 10px; }
 
+        /* GRID LAYOUT */
         .bento-grid { display: none; gap: 15px; grid-template-areas: "video" "info" "chat" "poll" "voters" "chart"; }
         .unlocked { display: grid !important; }
 
@@ -38,22 +52,22 @@
 
         .bento-item { background: var(--glass); backdrop-filter: blur(12px); border-radius: 20px; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.05); overflow: hidden; }
         .picker-label { display: block; font-weight: 800; color: var(--primary); margin-bottom: 8px; font-size: 0.9rem; text-transform: uppercase; }
-        #locPicker { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid var(--primary); background: white; font-weight: bold; font-size: 1rem; margin-bottom: 15px; cursor: pointer; }
+        #locPicker { width: 100%; border: 2px solid var(--primary); background: white; font-weight: bold; margin-bottom: 15px; cursor: pointer; }
 
         .video-player { width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
         .video-player iframe { position: absolute; width: 100%; height: 100%; border: none; top:0; left:0; }
 
+        /* CHAT */
         .chat-header { background: #eee; padding: 5px 10px; font-size: 0.7rem; font-weight: bold; border-radius: 5px; margin: 10px 0 5px 0; color: #666; }
         .chat-msg { font-size: 0.85rem; padding: 5px 0; border-bottom: 1px solid #f0f0f0; position: relative; }
         .reply-btn { font-size: 0.7rem; color: var(--primary); cursor: pointer; text-decoration: underline; margin-left: 10px; }
         .is-reply { margin-left: 20px; border-left: 2px solid #ddd; padding-left: 10px; background: rgba(0,0,0,0.02); }
         #replyingToBar { display: none; background: #fff3cd; padding: 5px 10px; font-size: 0.8rem; border-radius: 5px; margin-bottom: 5px; justify-content: space-between; align-items: center; }
 
-        .contact-link { color: var(--primary); text-decoration: none; font-weight: bold; font-size: 0.8rem; margin-right: 15px; }
-        .review-bubble { background: rgba(0,0,0,0.04); padding: 8px; border-radius: 10px; margin-top: 5px; font-size: 0.8rem; border-left: 3px solid var(--primary); }
+        /* VOTING */
         .selection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
         .vote-card input { display: none; }
-        .vote-card label { display: block; padding: 10px; background: #fff; border-radius: 10px; text-align: center; cursor: pointer; border: 2px solid #eee; font-size: 0.8rem; font-weight: bold; }
+        .vote-card label { display: block; padding: 12px; background: #fff; border-radius: 10px; text-align: center; cursor: pointer; border: 2px solid #eee; font-size: 0.8rem; font-weight: bold; }
         .vote-card input:checked + label { background: var(--primary); color: white; border-color: var(--primary); }
         .voter-tag { background: #e0eafc; padding: 2px 8px; border-radius: 10px; margin: 2px; font-size: 0.7rem; color: var(--primary); display: inline-block; font-weight: bold; }
         .rank-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; }
@@ -68,10 +82,9 @@
     <div id="userHubBanner" class="user-hub-banner"></div>
 
     <div class="user-controls" id="userControls">
-        <a class="logout-link" onclick="logout()">LOGOUT / RESET DEVICE</a>
+        <a class="logout-link" onclick="logout()">LOGOUT / FORGET DEVICE</a>
         <div class="how-to-blurb">
-            <strong>How to use:</strong> Watch the videos and check the info cards to research. 
-            Discuss in the chat. Select 3–5 favorites and click Update. The <strong>Top Supporters</strong> list shows who is championing the leading 5 choices (including ties!).
+            Watch the videos and check info cards. Discuss in chat. Select 3–5 favorites and click Update. Leaders show who is championing the top choices!
         </div>
     </div>
 
@@ -84,7 +97,7 @@
 
     <div class="bento-grid" id="appBody">
         <div class="bento-item video-module">
-            <label class="picker-label">Select from 10 locations below:</label>
+            <label class="picker-label">Select a location to research:</label>
             <select id="locPicker" onchange="loadLoc(this.value)"></select>
             <div class="video-player">
                 <iframe id="mainPlayer" src="" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -92,46 +105,46 @@
         </div>
 
         <div class="bento-item info-module">
-            <h2 id="infoTitle" style="margin-top:0">DESTINATION INFO</h2>
+            <h2 id="infoTitle" style="margin-top:0">INFO</h2>
             <div id="contactRow">
-                <a id="lnkWeb" href="#" target="_blank" class="contact-link">🌐 WEBSITE</a>
-                <span id="txtPhone" class="contact-link" style="color:#333">📞 PHONE</span>
+                <a id="lnkWeb" href="#" target="_blank" class="contact-link" style="font-size: 0.9rem;">🌐 WEBSITE</a>
+                <span id="txtPhone" class="contact-link" style="color:#333; font-size: 0.9rem;">📞 PHONE</span>
             </div>
-            <div id="costArea" style="font-weight:bold; color:var(--primary); margin: 8px 0; font-size:0.9rem;"></div>
-            <p id="infoDesc" style="font-size:0.85rem;"></p>
+            <div id="costArea" style="font-weight:bold; color:var(--primary); margin: 8px 0; font-size:1rem;"></div>
+            <p id="infoDesc" style="font-size:0.9rem;"></p>
             <div id="reviewSection"></div>
         </div>
 
         <div class="bento-item chat-module">
-            <h3 style="margin:0;">💬 FAMILY DISCUSSION</h3>
+            <h3 style="margin:0;">💬 CHAT</h3>
             <div id="chatMessages" style="height:200px; overflow-y:auto; margin:10px 0;"></div>
             <div id="replyingToBar">
                 <span id="replyText">Replying to...</span>
                 <span onclick="cancelReply()" style="cursor:pointer; font-weight:bold;">✕</span>
             </div>
             <div style="font-size:0.75rem; margin-bottom:5px;">
-                <input type="checkbox" id="contextLock" checked> Tag message as <span id="contextName" style="font-weight:bold">General</span>?
+                <input type="checkbox" id="contextLock" checked> Tag to <span id="contextName" style="font-weight:bold">General</span>?
             </div>
             <div style="display:flex; gap:5px;">
-                <input type="text" id="chatInput" style="flex-grow:1; padding:8px; border-radius:8px; border:1px solid #ddd;" placeholder="Share a thought...">
+                <input type="text" id="chatInput" style="flex-grow:1; padding:8px; border-radius:8px; border:1px solid #ddd;" placeholder="Type here...">
                 <button onclick="sendChat()" style="background:var(--primary); border:none; color:white; padding:8px 12px; border-radius:8px; cursor:pointer;">↑</button>
             </div>
         </div>
 
         <div class="bento-item poll-module">
-            <h3 style="text-align:center; margin-top:0;">🗳️ YOUR MUST-DO LIST (3-5 PICKS)</h3>
+            <h3 style="text-align:center; margin-top:0;">🗳️ VOTE (CHOOSE 3-5)</h3>
             <div id="pollOptions" class="selection-grid"></div>
-            <button onclick="submitVotes()" style="width:100%; background:#2ecc71; color:white; border:none; padding:15px; border-radius:15px; font-weight:800; margin-top:10px; cursor:pointer;">UPDATE MY SELECTIONS</button>
+            <button onclick="submitVotes()" style="width:100%; background:#2ecc71; color:white; border:none; padding:15px; border-radius:15px; font-weight:800; margin-top:10px; cursor:pointer; font-size: 1.1rem;">UPDATE MY PICKS</button>
         </div>
 
         <div class="bento-item voters-module">
-            <h3 style="margin-top:0;">👥 TOP SUPPORTERS (RANKS 1-5)</h3>
-            <div id="voterDetails" style="font-size:0.8rem;"></div>
+            <h3 style="margin-top:0;">👥 TOP SUPPORTERS</h3>
+            <div id="voterDetails" style="font-size:0.85rem;"></div>
         </div>
 
         <div class="bento-item chart-module">
-            <h2 style="text-align:center; margin-top:0;">📊 LEADERBOARD</h2>
-            <canvas id="voteChart" height="100"></canvas>
+            <h2 style="text-align:center; margin-top:0;">📊 FAMILY RANKING</h2>
+            <canvas id="voteChart" height="120"></canvas>
         </div>
     </div>
 </div>
@@ -140,7 +153,7 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getDatabase, ref, onValue, set, get, child, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-const firebaseConfig = {
+ const firebaseConfig = {
   apiKey: "AIzaSyAByJd5SpzqtK7LAA80I-nONrXQqhgG2uQ",
   authDomain: "celebratemomandben.firebaseapp.com",
   projectId: "celebratemomandben",
@@ -154,16 +167,16 @@ const firebaseConfig = {
   const db = getDatabase(app);
 
   const locations = [
-    { name: "Garden of the Gods", vidId: "D-ZDwccPNcg", cost: "Free", web: "https://gardenofgods.com", phone: "719-634-6666", desc: "Red rock spires.", reviews: ["Best sunrise!", "Paved paths."] },
-    { name: "Pikes Peak Cog Railway", vidId: "tBFQgVrZkGI", cost: "$67+", web: "https://www.cograilway.com", phone: "719-685-5401", desc: "Highest cog train.", reviews: ["Dress warm!", "Summit donuts!"] },
-    { name: "Cheyenne Mountain Zoo", vidId: "qOkrFI00o9k", cost: "$35+", web: "https://www.cmzoo.org", phone: "719-633-9925", desc: "Mountain zoo.", reviews: ["Feed giraffes.", "Steep hike."] },
-    { name: "Seven Falls", vidId: "3oBjVHj4iTk", cost: "$25+", web: "https://www.sevenfalls.com", phone: "855-923-7272", desc: "Box canyon waterfalls.", reviews: ["224 stairs.", "Night lights."] },
-    { name: "Santa's Workshop", vidId: "T-cNRxYanxU", cost: "$35 wristband", web: "https://santas-colo.com", phone: "719-684-9432", desc: "Vintage theme park.", reviews: ["Grandkids loved it.", "Met Santa!"] },
-    { name: "Olympic Museum", vidId: "0QHfykjuoYk", cost: "$25+", web: "https://usopm.org", phone: "719-497-1234", desc: "Interactive sports.", reviews: ["Interactive games.", "Accessible."] },
-    { name: "Manitou Penny Arcade", vidId: "fDsdIW5v-RE", cost: "Pay-per-play", web: "https://manitousprings.org", phone: "719-685-5089", desc: "400+ vintage games.", reviews: ["Take quarters!", "Nostalgic."] },
-    { name: "Royal Gorge Bridge", vidId: "J1prZgmo67g", cost: "$35+", web: "https://royalgorgebridge.com", phone: "719-275-7507", desc: "Highest US bridge.", reviews: ["Gondola included.", "Breathtaking!"] },
-    { name: "Cave of the Winds", vidId: "8DWiM4ap9JY", cost: "$29+", web: "https://caveofthewinds.com", phone: "719-685-5444", desc: "Tours & cliff swings.", reviews: ["Kids loved it.", "Terrifying swing!"] },
-    { name: "Territory Days Fest", vidId: "_AZMHsejSQ4", cost: "Free Entry", web: "https://shopoldcoloradocity.com", phone: "719-577-4112", desc: "Street fair May 23-25.", reviews: ["Turkey legs!", "Use the shuttle."] }
+    { name: "Garden of the Gods", vidId: "D-ZDwccPNcg", cost: "Free", web: "https://gardenofgods.com", phone: "719-634-6666", desc: "Red rock spires. Best at sunrise.", reviews: ["Sunrise is breathtaking.", "Paved paths for kids."] },
+    { name: "Pikes Peak Cog Railway", vidId: "tBFQgVrZkGI", cost: "$67 Adult / $57 Child", web: "https://www.cograilway.com", phone: "719-685-5401", desc: "Historic cog train to the 14,115ft summit.", reviews: ["Snow at the peak in May!", "Summit donuts are key."] },
+    { name: "Cheyenne Mountain Zoo", vidId: "qOkrFI00o9k", cost: "$35 (Timed Entry)", web: "https://www.cmzoo.org", phone: "719-633-9925", desc: "Mountain-side zoo. Feed the giraffes.", reviews: ["Feeding giraffes is a must.", "Steep walking trails."] },
+    { name: "Seven Falls", vidId: "3oBjVHj4iTk", cost: "$25 Adult / $19 Child", web: "https://www.sevenfalls.com", phone: "855-923-7272", desc: "Waterfalls in a dramatic box canyon.", reviews: ["224 stairs is a workout!", "Night lights are magical."] },
+    { name: "Santa's Workshop", vidId: "T-cNRxYanxU", cost: "$35 wristband", web: "https://santas-colo.com", phone: "719-684-9432", desc: "Vintage Christmas park. Great for kids.", reviews: ["Kids under 10 loved it.", "Nostalgic charm."] },
+    { name: "Olympic Museum", vidId: "0QHfykjuoYk", cost: "$25 - $30", web: "https://usopm.org", phone: "719-497-1234", desc: "High-tech interactive sports museum.", reviews: ["Archery game is fun.", "Indoor rain backup."] },
+    { name: "Manitou Penny Arcade", vidId: "fDsdIW5v-RE", cost: "Pay-per-play", web: "https://manitousprings.org", phone: "719-685-5089", desc: "400+ vintage games from the 1900s.", reviews: ["Bring $20 in quarters!", "Penny games still exist."] },
+    { name: "Royal Gorge Bridge", vidId: "J1prZgmo67g", cost: "$35 Adult / $30 Child", web: "https://royalgorgebridge.com", phone: "719-275-7507", desc: "USA's highest suspension bridge.", reviews: ["Gondola is beautiful.", "Bridge sways in the wind."] },
+    { name: "Cave of the Winds", vidId: "8DWiM4ap9JY", cost: "$29 Adult / $19 Child", web: "https://caveofthewinds.com", phone: "719-685-5444", desc: "Cave tours and high-speed cliff swings.", reviews: ["Spooky lantern tour!", "Swing is terrifying."] },
+    { name: "Territory Days Fest", vidId: "_AZMHsejSQ4", cost: "Free Entry", web: "https://shopoldcoloradocity.com", phone: "719-577-4112", desc: "Street fair May 23-25. 180 vendors.", reviews: ["Huge turkey legs!", "Use the shuttle bus."] }
   ];
 
   let currentLoc = locations[0];
@@ -212,15 +225,12 @@ const firebaseConfig = {
     if (rawName && passInput === "rockies") {
         localStorage.setItem('family_voterName', rawName);
         localStorage.setItem('family_voterPass', passInput);
-
         document.getElementById('appBody').classList.add('unlocked');
         document.getElementById('authBox').style.display = "none";
         document.getElementById('userHubBanner').style.display = "block";
         document.getElementById('userHubBanner').innerText = `${rawName}'S TRIP HUB`;
         document.getElementById('userControls').style.display = "flex";
-        
         loadLoc(0);
-        
         const snap = await get(child(ref(db), `userVotes/${rawName}`));
         if (snap.exists()) {
             const v = snap.val();
@@ -235,15 +245,14 @@ const firebaseConfig = {
     document.getElementById('infoTitle').innerText = loc.name.toUpperCase();
     document.getElementById('infoDesc').innerText = loc.desc;
     document.getElementById('contextName').innerText = loc.name;
-    document.getElementById('costArea').innerText = "EST. COST: " + loc.cost;
+    document.getElementById('costArea').innerText = "AVG COST: " + loc.cost;
     document.getElementById('lnkWeb').href = loc.web;
     document.getElementById('txtPhone').innerText = "📞 " + loc.phone;
     document.getElementById('reviewSection').innerHTML = loc.reviews.map(r => `<div class="review-bubble">"${r}"</div>`).join('');
   };
 
   window.setReply = (id, user, room) => {
-    replyToId = id;
-    replyRoom = room;
+    replyToId = id; replyRoom = room;
     document.getElementById('replyingToBar').style.display = "flex";
     document.getElementById('replyText').innerText = `Replying to ${user} in [${room}]...`;
     document.getElementById('contextLock').disabled = true;
@@ -261,9 +270,7 @@ const firebaseConfig = {
     const name = document.getElementById('voterName').value.trim().toUpperCase();
     if(msg && name) {
         const room = replyToId ? replyRoom : (document.getElementById('contextLock').checked ? currentLoc.name : "General");
-        push(ref(db, 'globalChat'), { 
-            user: name, msg, room, time: serverTimestamp(), parentId: replyToId 
-        });
+        push(ref(db, 'globalChat'), { user: name, msg, room, time: serverTimestamp(), parentId: replyToId });
         document.getElementById('chatInput').value = "";
         cancelReply();
     }
@@ -271,18 +278,13 @@ const firebaseConfig = {
 
   onValue(ref(db, 'globalChat'), (snap) => {
     const chatBox = document.getElementById('chatMessages'); chatBox.innerHTML = "";
-    let msgs = []; 
-    snap.forEach(c => { let d = c.val(); d.id = c.key; d.time = d.time || 0; msgs.push(d); });
+    let msgs = []; snap.forEach(c => { let d = c.val(); d.id = c.key; d.time = d.time || 0; msgs.push(d); });
     msgs.sort((a,b) => b.time - a.time);
     let lastRoom = "";
     msgs.forEach(d => {
         if (!d.parentId) {
             if(d.room !== lastRoom) { chatBox.innerHTML += `<div class="chat-header">${d.room.toUpperCase()}</div>`; lastRoom = d.room; }
-            chatBox.innerHTML += `
-                <div class="chat-msg" id="msg-${d.id}">
-                    <strong>${d.user}:</strong> ${d.msg}
-                    <span class="reply-btn" onclick="setReply('${d.id}', '${d.user}', '${d.room}')">reply</span>
-                </div>`;
+            chatBox.innerHTML += `<div class="chat-msg"><strong>${d.user}:</strong> ${d.msg}<span class="reply-btn" onclick="setReply('${d.id}', '${d.user}', '${d.room}')">reply</span></div>`;
             let replies = msgs.filter(r => r.parentId === d.id);
             replies.reverse().forEach(r => {
                 chatBox.innerHTML += `<div class="chat-msg is-reply"><strong>${r.user}:</strong> ${r.msg}</div>`;
@@ -302,34 +304,14 @@ const firebaseConfig = {
     const data = snap.val() || {}; const counts = {}; const supporters = {};
     locations.forEach(l => { counts[l.name] = 0; supporters[l.name] = []; });
     Object.entries(data).forEach(([u, l]) => { l.forEach(p => { counts[p]++; supporters[p].push(u); })});
-    
-    // SORTING & TIE-BREAKING LOGIC FOR TOP 5
     const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
-    
-    let h = "";
-    let currentRank = 0;
-    let lastVoteCount = -1;
-    let displayedRanks = 0;
-
-    for(let i = 0; i < sorted.length; i++) {
-        const [name, voteCount] = sorted[i];
-        if (voteCount === 0) continue;
-
-        if (voteCount !== lastVoteCount) {
-            currentRank++;
-            lastVoteCount = voteCount;
-        }
-
-        if (currentRank > 5) break;
-
-        h += `<div style="margin-bottom:8px;">
-                <span class="rank-badge">RANK ${currentRank}</span> 
-                <strong>${name.toUpperCase()}</strong> (${voteCount} votes)<br>
-                ${supporters[name].map(p => `<span class="voter-tag">${p}</span>`).join("")}
-              </div>`;
+    let h = ""; let rank = 0; let lastV = -1;
+    for(let i=0; i<sorted.length; i++){
+        const [n,v] = sorted[i]; if(v===0) continue;
+        if(v!==lastV){ rank++; lastV=v; } if(rank > 5) break;
+        h += `<div style="margin-bottom:8px;"><span class="rank-badge">RANK ${rank}</span><strong>${n.toUpperCase()}</strong> (${v})<br>${supporters[n].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
     }
-
-    document.getElementById('voterDetails').innerHTML = h || "Waiting for votes...";
+    document.getElementById('voterDetails').innerHTML = h || "Voting in progress...";
     myChart.data.labels = sorted.map(e => e[0]);
     myChart.data.datasets[0].data = sorted.map(e => e[1]);
     myChart.update();
