@@ -19,32 +19,28 @@
         }
         .container { max-width: 1300px; margin: auto; }
         
-        #countdown { text-align: center; font-weight: 800; color: var(--primary); font-size: 1.1rem; margin-bottom: 5px; }
         .main-title { text-align: center; font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 900; margin: 10px 0 5px 0; letter-spacing: 1px; color: #1a1a1a; }
         .user-hub-banner { text-align: center; font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 5px; display: none; text-transform: uppercase; }
 
         .auth-container { max-width: 450px; margin: 0 auto 20px auto; background: var(--glass); padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-/* Keeps login and selectors uppercase, but lets chat be natural */
-.auth-input, #voterName, #voterPass, select { 
-    text-transform: uppercase; 
-}
+        
+        /* Unified Step Header Style */
+        .step-header {
+            font-weight: 800; 
+            color: var(--primary); 
+            font-size: 0.9rem; 
+            display: block; 
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
 
-/* Base styles for all inputs */
-input[type="text"], input[type="password"], select { 
-    padding: 12px; 
-    border-radius: 8px; 
-    border: 1px solid #ddd; 
-    margin: 5px; 
-    width: 85%; 
-    font-size: 16px !important; 
-}
+        .auth-input, #voterName, #voterPass, select { text-transform: uppercase; }
 
-/* Specific fix for chat input width and case */
-#chatInput { 
-    text-transform: none !important; 
-    width: auto; 
-    flex-grow: 1; 
-}
+        input[type="text"], input[type="password"], select { 
+            padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin: 5px; width: 85%; font-size: 16px !important; 
+        }
+
+        #chatInput { text-transform: none !important; width: auto; flex-grow: 1; }
         .btn-unlock { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 90%; margin-top: 10px; }
         
         .user-controls { display: none; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 25px; }
@@ -71,10 +67,10 @@ input[type="text"], input[type="password"], select {
         #chatMessages { height: 400px; overflow-y: auto; margin: 10px 0; padding-right: 10px; scrollbar-width: thin; scrollbar-color: #cbd5e0 transparent; }
         #chatMessages::-webkit-scrollbar { width: 6px; }
         #chatMessages::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 10px; }
-        .chat-header { background: #edf2f7; padding: 6px 12px; font-size: 0.7rem; font-weight: bold; border-radius: 20px; margin: 15px 0 8px 0; color: #4a5568; text-transform: uppercase; }
-        .chat-msg { font-size: 0.85rem; padding: 8px 0; border-bottom: 1px solid #f0f0f0; }
+        .chat-header { background: #edf2f7; padding: 6px 12px; font-size: 0.75rem; font-weight: 800; border-radius: 8px; margin: 20px 0 10px 0; color: #2d3748; text-transform: uppercase; letter-spacing: 0.5px; }
+        .chat-msg { font-size: 0.85rem; padding: 10px 0 10px 15px; border-bottom: 1px solid #f0f0f0; position: relative; }
         .reply-btn { font-size: 0.7rem; color: var(--primary); cursor: pointer; text-decoration: underline; margin-left: 10px; font-weight: 600; }
-        .is-reply { margin-left: 20px; border-left: 3px solid var(--primary); padding-left: 12px; background: rgba(0,0,0,0.02); margin-top: 4px; border-radius: 0 8px 8px 0; }
+        .is-reply { margin-left: 35px; border-left: 3px solid var(--primary); padding-left: 15px; background: rgba(0,0,0,0.02); margin-top: 4px; border-radius: 0 8px 8px 0; }
         #replyingToBar { display: none; background: #fff3cd; padding: 8px 12px; font-size: 0.8rem; border-radius: 10px; margin-bottom: 8px; justify-content: space-between; align-items: center; }
 
         .review-card { background: #fff; padding: 12px; border-radius: 10px; margin-top: 10px; border: 1px solid #e1e8ed; }
@@ -98,111 +94,45 @@ input[type="text"], input[type="password"], select {
         
         .voter-tag { background: #e0f2fe; padding: 2px 8px; border-radius: 10px; margin: 2px; font-size: 0.7rem; color: var(--primary); display: inline-block; font-weight: bold; border: 1px solid #bae6fd; }
         .rank-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; font-weight: 900; }
-    /* Standard message indentation under the room header */
-.chat-msg { 
-    font-size: 0.85rem; 
-    padding: 10px 0 10px 15px; /* Added left padding for global indent */
-    border-bottom: 1px solid #f0f0f0; 
-    position: relative;
-}
 
-/* Deeper indentation for replies (nested comments) */
-.is-reply { 
-    margin-left: 35px; /* Pushes replies further right */
-    border-left: 3px solid var(--primary); 
-    padding-left: 15px; 
-    background: rgba(0,0,0,0.02); 
-    margin-top: 4px; 
-    border-radius: 0 8px 8px 0; 
-}
-
-/* Ensure the header stands out as the anchor point */
-.chat-header { 
-    background: #edf2f7; 
-    padding: 8px 12px; 
-    font-size: 0.75rem; 
-    font-weight: 800; 
-    border-radius: 8px; 
-    margin: 20px 0 10px 0; 
-    color: #2d3748; 
-    text-transform: uppercase; 
-    letter-spacing: 0.5px;
-}
-/* Cooler Countdown Styling */
-.countdown-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-.time-unit {
-    background: #1a1a1a;
-    color: #fff;
-    padding: 8px 12px;
-    border-radius: 10px;
-    min-width: 50px;
-    box-shadow: 0 4px 15px rgba(0, 131, 184, 0.3);
-    border-bottom: 3px solid var(--primary);
-}
-.time-value {
-    display: block;
-    font-size: 1.5rem;
-    font-weight: 900;
-    line-height: 1;
-}
-.time-label {
-    display: block;
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    color: var(--primary);
-    font-weight: 700;
-}
-#countdown { animation: pulse 2s infinite; }
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-    100% { transform: scale(1); }
-}
+        /* Countdown */
+        .countdown-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
+        .time-unit { background: #1a1a1a; color: #fff; padding: 8px 12px; border-radius: 10px; min-width: 50px; box-shadow: 0 4px 15px rgba(0, 131, 184, 0.3); border-bottom: 3px solid var(--primary); }
+        .time-value { display: block; font-size: 1.5rem; font-weight: 900; line-height: 1; }
+        .time-label { display: block; font-size: 0.6rem; text-transform: uppercase; color: var(--primary); font-weight: 700; }
+        #countdown { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div id="countdown" class="countdown-container">
-    <div class="time-unit">
-        <span class="time-value" id="cd-d">00</span>
-        <span class="time-label">Days</span>
+        <div class="time-unit"><span class="time-value" id="cd-d">00</span><span class="time-label">Days</span></div>
+        <div class="time-unit"><span class="time-value" id="cd-h">00</span><span class="time-label">Hrs</span></div>
+        <div class="time-unit"><span class="time-value" id="cd-m">00</span><span class="time-label">Min</span></div>
     </div>
-    <div class="time-unit">
-        <span class="time-value" id="cd-h">00</span>
-        <span class="time-label">Hrs</span>
-    </div>
-    <div class="time-unit">
-        <span class="time-value" id="cd-m">00</span>
-        <span class="time-label">Min</span>
-    </div>
-</div>
     <h1 class="main-title">COLORADO SPRINGS '26</h1>
     <div id="userHubBanner" class="user-hub-banner"></div>
 
     <div class="user-controls" id="userControls">
         <a class="logout-link" onclick="logout()">LOGOUT / RESET DEVICE</a>
         <div class="how-to-blurb">
-            Research locations, chat with family, and select 3–5 picks. 
-            <br>Update picks upon return! (buttons turn solid blue when selected!)
+            Explore locations, chat with family, and select 3–5 picks. 
+            <br>Update your picks and comments upon return! 
         </div>
     </div>
 
     <div class="auth-container" id="authBox">
         <h2 style="margin:0 0 15px 0">Family Login</h2>
         <input type="text" id="voterName" class="auth-input" placeholder="FIRST NAME">
-        <input type="password" id="voterPass" class="auth-input" placeholder="ENTER PASSCODE(ALL Cases allowed)">
+        <input type="password" id="voterPass" class="auth-input" placeholder="ENTER PASSCODE">
         <button onclick="unlockApp()" class="btn-unlock">UNLOCK HUB</button>
     </div>
 
     <div class="bento-grid" id="appBody">
         <div class="bento-item video-module">
-            <label style="font-weight: 800; color: var(--primary); font-size: 0.9rem; display: block; margin-bottom: 8px;">Step 1: EXPLORE DESTINATIONS (Click below dropdown)</label>
+            <span class="step-header">Step 1: EXPLORE (Click below dropdown)</span>
             <select id="locPicker" onchange="loadLoc(this.value)"></select>
             <div class="video-player">
                 <iframe id="mainPlayer" src="" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -224,7 +154,7 @@ input[type="text"], input[type="password"], select {
         </div>
 
         <div class="bento-item chat-module">
-            <h3 style="margin:0;">STEP 2:  💬 CHAT ABOUT FAMILY TRIP</h3>
+            <span class="step-header">Step 2: 💬 CHAT ABOUT FAMILY TRIP</span>
             <div id="chatMessages"></div>
             <div id="replyingToBar">
                 <span id="replyText">Replying to...</span>
@@ -240,7 +170,7 @@ input[type="text"], input[type="password"], select {
         </div>
 
         <div class="bento-item poll-module">
-            <h3 style="text-align:center; margin-top:0;">STEP 3: 🗳️ VOTE (CHOOSE 3-5)</h3>
+            <span class="step-header">Step 3: 🗳️ VOTE (CHOOSE 3-5)</span>
             <div id="pollOptions" class="selection-grid"></div>
             <button onclick="submitVotes()" style="width:100%; background:#2ecc71; color:white; border:none; padding:15px; border-radius:15px; font-weight:800; margin-top:10px; cursor:pointer; font-size:1.1rem;">UPDATE MY PICKS</button>
         </div>
@@ -303,32 +233,25 @@ input[type="text"], input[type="password"], select {
   window.onload = () => { if(localStorage.getItem('family_voterName')) unlockApp(); };
   window.logout = () => { localStorage.clear(); location.reload(); };
 
- function updateCountdown() {
+  function updateCountdown() {
     const target = new Date("May 23, 2026 00:00:00").getTime();
     const now = new Date().getTime();
     const diff = target - now;
-
-    if (diff <= 0) {
-        document.getElementById('countdown').innerHTML = "🚀 COLORADO TIME!";
-        return;
-    }
-
+    if (diff <= 0) { document.getElementById('countdown').innerHTML = "🚀 COLORADO TIME!"; return; }
     const d = Math.floor(diff / (1000 * 60 * 60 * 24));
     const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
     document.getElementById('cd-d').innerText = d.toString().padStart(2, '0');
     document.getElementById('cd-h').innerText = h.toString().padStart(2, '0');
     document.getElementById('cd-m').innerText = m.toString().padStart(2, '0');
-}
-setInterval(updateCountdown, 60000); 
-updateCountdown();
+  }
+  setInterval(updateCountdown, 60000); updateCountdown();
 
   window.unlockApp = async function() {
     const nInput = (document.getElementById('voterName').value.trim().toUpperCase()) || localStorage.getItem('family_voterName');
     const pInput = document.getElementById('voterPass').value.trim().toLowerCase();
-    if (nInput && (pInput === "rockies" || localStorage.getItem('family_voterPass'))) {
-        localStorage.setItem('family_voterName', nInput); localStorage.setItem('family_voterPass', "rockies");
+    if (nInput && (pInput === "congrats" || localStorage.getItem('family_voterPass'))) {
+        localStorage.setItem('family_voterName', nInput); localStorage.setItem('family_voterPass', "congrats");
         document.getElementById('appBody').classList.add('unlocked');
         document.getElementById('authBox').style.display = "none";
         document.getElementById('userHubBanner').style.display = "block";
@@ -351,8 +274,6 @@ updateCountdown();
     document.getElementById('reviewSection').innerHTML = loc.reviews.map(r => `<div class="review-card"><div class="review-meta"><span class="review-user">${r.u}</span><span class="review-stars">${"★".repeat(r.s)}</span></div><div class="review-text">"${r.t}"</div></div>`).join('');
   };
 
-  /* --- CHAT FUNCTIONS --- */
-
   window.setReply = (id, user, room) => {
     replyToId = id; replyRoom = room || "General";
     document.getElementById('replyingToBar').style.display = "flex";
@@ -363,22 +284,15 @@ updateCountdown();
   window.editMsg = (id, oldMsg) => {
     editId = id;
     const input = document.getElementById('chatInput');
-    input.value = oldMsg;
-    input.style.border = "2px solid var(--gold)";
-    input.focus();
+    input.value = oldMsg; input.style.border = "2px solid var(--gold)"; input.focus();
     document.getElementById('replyingToBar').style.display = "flex";
     document.getElementById('replyText').innerText = `Editing message...`;
   };
 
-  window.deleteMsg = (id) => {
-    if(confirm("Delete this message permanently?")) {
-        remove(ref(db, `globalChat/${id}`));
-    }
-  };
+  window.deleteMsg = (id) => { if(confirm("Delete this message permanently?")) { remove(ref(db, `globalChat/${id}`)); } };
 
   window.cancelReply = () => { 
-    replyToId = null; 
-    editId = null;
+    replyToId = null; editId = null;
     document.getElementById('replyingToBar').style.display = "none"; 
     document.getElementById('contextLock').disabled = false; 
     document.getElementById('chatInput').style.border = "1px solid #ddd";
@@ -387,76 +301,40 @@ updateCountdown();
   window.sendChat = () => {
     const m = document.getElementById('chatInput').value.trim();
     if(!m) return;
-
-    if (editId) {
-        update(ref(db, `globalChat/${editId}`), { msg: m });
-    } else {
+    if (editId) { update(ref(db, `globalChat/${editId}`), { msg: m }); } 
+    else {
         push(ref(db, 'globalChat'), { 
-            user: localStorage.getItem('family_voterName'), 
-            msg: m, 
+            user: localStorage.getItem('family_voterName'), msg: m, 
             room: replyToId ? replyRoom : (document.getElementById('contextLock').checked ? currentLoc.name : "General"), 
-            time: serverTimestamp(), 
-            parentId: replyToId 
+            time: serverTimestamp(), parentId: replyToId 
         });
     }
-    document.getElementById('chatInput').value = ""; 
-    cancelReply();
+    document.getElementById('chatInput').value = ""; cancelReply();
   };
 
-  // Helper function to handle rendering with Admin/Owner logic
   function renderMessage(m, room, container, currentUser, allMsgs) {
     const isOwner = (m.user === currentUser);
     const isAdmin = (currentUser === "CHUCK");
     const canManage = isOwner || isAdmin;
     const indentClass = m.parentId ? 'is-reply' : '';
-    
-    const actions = canManage ? `
-        <span class="reply-btn" style="color:var(--accent)" onclick="deleteMsg('${m.id}')">delete</span>
-        <span class="reply-btn" onclick="editMsg('${m.id}', '${m.msg.replace(/'/g, "\\'")}')">edit</span>
-    ` : '';
-    
+    const actions = canManage ? `<span class="reply-btn" style="color:var(--accent)" onclick="deleteMsg('${m.id}')">delete</span><span class="reply-btn" onclick="editMsg('${m.id}', '${m.msg.replace(/'/g, "\\'")}')">edit</span>` : '';
     const replyBtn = !m.parentId ? `<span class="reply-btn" onclick="setReply('${m.id}', '${m.user}', '${room}')">reply</span>` : '';
-
-    container.innerHTML += `
-        <div class="chat-msg ${indentClass}">
-            <strong>${m.user}:</strong> ${m.msg}
-            ${replyBtn}
-            ${actions}
-        </div>`;
-
-    allMsgs.filter(r => r.parentId === m.id).forEach(r => {
-        renderMessage(r, room, container, currentUser, allMsgs);
-    });
+    container.innerHTML += `<div class="chat-msg ${indentClass}"><strong>${m.user}:</strong> ${m.msg}${replyBtn}${actions}</div>`;
+    allMsgs.filter(r => r.parentId === m.id).forEach(r => { renderMessage(r, room, container, currentUser, allMsgs); });
   }
 
   onValue(ref(db, 'globalChat'), (snap) => {
-    const chatBox = document.getElementById('chatMessages'); 
-    chatBox.innerHTML = "";
+    const chatBox = document.getElementById('chatMessages'); chatBox.innerHTML = "";
     const currentUser = localStorage.getItem('family_voterName');
-    let msgs = []; 
-    snap.forEach(c => { 
-        let d = c.val(); 
-        if(d) { d.id = c.key; msgs.push(d); } 
-    });
-    
+    let msgs = []; snap.forEach(c => { let d = c.val(); if(d) { d.id = c.key; msgs.push(d); } });
     msgs.sort((a,b) => (a.time || 0) - (b.time || 0)); 
-    let groups = {};
-    msgs.forEach(m => { 
-        let rName = m.room || "General"; 
-        if(!groups[rName]) groups[rName] = []; 
-        groups[rName].push(m); 
-    });
-    
+    let groups = {}; msgs.forEach(m => { let rName = m.room || "General"; if(!groups[rName]) groups[rName] = []; groups[rName].push(m); });
     Object.keys(groups).reverse().forEach(room => {
         chatBox.innerHTML += `<div class="chat-header">${room.toUpperCase()}</div>`;
         const roomMsgs = groups[room];
-        roomMsgs.filter(m => !m.parentId).forEach(m => {
-            renderMessage(m, room, chatBox, currentUser, roomMsgs);
-        });
+        roomMsgs.filter(m => !m.parentId).forEach(m => { renderMessage(m, room, chatBox, currentUser, roomMsgs); });
     });
   });
-
-  /* --- POLL FUNCTIONS --- */
 
   window.submitVotes = function() {
     const v = Array.from(document.querySelectorAll('.vote-check:checked')).map(cb => cb.value);
@@ -467,16 +345,11 @@ updateCountdown();
   onValue(ref(db, 'userVotes'), (snap) => {
     const data = snap.val() || {}; const counts = {}; const supporters = {};
     locations.forEach(l => { counts[l.name] = 0; supporters[l.name] = []; });
-    Object.entries(data).forEach(([u, l]) => { 
-        if(l && Array.isArray(l)) {
-            l.forEach(p => { if(counts[p] !== undefined) { counts[p]++; supporters[p].push(u); } });
-        }
-    });
+    Object.entries(data).forEach(([u, l]) => { if(l && Array.isArray(l)) { l.forEach(p => { if(counts[p] !== undefined) { counts[p]++; supporters[p].push(u); } }); } });
     const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
     let h = ""; let rank = 0, lastV = -1;
     for(let i=0; i<sorted.length; i++){
-        const n = sorted[i][0]; const v = sorted[i][1];
-        if(!n || v===0) continue;
+        const n = sorted[i][0]; const v = sorted[i][1]; if(!n || v===0) continue;
         if(v!==lastV){ rank++; lastV=v; } if(rank > 5) break;
         h += `<div style="margin-bottom:8px;"><span class="rank-badge">RANK ${rank}</span><strong>${n.toUpperCase()}</strong> (${v})<br>${supporters[n].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
     }
