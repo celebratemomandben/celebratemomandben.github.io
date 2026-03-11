@@ -433,7 +433,7 @@
   }
   setInterval(updateCountdown, 60000); updateCountdown();
 
-  window.playCelebration = (force = false) => {
+ window.playCelebration = (force = false) => {
     // Only play once per session so it doesn't get annoying on refresh, UNLESS forced
     if (!force && sessionStorage.getItem('celebrated')) return;
     sessionStorage.setItem('celebrated', 'true');
@@ -442,12 +442,24 @@
     const overlay = document.createElement('div');
     overlay.style.cssText = "position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:99999; pointer-events:none; overflow:hidden; display:flex; justify-content:center; align-items:center; flex-direction:column; background:rgba(255,255,255,0.85); backdrop-filter:blur(8px); transition:opacity 1s;";
     
-    // --- Play the Audio ---
+    // --- The Audio Autoplay Fix ---
     const audio = new Audio('celebratesong.mp3');
     
-    // We use a .catch() here because modern browsers sometimes block audio from playing automatically 
-    // if the user hasn't clicked anywhere on the page yet.
-    audio.play().catch(error => console.log("Browser blocked autoplay:", error));
+    // Attempt to play immediately
+    audio.play().catch(error => {
+        console.log("Browser blocked autoplay. Waiting for user interaction...");
+        
+        // If the browser blocks it on page load, wait for their very first tap/click anywhere!
+        const playOnInteraction = () => {
+            audio.play();
+            // Remove the listener so it doesn't keep trying to play on every click
+            document.removeEventListener('click', playOnInteraction);
+            document.removeEventListener('touchstart', playOnInteraction);
+        };
+        
+        document.addEventListener('click', playOnInteraction);
+        document.addEventListener('touchstart', playOnInteraction);
+    });
 
     // Create the congratulatory text
     const title = document.createElement('h1');
@@ -459,9 +471,9 @@
 
     // Generate falling emojis (caps, diplomas, drinks, beaches)
     const confettiItems = [
-        '🎓', '🎉', '🥂', '🏔️', /* Mountains for CO */
+        '🎓', '🎉', '🥂', '🏔️', 
         '🌲', '📜', '🍾', '✈️', 
-        '👨‍🎓', /* Ben */ '🌴', /* Mom relaxing */ 
+        '👨‍🎓', '🌴',  
         'Congrats Ben!', 'Go Mom!', 'Class of 26!'
     ];
     
@@ -474,15 +486,14 @@
         
         el.innerText = item;
         
-        // Randomize the size, position, and fall speed
-        let size = Math.random() * 1.5 + 1; // slightly smaller so text fits well
+        let size = Math.random() * 1.5 + 1; 
         
         el.style.cssText = `
             position: absolute; 
             font-size: ${size}rem; 
             font-weight: 900;
             color: ${textColors[Math.floor(Math.random() * textColors.length)]};
-            white-space: nowrap; /* Keeps text snippets on one line */
+            white-space: nowrap; 
             left: ${Math.random() * 100}vw; 
             top: -50px; 
             animation: fall ${Math.random() * 2.5 + 2}s linear forwards; 
@@ -491,11 +502,11 @@
         overlay.appendChild(el);
     }
 
-    // Fade out and remove after 4 seconds (and safely fade the audio)
+    // Fade out and remove after 4 seconds
     setTimeout(() => {
         overlay.style.opacity = '0';
         
-        // Safely fade out the audio volume so it doesn't drop below 0
+        // Safely fade out the audio volume
         let fadeAudio = setInterval(() => {
             if (audio.volume >= 0.1) {
                 audio.volume -= 0.1;
