@@ -99,58 +99,27 @@
         #countdown { animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-        /* Specific style for the new Tag dropdown in chat */
         #chatTagPicker { width: 100%; font-size: 0.8rem !important; padding: 8px; border-color: var(--primary); border-width: 2px; background: white; margin: 0 0 10px 0; }
-/* Add to your <style> section */
-.chart-module { 
-    grid-area: chart; 
-    min-height: 300px; /* Ensures enough space on mobile */
-}
 
-@media (min-width: 1100px) {
-    .chart-module { min-height: auto; }
-}
-/* Update your .chart-module section in <style> */
-.chart-module { 
-    grid-area: chart; 
-    height: 350px; /* Use a fixed height instead of min-height */
-    width: 100%;
-    position: relative; /* Required for responsive Chart.js */
-}
+        .chart-module { 
+            grid-area: chart; 
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            position: relative; 
+            box-sizing: border-box;
+        }
 
-/* Ensure the canvas doesn't overflow its rounded card */
-.chart-module canvas {
-    max-height: 100% !important;
-    max-width: 100% !important;
-}
+        @media (max-width: 1100px) {
+            .chart-module { 
+                aspect-ratio: 1 / 1.2;
+            }
+        }
 
-@media (max-width: 1100px) {
-    .chart-module { 
-        height: 450px; /* Slightly taller on mobile for better label spacing */
-    }
-}
-/* Update your .chart-module section in <style> */
-.chart-module { 
-    grid-area: chart; 
-    width: 100%;
-    aspect-ratio: 16 / 9; /* Matches typical bento item proportions */
-    position: relative; 
-    box-sizing: border-box; /* Ensures padding stays inside the box */
-}
-
-/* Fix for mobile: make it taller so labels don't squash */
-@media (max-width: 1100px) {
-    .chart-module { 
-        aspect-ratio: 1 / 1.2; /* Taller square-ish shape for phones */
-    }
-}
-
-/* Ensure the canvas fills the container exactly */
-.chart-module canvas {
-    display: block;
-    width: 100% !important;
-    height: 100% !important;
-}
+        .chart-module canvas {
+            display: block;
+            width: 100% !important;
+            height: 100% !important;
+        }
     </style>
 </head>
 <body>
@@ -192,7 +161,7 @@
             <h2 id="infoTitle" style="margin-top:0">INFO</h2>
             <div id="contactRow">
                 <a id="lnkWeb" href="#" target="_blank" class="contact-link" style="color:var(--primary); text-decoration:none; font-weight:bold; font-size:0.9rem; margin-right:15px;">🌐 Website</a>
-                <span id="txtPhone" style="font-weight:bold; font-size:0.9rem; color:#333;">📞 Phone</span>
+                <span id="txtPhone" class="contact-link" style="color:#333;">📞 Phone</span>
             </div>
             <div id="costArea" style="font-weight:bold; color:var(--primary); margin: 10px 0; font-size:1rem;"></div>
             <p id="infoDesc" style="font-size:0.9rem; color: #555;"></p>
@@ -269,18 +238,19 @@
     { name: "Olympic Museum", vidId: "0QHfykjuoYk", cost: "$25+", web: "https://usopm.org", phone: "719-497-1234", desc: "Interactive sports museum.", reviews: [{u:"Kevin V.", t:"The tech is world-class.", s:5}, {u:"Sports Nut", t:"Very accessible.", s:5}] },
     { name: "Manitou Penny Arcade", vidId: "h_vH_yh9WiM", cost: "Pay-per-play", web: "https://manitousprings.org", phone: "719-685-5089", desc: "400+ vintage games.", reviews: [{u:"Retro Kid", t:"Penny games still exist!", s:5}, {u:"Traveler", t:"Bring $20 in quarters.", s:5}] },
     { name: "Royal Gorge Bridge", vidId: "RCSEk2bnSIw", cost: "$35+", web: "https://royalgorgebridge.com", phone: "719-275-7507", desc: "Highest US suspension bridge.", reviews: [{u:"Adrenaline Fan", t:"Walking across is thrilling.", s:5}, {u:"Photographer", t:"Amazing views.", s:5}] },
+    { name: "Royal Gorge Railroad", vidId: "qhHp4M5lcTo", cost: "$89+", web: "https://royalgorgeroute.com/", phone: "719-276-4000", desc: "Premier scenic train through the Royal Gorge.", reviews: [{u:"Train Buff", t:"Incredible views of the river and canyon floor.", s:5}, {u:"Foodie", t:"High quality dining in the observation cars.", s:5}] },
     { name: "Cave of the Winds", vidId: "8DWiM4ap9JY", cost: "$29+", web: "https://caveofthewinds.com", phone: "719-685-5444", desc: "Cave tours & cliff swings.", reviews: [{u:"Darkness Lover", t:"Lantern tour is spooky.", s:5}, {u:"The Swing", t:"Genuinely terrifying.", s:4}] },
     { name: "Territory Days Fest", vidId: "og9bUIM6S1E", cost: "Free", web: "https://shopoldcoloradocity.com", phone: "719-577-4112", desc: "Street fair May 23-25.", reviews: [{u:"Street Foodie", t:"Best turkey legs ever.", s:5}, {u:"Local", t:"Use the free shuttle bus.", s:4}] }
   ];
 
   let currentLoc = locations[0];
   const picker = document.getElementById('locPicker');
-  const tagPicker = document.getElementById('chatTagPicker'); // New chat tag picker
+  const tagPicker = document.getElementById('chatTagPicker');
   const pollOptions = document.getElementById('pollOptions');
 
   locations.forEach((l, i) => { 
     picker.innerHTML += `<option value="${i}">${l.name}</option>`; 
-    tagPicker.innerHTML += `<option value="${l.name}">${l.name}</option>`; // Also populate chat tags
+    tagPicker.innerHTML += `<option value="${l.name}">${l.name}</option>`; 
     pollOptions.innerHTML += `<div class="vote-card"><input type="checkbox" class="vote-check" id="v-${i}" value="${l.name}"><label for="v-${i}">${l.name}</label></div>`;
   });
 
@@ -322,10 +292,7 @@
     document.getElementById('mainPlayer').src = `https://www.youtube-nocookie.com/embed/${loc.vidId}?autoplay=1&rel=0&origin=${window.location.origin}`;
     document.getElementById('infoTitle').innerText = loc.name.toUpperCase();
     document.getElementById('infoDesc').innerText = loc.desc;
-    
-    // Sync the chat tag dropdown with the explorer selection
     document.getElementById('chatTagPicker').value = loc.name;
-    
     document.getElementById('costArea').innerText = "AVG COST: " + loc.cost;
     document.getElementById('lnkWeb').href = loc.web; document.getElementById('txtPhone').innerText = "📞 " + loc.phone;
     document.getElementById('reviewSection').innerHTML = loc.reviews.map(r => `<div class="review-card"><div class="review-meta"><span class="review-user">${r.u}</span><span class="review-stars">${"★".repeat(r.s)}</span></div><div class="review-text">"${r.t}"</div></div>`).join('');
@@ -375,8 +342,9 @@
     const canManage = isOwner || isAdmin;
     const indentClass = m.parentId ? 'is-reply' : '';
     const actions = canManage ? `<span class="reply-btn" style="color:var(--accent)" onclick="deleteMsg('${m.id}')">delete</span><span class="reply-btn" onclick="editMsg('${m.id}', '${m.msg.replace(/'/g, "\\'")}')">edit</span>` : '';
-    const replyBtn = !m.parentId ? `<span class="reply-btn" onclick="setReply('${m.id}', '${m.user}', '${room}')">reply</span>` : '';
-    container.innerHTML += `<div class="chat-msg ${indentClass}"><strong>${m.user}:</strong> ${m.msg}${replyBtn}${actions}</div>`;
+    const userName = m.user || "GUEST";
+    const replyBtn = !m.parentId ? `<span class="reply-btn" onclick="setReply('${m.id}', '${userName}', '${room}')">reply</span>` : '';
+    container.innerHTML += `<div class="chat-msg ${indentClass}"><strong>${userName}:</strong> ${m.msg}${replyBtn}${actions}</div>`;
     allMsgs.filter(r => r.parentId === m.id).forEach(r => { renderMessage(r, room, container, currentUser, allMsgs); });
   }
 
@@ -408,16 +376,16 @@
     for(let i=0; i<sorted.length; i++){
         const n = sorted[i][0]; const v = sorted[i][1]; if(!n || v===0) continue;
         if(v!==lastV){ rank++; lastV=v; } if(rank > 5) break;
-        h += `<div style="margin-bottom:8px;"><span class="rank-badge">RANK ${rank}</span><strong>${n.toUpperCase()}</strong> (${v})<br>${supporters[n].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
+        if(n && typeof n === 'string') {
+            h += `<div style="margin-bottom:8px;"><span class="rank-badge">RANK ${rank}</span><strong>${n.toUpperCase()}</strong> (${v})<br>${supporters[n].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
+        }
     }
     document.getElementById('voterDetails').innerHTML = h || "Voting in progress...";
     myChart.data.labels = sorted.map(e => e[0]); myChart.data.datasets[0].data = sorted.map(e => e[1]); myChart.update();
   });
 
   const ctx = document.getElementById('voteChart').getContext('2d');
-// Replace your existing myChart initialization
-// Locate your myChart initialization and update the options block:
-let myChart = new Chart(ctx, { 
+  let myChart = new Chart(ctx, { 
     type: 'bar', 
     data: { 
         labels: [], 
@@ -431,7 +399,7 @@ let myChart = new Chart(ctx, {
     options: { 
         indexAxis: 'y', 
         responsive: true,
-        maintainAspectRatio: false, /* Let CSS aspect-ratio handle the size */
+        maintainAspectRatio: false,
         plugins: { 
             legend: { display: false } 
         },
@@ -463,7 +431,7 @@ let myChart = new Chart(ctx, {
             }
         }
     } 
-});
+  });
 </script>
 </body>
 </html>
