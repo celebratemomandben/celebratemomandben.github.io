@@ -159,6 +159,35 @@
     top: 0;
     z-index: 2;
 }
+/* Firefox Scrollbar */
+#chatMessages { 
+    height: 400px; 
+    overflow-y: auto; 
+    margin: 10px 0; 
+    padding-right: 10px; 
+    scrollbar-width: auto; 
+    scrollbar-color: var(--primary) #e2e8f0; 
+}
+
+/* Chrome, Edge, and Safari Scrollbar */
+#chatMessages::-webkit-scrollbar { 
+    width: 10px; /* Widened from 6px to 10px */
+}
+
+#chatMessages::-webkit-scrollbar-track { 
+    background: #e2e8f0; /* Adds a light gray track behind the scrollbar */
+    border-radius: 10px; 
+}
+
+#chatMessages::-webkit-scrollbar-thumb { 
+    background: var(--primary); /* Uses your bright primary blue */
+    border-radius: 10px; 
+    border: 2px solid #e2e8f0; /* Adds a little breathing room inside the track */
+}
+
+#chatMessages::-webkit-scrollbar-thumb:hover { 
+    background: #005b82; /* Darkens slightly when the user hovers over it */
+}
     </style>
 </head>
 <body>
