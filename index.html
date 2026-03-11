@@ -9,77 +9,90 @@
         :root {
             --primary: #0083B8; --accent: #D9534F; --bg: #f0f4f8;
             --glass: rgba(255, 255, 255, 0.9);
-            --fs-h1: clamp(1.5rem, 4vw, 2.5rem);
-            --fs-body: clamp(0.85rem, 1vw + 0.4rem, 1rem);
         }
         body { font-family: 'Inter', sans-serif; background: radial-gradient(circle at top left, #e0eafc, #cfdef3); margin: 0; padding: clamp(10px, 2vw, 20px); color: #2d3436; }
         .container { max-width: 1300px; margin: auto; }
         
-        /* AUTH SECTION */
-        .auth-container { max-width: 450px; margin: 0 auto 20px auto; background: var(--glass); padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .auth-input { padding: 10px; border-radius: 8px; border: 1px solid #ddd; margin: 5px; width: 85%; text-transform: uppercase; }
-        .btn-unlock { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 90%; margin-top: 10px; }
+        #countdown { text-align: center; font-weight: 800; color: var(--primary); font-size: 1.1rem; margin-bottom: 5px; }
+        
+        .main-title { text-align: center; font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 900; margin: 10px 0 5px 0; letter-spacing: 1px; color: #1a1a1a; }
+        .user-hub-banner { text-align: center; font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 5px; display: none; text-transform: uppercase; }
 
-        /* BENTO GRID */
-        .bento-grid { display: grid; gap: 15px; opacity: 0.15; pointer-events: none; transition: 0.5s; grid-template-areas: "sidebar" "video" "info" "chat" "poll" "voters" "chart"; }
-        .unlocked { opacity: 1 !important; pointer-events: all !important; }
+        .auth-container { max-width: 450px; margin: 0 auto 20px auto; background: var(--glass); padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .auth-input { padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin: 5px; width: 85%; text-transform: uppercase; }
+        .btn-unlock { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 90%; margin-top: 10px; }
+        
+        .user-controls { display: none; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 25px; }
+        .logout-link { color: var(--accent); cursor: pointer; font-weight: bold; text-decoration: underline; font-size: 0.85rem; }
+        .how-to-blurb { max-width: 600px; font-size: 0.85rem; color: #555; text-align: center; line-height: 1.4; background: rgba(255,255,255,0.4); padding: 10px; border-radius: 10px; }
+
+        .bento-grid { display: none; gap: 15px; grid-template-areas: "video" "info" "chat" "poll" "voters" "chart"; }
+        .unlocked { display: grid !important; }
 
         @media (min-width: 1100px) {
-            .bento-grid { grid-template-columns: repeat(4, 1fr); grid-template-areas: "sidebar video video video" "sidebar video video video" "info info chat chat" "poll poll voters voters" "chart chart chart chart"; }
+            .bento-grid { grid-template-columns: repeat(4, 1fr); grid-template-areas: "video video video video" "info info chat chat" "poll poll voters voters" "chart chart chart chart"; }
         }
 
-        .video-module { grid-area: video; } .sidebar-module { grid-area: sidebar; } .info-module { grid-area: info; } 
+        .video-module { grid-area: video; } .info-module { grid-area: info; } 
         .chat-module { grid-area: chat; } .poll-module { grid-area: poll; } .voters-module { grid-area: voters; } .chart-module { grid-area: chart; }
 
         .bento-item { background: var(--glass); backdrop-filter: blur(12px); border-radius: 20px; padding: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.05); overflow: hidden; }
+        .picker-label { display: block; font-weight: 800; color: var(--primary); margin-bottom: 8px; font-size: 0.9rem; text-transform: uppercase; }
+        #locPicker { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid var(--primary); background: white; font-weight: bold; font-size: 1rem; margin-bottom: 15px; cursor: pointer; }
+
         .video-player { width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
         .video-player iframe { position: absolute; width: 100%; height: 100%; border: none; top:0; left:0; }
 
-        .video-sidebar { display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto; }
-        .video-item { background: #fff; border: 1px solid #eee; padding: 10px; border-radius: 8px; cursor: pointer; text-align: left; font-weight: 600; font-size: 0.85rem; }
-        .video-item.active { background: var(--primary); color: white; }
-
-        /* CHAT STYLING */
         .chat-header { background: #eee; padding: 5px 10px; font-size: 0.7rem; font-weight: bold; border-radius: 5px; margin: 10px 0 5px 0; color: #666; }
-        .chat-msg { font-size: 0.85rem; padding: 2px 0; border-bottom: 1px solid #f0f0f0; }
+        .chat-msg { font-size: 0.85rem; padding: 5px 0; border-bottom: 1px solid #f0f0f0; position: relative; }
+        .reply-btn { font-size: 0.7rem; color: var(--primary); cursor: pointer; text-decoration: underline; margin-left: 10px; }
+        .is-reply { margin-left: 20px; border-left: 2px solid #ddd; padding-left: 10px; background: rgba(0,0,0,0.02); }
+        #replyingToBar { display: none; background: #fff3cd; padding: 5px 10px; font-size: 0.8rem; border-radius: 5px; margin-bottom: 5px; justify-content: space-between; align-items: center; }
 
-        /* CONTACT & REVIEWS */
         .contact-link { color: var(--primary); text-decoration: none; font-weight: bold; font-size: 0.8rem; margin-right: 15px; }
         .review-bubble { background: rgba(0,0,0,0.04); padding: 8px; border-radius: 10px; margin-top: 5px; font-size: 0.8rem; border-left: 3px solid var(--primary); }
-
         .selection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
         .vote-card input { display: none; }
         .vote-card label { display: block; padding: 10px; background: #fff; border-radius: 10px; text-align: center; cursor: pointer; border: 2px solid #eee; font-size: 0.8rem; font-weight: bold; }
         .vote-card input:checked + label { background: var(--primary); color: white; border-color: var(--primary); }
-        .voter-tag { background: #e0eafc; padding: 2px 8px; border-radius: 10px; margin: 2px; font-size: 0.7rem; color: var(--primary); display: inline-block; }
+        .voter-tag { background: #e0eafc; padding: 2px 8px; border-radius: 10px; margin: 2px; font-size: 0.7rem; color: var(--primary); display: inline-block; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div id="countdown">🚀 INITIALIZING...</div>
+    
+    <h1 class="main-title">COLORADO SPRINGS '26</h1>
+    <div id="userHubBanner" class="user-hub-banner"></div>
+
+    <div class="user-controls" id="userControls">
+        <a class="logout-link" onclick="logout()">LOGOUT / RESET DEVICE</a>
+        <div class="how-to-blurb">
+            <strong>How to use:</strong> Watch the videos and check the info cards below to research. 
+            Discuss ideas in the chat (tag them to a specific location to stay organized!). 
+            Finally, select 3–5 favorites and click Update to see the live leaderboard!
+        </div>
+    </div>
+
     <div class="auth-container" id="authBox">
-        <h2 style="margin:0 0 15px 0">Trip Access</h2>
+        <h2 style="margin:0 0 15px 0">Family Login</h2>
         <input type="text" id="voterName" class="auth-input" placeholder="FIRST NAME">
         <input type="password" id="voterPass" class="auth-input" placeholder="PASSCODE: ROCKIES">
         <button onclick="unlockApp()" class="btn-unlock">UNLOCK HUB</button>
     </div>
 
-    <h1 id="mainTitle" style="text-align: center;">COLORADO SPRINGS '26</h1>
-
     <div class="bento-grid" id="appBody">
         <div class="bento-item video-module">
+            <label class="picker-label">Select from 10 locations below:</label>
+            <select id="locPicker" onchange="loadLoc(this.value)"></select>
             <div class="video-player">
                 <iframe id="mainPlayer" src="" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
             </div>
         </div>
 
-        <div class="bento-item sidebar-module">
-            <h3 style="margin-top:0;">📍 DESTINATIONS</h3>
-            <div class="video-sidebar" id="sidebar"></div>
-        </div>
-
         <div class="bento-item info-module">
-            <h2 id="infoTitle" style="margin-top:0">SELECT A PLACE</h2>
+            <h2 id="infoTitle" style="margin-top:0">DESTINATION INFO</h2>
             <div id="contactRow">
                 <a id="lnkWeb" href="#" target="_blank" class="contact-link">🌐 WEBSITE</a>
                 <span id="txtPhone" class="contact-link" style="color:#333">📞 PHONE</span>
@@ -90,25 +103,29 @@
         </div>
 
         <div class="bento-item chat-module">
-            <h3 style="margin:0;">💬 FAMILY CHAT</h3>
-            <div id="chatMessages" style="height:150px; overflow-y:auto; margin:10px 0;"></div>
+            <h3 style="margin:0;">💬 FAMILY DISCUSSION</h3>
+            <div id="chatMessages" style="height:200px; overflow-y:auto; margin:10px 0;"></div>
+            <div id="replyingToBar">
+                <span id="replyText">Replying to...</span>
+                <span onclick="cancelReply()" style="cursor:pointer; font-weight:bold;">✕</span>
+            </div>
             <div style="font-size:0.75rem; margin-bottom:5px;">
-                <input type="checkbox" id="contextLock" checked> Tag as <span id="contextName" style="font-weight:bold">General</span>?
+                <input type="checkbox" id="contextLock" checked> Tag message as <span id="contextName" style="font-weight:bold">General</span>?
             </div>
             <div style="display:flex; gap:5px;">
-                <input type="text" id="chatInput" style="flex-grow:1; padding:8px; border-radius:8px; border:1px solid #ddd;" placeholder="Type message...">
+                <input type="text" id="chatInput" style="flex-grow:1; padding:8px; border-radius:8px; border:1px solid #ddd;" placeholder="Share a thought...">
                 <button onclick="sendChat()" style="background:var(--primary); border:none; color:white; padding:8px 12px; border-radius:8px; cursor:pointer;">↑</button>
             </div>
         </div>
 
         <div class="bento-item poll-module">
-            <h3 style="text-align:center; margin-top:0;">🗳️ YOUR PICKS (CHOOSE 3-5)</h3>
+            <h3 style="text-align:center; margin-top:0;">🗳️ YOUR MUST-DO LIST (3-5 PICKS)</h3>
             <div id="pollOptions" class="selection-grid"></div>
-            <button onclick="submitVotes()" style="width:100%; background:#2ecc71; color:white; border:none; padding:15px; border-radius:15px; font-weight:800; margin-top:10px; cursor:pointer;">UPDATE MY PICKS</button>
+            <button onclick="submitVotes()" style="width:100%; background:#2ecc71; color:white; border:none; padding:15px; border-radius:15px; font-weight:800; margin-top:10px; cursor:pointer;">UPDATE MY SELECTIONS</button>
         </div>
 
         <div class="bento-item voters-module">
-            <h3 style="margin-top:0;">👥 SUPPORTERS OF TOP 3</h3>
+            <h3 style="margin-top:0;">👥 TOP SUPPORTERS</h3>
             <div id="voterDetails" style="font-size:0.8rem;"></div>
         </div>
 
@@ -150,23 +167,61 @@
   ];
 
   let currentLoc = locations[0];
-  const sidebar = document.getElementById('sidebar');
+  let replyToId = null;
+  let replyRoom = "General";
+  const picker = document.getElementById('locPicker');
   const pollOptions = document.getElementById('pollOptions');
 
   locations.forEach((loc, index) => {
-    sidebar.innerHTML += `<button class="video-item" onclick="loadLoc(${index})">${loc.name}</button>`;
+    picker.innerHTML += `<option value="${index}">${loc.name}</option>`;
     pollOptions.innerHTML += `<div class="vote-card"><input type="checkbox" class="vote-check" id="v-${index}" value="${loc.name}"><label for="v-${index}">${loc.name}</label></div>`;
   });
 
+  window.onload = () => {
+    const savedName = localStorage.getItem('family_voterName');
+    const savedPass = localStorage.getItem('family_voterPass');
+    if (savedName && savedPass === "rockies") {
+        document.getElementById('voterName').value = savedName;
+        document.getElementById('voterPass').value = savedPass;
+        unlockApp();
+    }
+  };
+
+  window.logout = () => {
+    localStorage.removeItem('family_voterName');
+    localStorage.removeItem('family_voterPass');
+    location.reload();
+  };
+
+  function updateCountdown() {
+      const target = new Date("May 23, 2026 00:00:00").getTime();
+      const now = new Date().getTime();
+      const diff = target - now;
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      document.getElementById('countdown').innerText = `🚀 ${d}d ${h}h ${m}m UNTIL COLORADO!`;
+  }
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+
   window.unlockApp = async function() {
-    const name = document.getElementById('voterName').value.trim().toUpperCase();
-    const pass = document.getElementById('voterPass').value.trim().toLowerCase();
-    if (name && (pass === "rockies")) {
+    const rawName = document.getElementById('voterName').value.trim().toUpperCase();
+    const passInput = document.getElementById('voterPass').value.trim().toLowerCase();
+    
+    if (rawName && passInput === "rockies") {
+        localStorage.setItem('family_voterName', rawName);
+        localStorage.setItem('family_voterPass', passInput);
+
         document.getElementById('appBody').classList.add('unlocked');
         document.getElementById('authBox').style.display = "none";
-        document.getElementById('mainTitle').innerText = `${name}'S TRIP HUB`;
+        document.getElementById('userHubBanner').style.display = "block";
+        document.getElementById('userHubBanner').innerText = `${rawName}'S TRIP HUB`;
+        document.getElementById('userControls').style.display = "flex";
+        
         loadLoc(0);
-        const snap = await get(child(ref(db), `userVotes/${name}`));
+        
+        const snap = await get(child(ref(db), `userVotes/${rawName}`));
         if (snap.exists()) {
             const v = snap.val();
             document.querySelectorAll('.vote-check').forEach(cb => cb.checked = v.includes(cb.value));
@@ -184,27 +239,55 @@
     document.getElementById('lnkWeb').href = loc.web;
     document.getElementById('txtPhone').innerText = "📞 " + loc.phone;
     document.getElementById('reviewSection').innerHTML = loc.reviews.map(r => `<div class="review-bubble">"${r}"</div>`).join('');
-    document.querySelectorAll('.video-item').forEach((btn, idx) => btn.classList.toggle('active', idx === i));
+  };
+
+  window.setReply = (id, user, room) => {
+    replyToId = id;
+    replyRoom = room;
+    document.getElementById('replyingToBar').style.display = "flex";
+    document.getElementById('replyText').innerText = `Replying to ${user} in [${room}]...`;
+    document.getElementById('contextLock').disabled = true;
+    document.getElementById('chatInput').focus();
+  };
+
+  window.cancelReply = () => {
+    replyToId = null;
+    document.getElementById('replyingToBar').style.display = "none";
+    document.getElementById('contextLock').disabled = false;
   };
 
   window.sendChat = () => {
     const msg = document.getElementById('chatInput').value.trim();
     const name = document.getElementById('voterName').value.trim().toUpperCase();
     if(msg && name) {
-        const room = document.getElementById('contextLock').checked ? currentLoc.name : "General";
-        push(ref(db, 'globalChat'), { user: name, msg, room, time: serverTimestamp() });
+        const room = replyToId ? replyRoom : (document.getElementById('contextLock').checked ? currentLoc.name : "General");
+        push(ref(db, 'globalChat'), { 
+            user: name, msg, room, time: serverTimestamp(), parentId: replyToId 
+        });
         document.getElementById('chatInput').value = "";
+        cancelReply();
     }
   };
 
   onValue(ref(db, 'globalChat'), (snap) => {
     const chatBox = document.getElementById('chatMessages'); chatBox.innerHTML = "";
-    let msgs = []; snap.forEach(c => { let d = c.val(); d.time = d.time || 0; msgs.push(d); });
+    let msgs = []; 
+    snap.forEach(c => { let d = c.val(); d.id = c.key; d.time = d.time || 0; msgs.push(d); });
     msgs.sort((a,b) => b.time - a.time);
-    let last = "";
+    let lastRoom = "";
     msgs.forEach(d => {
-        if(d.room !== last) { chatBox.innerHTML += `<div class="chat-header">${d.room.toUpperCase()}</div>`; last = d.room; }
-        chatBox.innerHTML += `<div class="chat-msg"><strong>${d.user}:</strong> ${d.msg}</div>`;
+        if (!d.parentId) {
+            if(d.room !== lastRoom) { chatBox.innerHTML += `<div class="chat-header">${d.room.toUpperCase()}</div>`; lastRoom = d.room; }
+            chatBox.innerHTML += `
+                <div class="chat-msg" id="msg-${d.id}">
+                    <strong>${d.user}:</strong> ${d.msg}
+                    <span class="reply-btn" onclick="setReply('${d.id}', '${d.user}', '${d.room}')">reply</span>
+                </div>`;
+            let replies = msgs.filter(r => r.parentId === d.id);
+            replies.reverse().forEach(r => {
+                chatBox.innerHTML += `<div class="chat-msg is-reply"><strong>${r.user}:</strong> ${r.msg}</div>`;
+            });
+        }
     });
   });
 
@@ -222,7 +305,7 @@
     const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
     let h = "";
     for(let i=0; i<3; i++) {
-        if(sorted[i] && sorted[i][1]>0) h += `<div style="margin-bottom:8px;"><strong>#${i+1} ${sorted[i][0].toUpperCase()}</strong><br>${supporters[sorted[i][0]].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
+        if(sorted[i] && sorted[i][1]>0) h += `<div style="margin-bottom:8px;"><strong>#1 ${sorted[i][0].toUpperCase()}</strong><br>${supporters[sorted[i][0]].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
     }
     document.getElementById('voterDetails').innerHTML = h || "Voting in progress...";
     myChart.data.labels = sorted.map(e => e[0]);
