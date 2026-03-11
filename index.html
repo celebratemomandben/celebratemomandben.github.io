@@ -464,11 +464,36 @@ body {
     document.body.appendChild(overlay);
 
     // Generate falling emojis (caps, diplomas, drinks, beaches)
-    const emojis = ['🎓', '🎉', '🥂', '🏖️', '✨', '📜', '🍾', '✈️'];
+const confettiItems = [
+        '🎓', '🎉', '🥂', '🏔️', /* Mountains for CO */
+        '🌲', '📜', '🍾', '✈️', 
+        '👨‍🎓', /* Ben */ '🌴', /* Mom relaxing */ 
+        'Congrats Ben!', 'Go Mom!', 'Class of 26!'
+    ];
+    
+    // Theme colors to apply to the text items
+    const textColors = ['#0083B8', '#D9534F', '#f39c12', '#2ecc71'];
+
     for (let i = 0; i < 40; i++) {
         let el = document.createElement('div');
-        el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-        el.style.cssText = `position:absolute; font-size:${Math.random() * 2 + 1.5}rem; left:${Math.random() * 100}vw; top:-50px; animation: fall ${Math.random() * 2.5 + 2}s linear forwards; opacity: ${Math.random() + 0.5};`;
+        let item = confettiItems[Math.floor(Math.random() * confettiItems.length)];
+        
+        el.innerText = item;
+        
+        // Randomize the size, position, and fall speed
+        let size = Math.random() * 1.5 + 1; // slightly smaller so text fits well
+        
+        el.style.cssText = `
+            position: absolute; 
+            font-size: ${size}rem; 
+            font-weight: 900;
+            color: ${textColors[Math.floor(Math.random() * textColors.length)]};
+            white-space: nowrap; /* Keeps text snippets on one line */
+            left: ${Math.random() * 100}vw; 
+            top: -50px; 
+            animation: fall ${Math.random() * 2.5 + 2}s linear forwards; 
+            opacity: ${Math.random() + 0.5};
+        `;
         overlay.appendChild(el);
     }
 
