@@ -438,15 +438,23 @@ body {
   }
   setInterval(updateCountdown, 60000); updateCountdown();
 
-  window.playCelebration = () => {
-    // Only play once per session so it doesn't get annoying on refresh
-    if (sessionStorage.getItem('celebrated')) return;
+ window.playCelebration = (force = false) => {
+    // Only play once per session so it doesn't get annoying on refresh, UNLESS forced
+    if (!force && sessionStorage.getItem('celebrated')) return;
     sessionStorage.setItem('celebrated', 'true');
 
     // Create the overlay container
     const overlay = document.createElement('div');
     overlay.style.cssText = "position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:99999; pointer-events:none; overflow:hidden; display:flex; justify-content:center; align-items:center; flex-direction:column; background:rgba(255,255,255,0.85); backdrop-filter:blur(8px); transition:opacity 1s;";
     
+    // --- NEW: Play the Audio ---
+    // Note: You will need to replace the placeholder URL below with a direct link to your MP3 file!
+    const audio = new Audio('celebratesong.mp3');
+    
+    // We use a .catch() here because modern browsers sometimes block audio from playing automatically 
+    // if the user hasn't clicked anywhere on the page yet.
+    audio.play().catch(error => console.log("Browser blocked autoplay:", error));
+
     // Create the congratulatory text
     const title = document.createElement('h1');
     title.innerHTML = "🎉 Happy Retirement Mom! 🎉<br><br>🎓 Congrats on Graduating Ben! 🎓";
@@ -464,12 +472,18 @@ body {
         overlay.appendChild(el);
     }
 
-    // Fade out and remove after 4 seconds
+    // Fade out and remove after 4 seconds (and stop the audio)
     setTimeout(() => {
         overlay.style.opacity = '0';
+        // Fade out the audio volume smoothly over 1 second
+        let fadeAudio = setInterval(() => {
+            if (audio.volume > 0.1) audio.volume -= 0.1;
+            else { clearInterval(fadeAudio); audio.pause(); }
+        }, 100);
+
         setTimeout(() => overlay.remove(), 1000);
     }, 4000);
-};
+  };
 
 window.unlockApp = async function() {
     const nInput = (document.getElementById('voterName').value.trim().toUpperCase()) || localStorage.getItem('family_voterName');
