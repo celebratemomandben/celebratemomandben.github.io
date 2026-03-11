@@ -188,6 +188,46 @@
 #chatMessages::-webkit-scrollbar-thumb:hover { 
     background: #005b82; /* Darkens slightly when the user hovers over it */
 }
+/* Celebration Animations */
+@keyframes fall {
+    to { transform: translateY(110vh) rotate(360deg); }
+}
+@keyframes popIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    80% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+/* Update Picks Button Animation */
+.btn-update-picks {
+    width: 100%;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    font-weight: 800;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    /* The 3D shadow effect */
+    box-shadow: 0 6px 0 #27ae60, 0 10px 20px rgba(46, 204, 113, 0.4);
+    /* Bouncy transition */
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* When hovering over the button */
+.btn-update-picks:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 0 #27ae60, 0 15px 25px rgba(46, 204, 113, 0.5);
+    background: #34d878;
+}
+
+/* When actively clicking the button */
+.btn-update-picks:active {
+    transform: translateY(4px); /* Pushes the button down */
+    box-shadow: 0 2px 0 #27ae60, 0 5px 10px rgba(46, 204, 113, 0.3); /* Flattens the shadow */
+}
     </style>
 </head>
 <body>
@@ -264,7 +304,7 @@
         <div class="bento-item poll-module">
             <span class="step-header">Step 3: 🗳️ VOTE (CHOOSE 3-5)</span>
             <div id="pollOptions" class="selection-grid"></div>
-            <button onclick="submitVotes()" style="width:100%; background:#2ecc71; color:white; border:none; padding:15px; border-radius:15px; font-weight:800; margin-top:10px; cursor:pointer; font-size:1.1rem;">UPDATE MY PICKS</button>
+           <button onclick="submitVotes()" class="btn-update-picks">UPDATE MY PICKS</button>
         </div>
 
         <div class="bento-item voters-module">
@@ -342,21 +382,73 @@
   }
   setInterval(updateCountdown, 60000); updateCountdown();
 
-  window.unlockApp = async function() {
+  window.playCelebration = () => {
+    // Only play once per session so it doesn't get annoying on refresh
+    if (sessionStorage.getItem('celebrated')) return;
+    sessionStorage.setItem('celebrated', 'true');
+
+    // Create the overlay container
+    const overlay = document.createElement('div');
+    overlay.style.cssText = "position:fixed; top:0; left:0; width:100vw; height:100vh; z-index:99999; pointer-events:none; overflow:hidden; display:flex; justify-content:center; align-items:center; flex-direction:column; background:rgba(255,255,255,0.85); backdrop-filter:blur(8px); transition:opacity 1s;";
+    
+    // Create the congratulatory text
+    const title = document.createElement('h1');
+    title.innerHTML = "🎉 Happy Retirement Mom! 🎉<br><br>🎓 Congrats on Graduating Ben! 🎓";
+    title.style.cssText = "text-align:center; color:var(--primary); font-size:clamp(1.5rem, 4vw, 3rem); text-shadow: 0 4px 15px rgba(0,0,0,0.1); animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; padding: 20px;";
+    
+    overlay.appendChild(title);
+    document.body.appendChild(overlay);
+
+    // Generate falling emojis (caps, diplomas, drinks, beaches)
+    const emojis = ['🎓', '🎉', '🥂', '🏖️', '✨', '📜', '🍾', '✈️'];
+    for (let i = 0; i < 40; i++) {
+        let el = document.createElement('div');
+        el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.cssText = `position:absolute; font-size:${Math.random() * 2 + 1.5}rem; left:${Math.random() * 100}vw; top:-50px; animation: fall ${Math.random() * 2.5 + 2}s linear forwards; opacity: ${Math.random() + 0.5};`;
+        overlay.appendChild(el);
+    }
+
+    // Fade out and remove after 4 seconds
+    setTimeout(() => {
+        overlay.style.opacity = '0';
+        setTimeout(() => overlay.remove(), 1000);
+    }, 4000);
+};
+
+window.unlockApp = async function() {
     const nInput = (document.getElementById('voterName').value.trim().toUpperCase()) || localStorage.getItem('family_voterName');
     const pInput = document.getElementById('voterPass').value.trim().toLowerCase();
+    
     if (nInput && (pInput === "congrats" || localStorage.getItem('family_voterPass'))) {
-        localStorage.setItem('family_voterName', nInput); localStorage.setItem('family_voterPass', "congrats");
+        localStorage.setItem('family_voterName', nInput); 
+        localStorage.setItem('family_voterPass', "congrats");
+        
         document.getElementById('appBody').classList.add('unlocked');
         document.getElementById('authBox').style.display = "none";
         document.getElementById('userHubBanner').style.display = "block";
         document.getElementById('userHubBanner').innerText = `${nInput}'S TRIP HUB`;
         document.getElementById('userControls').style.display = "flex";
-        loadLoc(0);
+        
+        // --- NEW: Trigger Celebration Animation ---
+        playCelebration();
+
+        // --- NEW: Randomize Initial Location ---
+        const randomLocIndex = Math.floor(Math.random() * locations.length);
+        document.getElementById('locPicker').value = randomLocIndex; // Update the dropdown to match
+        loadLoc(randomLocIndex); // Load the random location
+        
+        // Load user's previous votes
         const snap = await get(child(ref(db), `userVotes/${nInput}`));
-        if (snap.exists()) snap.val().forEach(v => { const el = document.querySelector(`.vote-check[value="${v}"]`); if(el) el.checked = true; });
+        if (snap.exists()) {
+            snap.val().forEach(v => { 
+                const el = document.querySelector(`.vote-check[value="${v}"]`); 
+                if(el) el.checked = true; 
+            });
+        }
+    } else {
+        alert("Please enter your name and the correct passcode.");
     }
-  }
+}
 
   window.loadLoc = (i) => {
     const loc = locations[i]; currentLoc = loc;
@@ -418,6 +510,8 @@
     container.innerHTML += `<div class="chat-msg ${indentClass}"><strong>${userName}:</strong> ${m.msg}${replyBtn}${actions}</div>`;
     allMsgs.filter(r => r.parentId === m.id).forEach(r => { renderMessage(r, room, container, currentUser, allMsgs); });
   }
+
+
 
 window.toggleChatFullscreen = () => {
     const chatModule = document.querySelector('.chat-module');
