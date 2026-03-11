@@ -24,7 +24,6 @@
 
         .auth-container { max-width: 450px; margin: 0 auto 20px auto; background: var(--glass); padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         
-        /* Unified Step Header Style */
         .step-header {
             font-weight: 800; 
             color: var(--primary); 
@@ -34,7 +33,7 @@
             text-transform: uppercase;
         }
 
-        .auth-input, #voterName, #voterPass, select { text-transform: uppercase; }
+        .auth-input, #voterName, #voterPass, #locPicker, #chatTagPicker { text-transform: uppercase; }
 
         input[type="text"], input[type="password"], select { 
             padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin: 5px; width: 85%; font-size: 16px !important; 
@@ -63,7 +62,6 @@
         .video-player { width: 100%; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #000; position: relative; }
         .video-player iframe { position: absolute; width: 100%; height: 100%; border: none; top:0; left:0; }
 
-        /* CHAT SYSTEM */
         #chatMessages { height: 400px; overflow-y: auto; margin: 10px 0; padding-right: 10px; scrollbar-width: thin; scrollbar-color: #cbd5e0 transparent; }
         #chatMessages::-webkit-scrollbar { width: 6px; }
         #chatMessages::-webkit-scrollbar-thumb { background: #cbd5e0; border-radius: 10px; }
@@ -79,7 +77,6 @@
         .review-user { font-weight: 700; font-size: 0.8rem; color: #333; }
         .review-text { font-size: 0.85rem; line-height: 1.4; color: #444; }
 
-        /* VOTE BUTTONS */
         .selection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
         .vote-card input { display: none; }
         .vote-card label { 
@@ -95,13 +92,15 @@
         .voter-tag { background: #e0f2fe; padding: 2px 8px; border-radius: 10px; margin: 2px; font-size: 0.7rem; color: var(--primary); display: inline-block; font-weight: bold; border: 1px solid #bae6fd; }
         .rank-badge { background: var(--accent); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; margin-right: 5px; font-weight: 900; }
 
-        /* Countdown */
         .countdown-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
         .time-unit { background: #1a1a1a; color: #fff; padding: 8px 12px; border-radius: 10px; min-width: 50px; box-shadow: 0 4px 15px rgba(0, 131, 184, 0.3); border-bottom: 3px solid var(--primary); }
         .time-value { display: block; font-size: 1.5rem; font-weight: 900; line-height: 1; }
         .time-label { display: block; font-size: 0.6rem; text-transform: uppercase; color: var(--primary); font-weight: 700; }
         #countdown { animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
+        /* Specific style for the new Tag dropdown in chat */
+        #chatTagPicker { width: 100%; font-size: 0.8rem !important; padding: 8px; border-color: var(--primary); border-width: 2px; background: white; margin: 0 0 10px 0; }
     </style>
 </head>
 <body>
@@ -160,9 +159,12 @@
                 <span id="replyText">Replying to...</span>
                 <span onclick="cancelReply()" style="cursor:pointer; font-weight:bold;">✕</span>
             </div>
-            <div style="font-size:0.75rem; margin-bottom:5px;">
-                <input type="checkbox" id="contextLock" checked> Tag to <span id="contextName" style="font-weight:bold">General</span>?
-            </div>
+            
+            <label class="step-header" style="font-size: 0.7rem; margin-bottom: 2px;">Select Tag message to: (Default: selected location)</label>
+            <select id="chatTagPicker">
+                <option value="General">GENERAL</option>
+            </select>
+
             <div style="display:flex; gap:5px;">
                 <input type="text" id="chatInput" style="flex-grow:1; padding:8px; border-radius:8px; border:1px solid #ddd;" placeholder="Type here...">
                 <button onclick="sendChat()" style="background:var(--primary); border:none; color:white; padding:8px 12px; border-radius:8px; cursor:pointer;">↑</button>
@@ -223,10 +225,12 @@
 
   let currentLoc = locations[0];
   const picker = document.getElementById('locPicker');
+  const tagPicker = document.getElementById('chatTagPicker'); // New chat tag picker
   const pollOptions = document.getElementById('pollOptions');
 
   locations.forEach((l, i) => { 
     picker.innerHTML += `<option value="${i}">${l.name}</option>`; 
+    tagPicker.innerHTML += `<option value="${l.name}">${l.name}</option>`; // Also populate chat tags
     pollOptions.innerHTML += `<div class="vote-card"><input type="checkbox" class="vote-check" id="v-${i}" value="${l.name}"><label for="v-${i}">${l.name}</label></div>`;
   });
 
@@ -268,7 +272,10 @@
     document.getElementById('mainPlayer').src = `https://www.youtube-nocookie.com/embed/${loc.vidId}?autoplay=1&rel=0&origin=${window.location.origin}`;
     document.getElementById('infoTitle').innerText = loc.name.toUpperCase();
     document.getElementById('infoDesc').innerText = loc.desc;
-    document.getElementById('contextName').innerText = loc.name;
+    
+    // Sync the chat tag dropdown with the explorer selection
+    document.getElementById('chatTagPicker').value = loc.name;
+    
     document.getElementById('costArea').innerText = "AVG COST: " + loc.cost;
     document.getElementById('lnkWeb').href = loc.web; document.getElementById('txtPhone').innerText = "📞 " + loc.phone;
     document.getElementById('reviewSection').innerHTML = loc.reviews.map(r => `<div class="review-card"><div class="review-meta"><span class="review-user">${r.u}</span><span class="review-stars">${"★".repeat(r.s)}</span></div><div class="review-text">"${r.t}"</div></div>`).join('');
@@ -278,7 +285,7 @@
     replyToId = id; replyRoom = room || "General";
     document.getElementById('replyingToBar').style.display = "flex";
     document.getElementById('replyText').innerText = `Replying to ${user}...`;
-    document.getElementById('contextLock').disabled = true; document.getElementById('chatInput').focus();
+    document.getElementById('chatTagPicker').disabled = true; document.getElementById('chatInput').focus();
   };
 
   window.editMsg = (id, oldMsg) => {
@@ -294,7 +301,7 @@
   window.cancelReply = () => { 
     replyToId = null; editId = null;
     document.getElementById('replyingToBar').style.display = "none"; 
-    document.getElementById('contextLock').disabled = false; 
+    document.getElementById('chatTagPicker').disabled = false; 
     document.getElementById('chatInput').style.border = "1px solid #ddd";
   };
 
@@ -305,7 +312,7 @@
     else {
         push(ref(db, 'globalChat'), { 
             user: localStorage.getItem('family_voterName'), msg: m, 
-            room: replyToId ? replyRoom : (document.getElementById('contextLock').checked ? currentLoc.name : "General"), 
+            room: replyToId ? replyRoom : document.getElementById('chatTagPicker').value, 
             time: serverTimestamp(), parentId: replyToId 
         });
     }
