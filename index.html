@@ -599,6 +599,8 @@ const tierColors = [
                 const el = document.querySelector(`.vote-check[value="${v}"]`); 
                 if(el) el.checked = true; 
             });
+            // NEW: Lock the remaining boxes immediately if they already have 5 picks
+    enforceVoteLimit();
         }
     } else {
         alert("Please enter your name and the correct passcode.");
@@ -692,23 +694,20 @@ const tierColors = [
     });
   });
 
-  window.submitVotes = function() {
+window.submitVotes = function() {
     const v = Array.from(document.querySelectorAll('.vote-check:checked')).map(cb => cb.value);
     
-    // Stop them if they didn't pick 3-5 items
-    if (v.length < 3 || v.length > 5) return alert("SELECT 3-5 ITEMS!");
+    // Updated: Require at least 1, max 5
+    if (v.length < 1) return alert("SELECT AT LEAST 1 ITEM!");
+    if (v.length > 5) return alert("MAX 5 SELECTIONS ALLOWED!");
     
-    // Save their votes to Firebase
-    set(ref(db, `userVotes/${localStorage.getItem('family_voterName')}`), v); 
-    
-    // 🎉 NEW: Force the celebration animation and song to play!
+    set(ref(db, `userVotes/${localStorage.getItem('family_voterName')}`), v);
     playCelebration(true);
     
-    // Let them know it worked (Delayed slightly so it doesn't block the music from starting!)
     setTimeout(() => {
         alert("VOTES UPDATED!");
     }, 150);
-  }
+};
 
   // 1. Build the blank chart FIRST
   const ctx = document.getElementById('voteChart').getContext('2d');
@@ -851,7 +850,35 @@ onValue(ref(db, 'userVotes'), (snap) => {
     myChart.data.datasets[0].hoverBackgroundColor = sorted.map(e => locationColors[e[0]]);
     myChart.update();
 });
+// Add this inside your <script type="module"> section
+document.addEventListener('change', (e) => {
+    if (e.target.classList.contains('vote-check')) {
+        const checkedCount = document.querySelectorAll('.vote-check:checked').length;
+        const checkboxes = document.querySelectorAll('.vote-check');
+             checkboxes.forEach(cb => {
+            if (!cb.checked) {
+                cb.disabled = checkedCount >= 5;
+            }
+        });
+    }
+});
+window.enforceVoteLimit = () => {
+    const checkedCount = document.querySelectorAll('.vote-check:checked').length;
+    const checkboxes = document.querySelectorAll('.vote-check');
+    
+    checkboxes.forEach(cb => {
+        if (!cb.checked) {
+            cb.disabled = (checkedCount >= 5);
+        }
+    });
+};
 
+// Keep your event listener, but have it call the new function
+document.addEventListener('change', (e) => {
+    if (e.target.classList.contains('vote-check')) {
+        enforceVoteLimit();
+    }
+});
 </script>
 </body>
 </html>
