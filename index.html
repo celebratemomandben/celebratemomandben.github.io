@@ -275,7 +275,32 @@
     transform: translateZ(0); /* Forces hardware acceleration */
     -webkit-transform: translateZ(0); /* Safari fallback */
 }
-    </style>
+/* Toast Notification Style */
+#toast {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+    padding: 16px;
+    position: fixed;
+    z-index: 10001;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    font-weight: 800;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+#toast.show {
+    visibility: visible;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+@keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+</style>
 </head>
 <body>
 
@@ -570,42 +595,51 @@ const tierColors = [
     }, 4000);
   };
 
-  window.unlockApp = async function() {
-    const nInput = (document.getElementById('voterName').value.trim().toUpperCase()) || localStorage.getItem('family_voterName');
-    const pInput = document.getElementById('voterPass').value.trim().toLowerCase();
+window.unlockApp = async function() {
+    const nInput = (document.getElementById('voterName').value.trim().toUpperCase()) || localStorage.getItem('family_voterName'); 
+    const pInput = document.getElementById('voterPass').value.trim().toLowerCase(); 
     
-    if (nInput && (pInput === "congrats" || localStorage.getItem('family_voterPass'))) {
-        localStorage.setItem('family_voterName', nInput); 
-        localStorage.setItem('family_voterPass', "congrats");
+    if (nInput && (pInput === "congrats" || localStorage.getItem('family_voterPass'))) { 
+        localStorage.setItem('family_voterName', nInput);
+        localStorage.setItem('family_voterPass', "congrats"); 
         
-        document.getElementById('appBody').classList.add('unlocked');
+        document.getElementById('appBody').classList.add('unlocked'); 
         document.getElementById('authBox').style.display = "none";
-        document.getElementById('userHubBanner').style.display = "block";
-        document.getElementById('userHubBanner').innerText = `${nInput}'S TRIP HUB`;
-        document.getElementById('userControls').style.display = "flex";
+        document.getElementById('userHubBanner').style.display = "block"; 
+        document.getElementById('userHubBanner').innerText = `${nInput}'S TRIP HUB`; 
+        document.getElementById('userControls').style.display = "flex"; 
         
         // --- NEW: Trigger Celebration Animation ---
-        playCelebration();
+        playCelebration(); 
 
         // --- NEW: Randomize Initial Location ---
-        const randomLocIndex = Math.floor(Math.random() * locations.length);
-        document.getElementById('locPicker').value = randomLocIndex; // Update the dropdown to match
-        loadLoc(randomLocIndex); // Load the random location
+        const randomLocIndex = Math.floor(Math.random() * locations.length); 
+        document.getElementById('locPicker').value = randomLocIndex; // Update the dropdown to match [cite: 184]
+        loadLoc(randomLocIndex); // Load the random location [cite: 184]
         
         // Load user's previous votes
-        const snap = await get(child(ref(db), `userVotes/${nInput}`));
+        const snap = await get(child(ref(db), `userVotes/${nInput}`)); 
         if (snap.exists()) {
             snap.val().forEach(v => { 
                 const el = document.querySelector(`.vote-check[value="${v}"]`); 
                 if(el) el.checked = true; 
-            });
+            }); 
+            
             // NEW: Lock the remaining boxes immediately if they already have 5 picks
-    enforceVoteLimit();
+            if (window.enforceVoteLimit) {
+                enforceVoteLimit();
+            } else {
+                // Fallback logic if enforceVoteLimit isn't defined globally yet
+                const checkedCount = document.querySelectorAll('.vote-check:checked').length;
+                document.querySelectorAll('.vote-check').forEach(cb => {
+                    if (!cb.checked) cb.disabled = checkedCount >= 5;
+                });
+            }
         }
     } else {
         alert("Please enter your name and the correct passcode.");
     }
-  }
+}
 
   window.loadLoc = (i) => {
     const loc = locations[i]; currentLoc = loc;
@@ -850,18 +884,35 @@ onValue(ref(db, 'userVotes'), (snap) => {
     myChart.data.datasets[0].hoverBackgroundColor = sorted.map(e => locationColors[e[0]]);
     myChart.update();
 });
+// Utility to show toast
+window.showToast = (msg) => {
+    const t = document.getElementById("toast");
+    t.innerText = msg;
+    t.className = "show";
+    setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
+};
+
 // Add this inside your <script type="module"> section
 document.addEventListener('change', (e) => {
     if (e.target.classList.contains('vote-check')) {
         const checkedCount = document.querySelectorAll('.vote-check:checked').length;
         const checkboxes = document.querySelectorAll('.vote-check');
-             checkboxes.forEach(cb => {
-            if (!cb.checked) {
-                cb.disabled = checkedCount >= 5;
-            }
+
+        if (checkedCount > 5) {
+            e.target.checked = false; // Immediately uncheck the 6th box
+            showToast("⚠️ MAXIMUM 5 PICKS ALLOWED!");
+            return;
+        }
+
+        // Lock/Unlock remaining boxes
+        checkboxes.forEach(cb => {
+            if (!cb.checked) cb.disabled = (checkedCount >= 5);
         });
     }
 });
+
+
+
 window.enforceVoteLimit = () => {
     const checkedCount = document.querySelectorAll('.vote-check:checked').length;
     const checkboxes = document.querySelectorAll('.vote-check');
@@ -873,6 +924,7 @@ window.enforceVoteLimit = () => {
     });
 };
 
+
 // Keep your event listener, but have it call the new function
 document.addEventListener('change', (e) => {
     if (e.target.classList.contains('vote-check')) {
@@ -880,5 +932,6 @@ document.addEventListener('change', (e) => {
     }
 });
 </script>
+<div id="toast"></div>
 </body>
 </html>
