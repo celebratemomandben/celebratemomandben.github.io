@@ -265,6 +265,16 @@
             transform: translateY(-5px);
             box-shadow: 0 20px 45px rgba(0,0,0,0.15);
         }
+        .video-player iframe { 
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    border: none; 
+    top: 0; 
+    left: 0; 
+    transform: translateZ(0); /* Forces hardware acceleration */
+    -webkit-transform: translateZ(0); /* Safari fallback */
+}
     </style>
 </head>
 <body>
