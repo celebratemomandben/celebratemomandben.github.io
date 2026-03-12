@@ -577,7 +577,7 @@
 
   window.loadLoc = (i) => {
     const loc = locations[i]; currentLoc = loc;
-    document.getElementById('mainPlayer').src = `https://www.youtube-nocookie.com/embed/${loc.vidId}?autoplay=1&rel=0&origin=${window.location.origin}`;
+    document.getElementById('mainPlayer').src = `https://www.youtube-nocookie.com/embed/${loc.vidId}?autoplay=0&rel=0&origin=${window.location.origin}`;
     document.getElementById('infoTitle').innerText = loc.name.toUpperCase();
     document.getElementById('infoDesc').innerText = loc.desc;
     document.getElementById('chatTagPicker').value = loc.name;
