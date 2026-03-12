@@ -417,6 +417,24 @@
     { name: "Colorado Wolf and Wildlife Center", vidId: "6WSq5WS63DE", cost: "$25", web: "http://www.wolfeducation.org", phone: "719-687-9742", desc: "Nonprofit sanctuary for wolves", reviews: [{u:"Sam", t:"It was my 18th birthday gift and hands down the coolest experience I ever had.", s:5}, {u:"Timothy", t:"Knowledgeable staff and small group tours allow for good interaction.", s:5}] }
   ];
 
+// 1. The Final Tier Names
+const tierNames = [
+    "1 — THE SUMMIT CLUB 🏔️", 
+    "2 — MAGNA CUM LAUDE 🎓", 
+    "3 — OFF THE CLOCK VIBES 🥂", 
+    "4 — THE GRADIENT 📈", 
+    "5 — SCENIC DETOURS 🌲"
+];
+
+// 2. The Colorado Sunset Palette
+const tierColors = [
+    "#D9534F", // Summit Red
+    "#E67E22", // Sunset Orange
+    "#F1C40F", // Aspen Gold
+    "#27AE60", // Evergreen
+    "#2980B9"  // Mountain Blue
+];
+
   let currentLoc = locations[0];
   const picker = document.getElementById('locPicker');
   const tagPicker = document.getElementById('chatTagPicker');
@@ -757,29 +775,82 @@
     } 
   });
 
-  // 2. THEN tell Firebase to update it whenever votes come in
-  onValue(ref(db, 'userVotes'), (snap) => {
-    const data = snap.val() || {}; const counts = {}; const supporters = {};
-    locations.forEach(l => { counts[l.name] = 0; supporters[l.name] = []; });
-    Object.entries(data).forEach(([u, l]) => { if(l && Array.isArray(l)) { l.forEach(p => { if(counts[p] !== undefined) { counts[p]++; supporters[p].push(u); } }); } });
+
+onValue(ref(db, 'userVotes'), (snap) => {
+    const data = snap.val() || {}; 
+    const counts = {}; 
+    const supporters = {};
+
+    // Initialize counts for all locations
+    locations.forEach(l => { 
+        counts[l.name] = 0; 
+        supporters[l.name] = []; 
+    });
+
+    // Tally votes from Firebase
+    Object.entries(data).forEach(([u, l]) => { 
+        if(l && Array.isArray(l)) { 
+            l.forEach(p => { 
+                if(counts[p] !== undefined) { 
+                    counts[p]++; 
+                    supporters[p].push(u); 
+                } 
+            }); 
+        } 
+    });
+
+    // Sort locations by vote count (highest first)
     const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]);
-    let h = ""; let rank = 0, lastV = -1;
-    for(let i=0; i<sorted.length; i++){
-        const n = sorted[i][0]; const v = sorted[i][1]; if(!n || v===0) continue;
-        if(v!==lastV){ rank++; lastV=v; } if(rank > 5) break;
-        if(n && typeof n === 'string') {
-            h += `<div style="margin-bottom:8px;"><span class="rank-badge">RANK ${rank}</span><strong>${n.toUpperCase()}</strong> (${v})<br>${supporters[n].map(p => `<span class="voter-tag">${p}</span>`).join("")}</div>`;
-        }
-    }
-    document.getElementById('voterDetails').innerHTML = h || "Voting in progress...";
     
-    // Update the chart with the new data and dynamic colors!
+    let h = ""; 
+    let currentRank = 0; 
+    let lastVoteCount = -1;
+
+    for(let i = 0; i < sorted.length; i++) {
+        const name = sorted[i][0]; 
+        const votes = sorted[i][1]; 
+        
+        if(!name || votes === 0) continue;
+
+        // Grouping Logic: Only show the Tier Header when the vote count changes
+        if(votes !== lastVoteCount) {
+            currentRank++;
+            lastVoteCount = votes;
+            if(currentRank > 5) break; // Limit to Top 5 unique vote counts
+
+            const displayTitle = tierNames[currentRank - 1];
+            const displayBg = tierColors[currentRank - 1];
+
+            h += `
+                <div style="margin-top: 25px; margin-bottom: 12px; border-top: 2px solid rgba(0,0,0,0.05); padding-top: 15px;">
+                    <span class="rank-badge" style="background:${displayBg}; padding: 6px 14px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        ${displayTitle}
+                    </span>
+                </div>`;
+        }
+
+        // Location Detail
+        h += `
+            <div style="margin: 10px 0 18px 5px; padding-left: 5px;">
+                <div style="display:flex; align-items:baseline; gap:8px; margin-bottom:6px;">
+                    <strong style="font-size:1.1rem; color:#1a1a1a; letter-spacing:-0.4px;">${name.toUpperCase()}</strong> 
+                    <span style="color:#718096; font-size:0.85rem; font-weight:800;">(${votes} VOTES)</span>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                    ${supporters[name].map(p => `<span class="voter-tag">${p}</span>`).join("")}
+                </div>
+            </div>`;
+    }
+
+    document.getElementById('voterDetails').innerHTML = h || "<p style='text-align:center; color:#666;'>Waiting for the first picks...</p>";
+    
+    // --- Update the Chart ---
     myChart.data.labels = sorted.map(e => e[0]); 
     myChart.data.datasets[0].data = sorted.map(e => e[1]); 
     myChart.data.datasets[0].backgroundColor = sorted.map(e => locationColors[e[0]]);
     myChart.data.datasets[0].hoverBackgroundColor = sorted.map(e => locationColors[e[0]]);
     myChart.update();
-  });
+});
 
 </script>
 </body>
