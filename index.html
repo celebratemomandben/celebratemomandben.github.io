@@ -1401,6 +1401,10 @@ onValue(ref(db, 'userVotes'), (snap) => {
           animation: 150,
           delay: 150, // Mobile friendly: prevent accidental drag when scrolling
           delayOnTouchOnly: true,
+          onAdd: function (evt) {
+              const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+              evt.item.dataset.mover = currentUser;
+          },
           onEnd: function (evt) {
               saveAgendaState();
           }
@@ -1413,10 +1417,11 @@ onValue(ref(db, 'userVotes'), (snap) => {
       days.forEach(day => {
           const items = Array.from(document.getElementById(`day-${day}`).children).map(el => {
               const span = el.querySelector('span');
-              const text = span ? span.textContent.trim() : el.textContent.trim();
+              const text = el.dataset.rawtext || (span ? span.textContent.trim() : el.textContent.trim());
               return {
                   text: text,
-                  creator: el.dataset.creator || "SYSTEM"
+                  creator: el.dataset.creator || "SYSTEM",
+                  mover: el.dataset.mover || ""
               };
           });
           newState[day] = items;
@@ -1436,10 +1441,19 @@ onValue(ref(db, 'userVotes'), (snap) => {
 
   window.editCustomActivity = (btn) => {
       const item = btn.closest('.agenda-item');
-      const span = item.querySelector('span');
-      const newText = prompt('Edit activity:', span.textContent);
+      const currentText = item.dataset.rawtext || item.querySelector('span').textContent.trim();
+      const newText = prompt('Edit activity:', currentText);
       if (newText !== null && newText.trim() !== "") {
-          span.textContent = newText.trim();
+          const safeText = newText.trim().replace(/"/g, '&quot;');
+          item.dataset.rawtext = safeText;
+          
+          const mover = item.dataset.mover || "";
+          let moverDisplay = "";
+          const isPool = item.closest('.sortable-list').id === 'day-pool';
+          if (!isPool && mover) {
+              moverDisplay = ` <span style="color:#888; font-size:0.75rem; font-style:italic; font-weight:normal;">(${mover})</span>`;
+          }
+          item.querySelector('span').innerHTML = `${newText.trim()}${moverDisplay}`;
           saveAgendaState();
       }
   };
@@ -1450,7 +1464,8 @@ onValue(ref(db, 'userVotes'), (snap) => {
       if (!val) return;
       const pool = document.getElementById('day-pool');
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      pool.innerHTML += `<div class="agenda-item" data-creator="${currentUser}">
+      const safeText = val.replace(/"/g, '&quot;');
+      pool.innerHTML += `<div class="agenda-item" data-creator="${currentUser}" data-mover="" data-rawtext="${safeText}">
           <span>${val}</span>
           <div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; display:flex; gap:6px; align-items:center;">
               <span onclick="editCustomActivity(this)" style="cursor:pointer; text-decoration:underline;">edit</span> <span style="color:#ccc;">/</span>
@@ -1472,26 +1487,52 @@ onValue(ref(db, 'userVotes'), (snap) => {
               list.innerHTML = "";
               if (state[day]) {
                   state[day].forEach(itemObj => {
-                      let text, creator;
+                      let text, creator, mover;
                       if (typeof itemObj === 'string') {
                           text = itemObj;
                           creator = "SYSTEM";
+                          mover = "";
                       } else {
                           text = itemObj.text;
                           creator = itemObj.creator;
+                          mover = itemObj.mover || "";
                       }
 
                       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
                       let actions = "";
-                      if (creator !== "SYSTEM" && (creator === currentUser || currentUser === "CHUCK")) {
-                          actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; display:flex; gap:6px; align-items:center;">
-                              <span onclick="editCustomActivity(this)" style="cursor:pointer; text-decoration:underline;">edit</span> <span style="color:#ccc;">/</span>
-                              <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:underline; color:var(--accent);">del</span>
-                          </div>`;
+                      
+                      const isCreator = (creator === currentUser);
+                      const isMover = (mover === currentUser);
+                      const isAdmin = (currentUser === "CHUCK");
+                      const canDelete = (isCreator || isMover || isAdmin);
+
+                      if (creator !== "SYSTEM") {
+                          if (isCreator || isAdmin) {
+                              actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; display:flex; gap:6px; align-items:center;">
+                                  <span onclick="editCustomActivity(this)" style="cursor:pointer; text-decoration:underline;">edit</span> <span style="color:#ccc;">/</span>
+                                  <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:underline; color:var(--accent);">del</span>
+                              </div>`;
+                          } else if (canDelete) {
+                              actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; display:flex; gap:6px; align-items:center;">
+                                  <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:underline; color:var(--accent);">del</span>
+                              </div>`;
+                          }
+                      } else {
+                          if (canDelete) {
+                              actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; display:flex; gap:6px; align-items:center;">
+                                  <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:underline; color:var(--accent);">del</span>
+                              </div>`;
+                          }
                       }
 
-                      list.innerHTML += `<div class="agenda-item" data-creator="${creator}">
-                          <span>${text}</span>
+                      let moverDisplay = "";
+                      if (day !== 'pool' && mover) {
+                          moverDisplay = ` <span style="color:#888; font-size:0.75rem; font-style:italic; font-weight:normal;">(${mover})</span>`;
+                      }
+
+                      const safeText = text.replace(/"/g, '&quot;');
+                      list.innerHTML += `<div class="agenda-item" data-creator="${creator}" data-mover="${mover}" data-rawtext="${safeText}">
+                          <span>${text}${moverDisplay}</span>
                           ${actions}
                       </div>`;
                   });
