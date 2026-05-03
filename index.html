@@ -74,7 +74,9 @@
         .row-comments { flex:1; padding:10px; display:flex; flex-direction:column; background:#fdfdfd; }
         .row-comments textarea { width:100%; height:100%; flex-grow:1; border:1px solid #ddd; padding:8px; border-radius:5px; font-size:0.8rem; background:white; font-family:'Inter', sans-serif; box-sizing: border-box; resize:vertical; min-height:60px; }
         .sortable-list { min-height:45px; display:flex; flex-direction:row; flex-wrap:wrap; gap:8px; align-items:flex-start; height: 100%; box-sizing: border-box; }
-        .agenda-item { background:white; padding:8px 12px; border-radius:8px; font-size:0.8rem; font-weight:700; color:#333; cursor:grab; box-shadow:0 2px 5px rgba(0,0,0,0.05); border:1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
+        .agenda-item { background:white; padding:8px 12px; border-radius:8px; font-size:0.8rem; font-weight:700; color:#333; cursor:grab; box-shadow:0 2px 5px rgba(0,0,0,0.05); border:1px solid #eee; display:flex; justify-content:flex-start; align-items:center; }
+        .agenda-item::before { content: "⋮⋮"; color: #cbd5e0; margin-right: 8px; font-size: 1.1rem; line-height: 1; letter-spacing: -2px; padding-right: 2px; }
+        .agenda-item > span { flex-grow: 1; }
         .agenda-item:active { cursor:grabbing; }
         .agenda-comments-container { flex:1; min-width:300px; background:var(--glass); border-radius:15px; padding:15px; display:flex; flex-direction:column; border: 1px solid rgba(255,255,255,0.6); }
         .agenda-details-wrapper { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, margin-bottom 0.4s ease; opacity: 0; margin-bottom: 0; }
@@ -90,11 +92,19 @@
         @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
         
         @media (max-width: 600px) {
-            .agenda-row { flex-direction:column; }
-            .row-header { flex:none; padding:8px; }
-            .row-agenda { border-right:none; border-bottom:1px solid #eee; }
-            .row-comments { flex:none; padding:8px; }
+            .agenda-row { flex-direction:column; margin-bottom: 15px; border-radius: 12px; border: 1px solid #cdd4d9; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+            .row-header { flex-direction: row !important; flex-wrap: wrap; align-items: center; justify-content: space-between; text-align: left; padding: 12px 15px; }
+            .row-header > div:nth-child(1) { order: 1; font-size: 0.95rem; }
+            .row-header > div:nth-child(3) { order: 2; margin-top: 0; margin-left: auto; }
+            .row-header > div:nth-child(2) { order: 3; flex-basis: 100%; text-align: left; margin-top: 4px !important; font-size: 0.75rem !important; }
+            
+            .row-agenda { border-right:none; border-bottom:1px solid #eee; padding: 15px; }
+            .row-comments { flex:none; padding:15px; }
             .agenda-table-headers { display:none !important; }
+            .agenda-row:not(:last-child) .row-comments::before { content: "💬 Day Discussion"; display: block; font-size: 0.75rem; font-weight: 800; color: #888; margin-bottom: 8px; text-transform: uppercase; }
+            
+            .sortable-list { flex-direction: column; align-items: stretch; gap: 10px; min-height: 55px; }
+            .agenda-item { width: 100%; box-sizing: border-box; padding: 12px; font-size: 0.9rem; }
         }
 
         .video-module { grid-area: video; } .info-module { grid-area: info; } 
@@ -1379,6 +1389,8 @@ onValue(ref(db, 'userVotes'), (snap) => {
       new Sortable(document.getElementById(`day-${day}`), {
           group: 'shared-agenda',
           animation: 150,
+          delay: 150, // Mobile friendly: prevent accidental drag when scrolling
+          delayOnTouchOnly: true,
           onEnd: function (evt) {
               saveAgendaState();
           }
