@@ -395,15 +395,15 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getDatabase, ref, onValue, set, get, child, push, serverTimestamp, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAByJd5SpzqtK7LAA80I-nONrXQqhgG2uQ",
-    authDomain: "celebratemomandben.firebaseapp.com",
-    projectId: "celebratemomandben",
-    storageBucket: "celebratemomandben.firebasestorage.app",
-    messagingSenderId: "567044784692",
-    appId: "1:567044784692:web:dba496160575757517c061",
-    measurementId: "G-6H8FYLXRG8"
-  };
+ const firebaseConfig = {
+  apiKey: "AIzaSyCE7LWow8RxILsvO89KWdizYmzfVWS5jZU",
+  authDomain: "myapp-5acc3.firebaseapp.com",
+  databaseURL: "https://myapp-5acc3.firebaseio.com",
+  projectId: "myapp-5acc3",
+  storageBucket: "myapp-5acc3.firebasestorage.app",
+  messagingSenderId: "903180039566",
+  appId: "1:903180039566:web:52879b44550773ba3120df"
+};
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
