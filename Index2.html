@@ -1,0 +1,216 @@
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{
+  --primary:#0f7ea8;
+  --primary-2:#0b5f82;
+  --accent:#e85d5d;
+  --bg-1:#eaf3fb;
+  --bg-2:#f7f9fc;
+  --card:rgba(255,255,255,.82);
+  --card-border:rgba(255,255,255,.55);
+  --text:#1f2937;
+  --muted:#667085;
+  --shadow:0 14px 40px rgba(15,23,42,.10);
+  --shadow-soft:0 8px 24px rgba(15,23,42,.08);
+  --radius:24px;
+  --radius-sm:16px;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(15,126,168,.18), transparent 28%),
+    linear-gradient(180deg, var(--bg-1), var(--bg-2));
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  padding:clamp(12px,2vw,24px);
+}
+
+.container{max-width:1280px;margin:0 auto}
+
+.main-title{
+  text-align:center;
+  margin:8px 0 6px;
+  font-size:clamp(1.65rem,4vw,2.8rem);
+  line-height:1.05;
+  letter-spacing:.04em;
+  font-weight:900;
+}
+
+.user-hub-banner{
+  text-align:center;
+  color:var(--primary);
+  font-size:.85rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+.auth-container,
+.bento-item{
+  background:var(--card);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--card-border);
+  box-shadow:var(--shadow);
+}
+
+.auth-container{
+  max-width:460px;
+  margin:0 auto 16px;
+  padding:22px;
+  border-radius:28px;
+  text-align:center;
+}
+
+.bento-grid{
+  display:none;
+  gap:14px;
+  grid-template-areas:
+    "agenda"
+    "video"
+    "info"
+    "chat"
+    "poll"
+    "voters"
+    "chart";
+}
+
+.unlocked{display:grid !important}
+
+.bento-item{
+  border-radius:var(--radius);
+  padding:18px;
+  overflow:hidden;
+  transition:transform .22s ease, box-shadow .22s ease;
+}
+
+.bento-item:hover{transform:translateY(-2px);box-shadow:0 18px 45px rgba(15,23,42,.12)}
+
+.step-header{
+  display:block;
+  margin-bottom:10px;
+  font-size:.78rem;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--primary-2);
+}
+
+input,select,textarea,button{
+  font:inherit;
+}
+
+input[type="text"],
+input[type="password"],
+select,
+textarea{
+  width:100%;
+  min-height:48px;
+  border-radius:16px;
+  border:1px solid #d7e0ea;
+  background:#fff;
+  color:var(--text);
+  padding:12px 14px;
+  font-size:16px !important;
+  outline:none;
+  transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+input:focus,select:focus,textarea:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px rgba(15,126,168,.12);
+}
+
+.btn-unlock,
+.btn-update-picks{
+  width:100%;
+  min-height:52px;
+  border:none;
+  border-radius:18px;
+  font-weight:900;
+  cursor:pointer;
+  transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+.btn-unlock{
+  margin-top:12px;
+  background:linear-gradient(135deg, var(--primary), var(--primary-2));
+  color:#fff;
+  box-shadow:0 10px 24px rgba(15,126,168,.22);
+}
+
+.btn-unlock:active,
+.btn-update-picks:active,
+button:active{
+  transform:scale(.98);
+}
+
+.btn-update-picks{
+  background:linear-gradient(135deg, #2ecc71, #24b863);
+  color:#fff;
+  box-shadow:0 10px 24px rgba(46,204,113,.24);
+  margin-top:12px;
+}
+
+.user-controls{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.how-to-blurb{
+  max-width:640px;
+  padding:12px 14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.6);
+  color:var(--muted);
+  line-height:1.45;
+  text-align:center;
+}
+
+.video-player{
+  width:100%;
+  aspect-ratio:16/9;
+  border-radius:18px;
+  overflow:hidden;
+  background:#000;
+  position:relative;
+}
+
+.video-player iframe{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  border:0;
+}
+
+@media (min-width:1100px){
+  .bento-grid{
+    grid-template-columns:repeat(4,1fr);
+    grid-template-areas:
+      "agenda agenda agenda agenda"
+      "video video video video"
+      "info info chat chat"
+      "poll poll voters voters"
+      "chart chart chart chart";
+  }
+}
+
+@media (max-width:700px){
+  body{padding:10px}
+  .bento-item{padding:15px;border-radius:22px}
+  .auth-container{padding:18px}
+}
+</style>
