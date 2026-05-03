@@ -438,8 +438,8 @@
         </div>
 
         <div class="bento-item agenda-module">
-            <h2 style="margin-top:0; text-align:center; color: var(--primary);">📅 PROPOSED AGENDA</h2>
-            <p style="text-align:center; font-size:0.9rem; color:#555; margin-bottom:15px; font-weight: bold;">Please read, comment & vote on proposed agenda. This is just something so we can start planning - Chuck</p>
+            <h2 id="title-main" onclick="editConfigText('title-main')" style="margin-top:0; text-align:center; color: var(--primary); cursor:pointer;">📅 OUR AGENDA</h2>
+            <p id="title-sub" onclick="editConfigText('title-sub')" style="text-align:center; font-size:0.9rem; color:#555; margin-bottom:15px; font-weight: bold; cursor:pointer;">Celebrating Together!</p>
             
             <div class="agenda-table-headers" style="display:flex; gap:10px; padding: 0 10px 5px 10px; font-weight:800; font-size:0.75rem; color:#666; text-transform:uppercase;">
                 <div style="flex:0 0 120px; text-align:center;">DAY</div>
@@ -451,7 +451,7 @@
                 <div class="agenda-row">
                     <div class="row-header" style="flex-direction:column;">
                         <div>SAT, MAY 23</div>
-                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">Arrival Day</div>
+                        <div id="desc-sat" onclick="editConfigText('desc-sat')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Arrival Day</div>
                     </div>
                     <div class="row-agenda">
                         <button class="details-toggle-btn" onclick="toggleDetails(this)">
@@ -474,7 +474,7 @@
                 <div class="agenda-row">
                     <div class="row-header" style="flex-direction:column;">
                         <div>SUN, MAY 24</div>
-                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">Local Charm</div>
+                        <div id="desc-sun" onclick="editConfigText('desc-sun')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Local Charm</div>
                         <div class="day-vote-btn" onclick="toggleDayVote('sun')" id="vote-btn-sun" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
@@ -498,7 +498,7 @@
                 <div class="agenda-row">
                     <div class="row-header" style="flex-direction:column;">
                         <div>MON, MAY 25</div>
-                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">Iconic Sights & Depths</div>
+                        <div id="desc-mon" onclick="editConfigText('desc-mon')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Iconic Sights & Depths</div>
                         <div class="day-vote-btn" onclick="toggleDayVote('mon')" id="vote-btn-mon" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
@@ -522,7 +522,7 @@
                 <div class="agenda-row">
                     <div class="row-header" style="flex-direction:column;">
                         <div>TUE, MAY 26</div>
-                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">Wildlife & Waterfalls</div>
+                        <div id="desc-tue" onclick="editConfigText('desc-tue')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Wildlife & Waterfalls</div>
                         <div class="day-vote-btn" onclick="toggleDayVote('tue')" id="vote-btn-tue" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
@@ -546,7 +546,7 @@
                 <div class="agenda-row">
                     <div class="row-header" style="flex-direction:column;">
                         <div>WED, MAY 27</div>
-                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">The Royal Gorge Experience</div>
+                        <div id="desc-wed" onclick="editConfigText('desc-wed')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">The Royal Gorge Experience</div>
                         <div class="day-vote-btn" onclick="toggleDayVote('wed')" id="vote-btn-wed" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
@@ -570,7 +570,7 @@
                 <div class="agenda-row">
                     <div class="row-header" style="flex-direction:column;">
                         <div>THU, MAY 28</div>
-                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">The Summit</div>
+                        <div id="desc-thu" onclick="editConfigText('desc-thu')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">The Summit</div>
                         <div class="day-vote-btn" onclick="toggleDayVote('thu')" id="vote-btn-thu" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
@@ -594,7 +594,7 @@
                 <div class="agenda-row">
                     <div class="row-header" style="flex-direction:column;">
                         <div>FRI, MAY 29</div>
-                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">Open Day</div>
+                        <div id="desc-fri" onclick="editConfigText('desc-fri')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Open Day</div>
                         <div class="day-vote-btn" onclick="toggleDayVote('fri')" id="vote-btn-fri" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
@@ -618,7 +618,7 @@
                 <div class="agenda-row">
                     <div class="row-header" style="flex-direction:column;">
                         <div>SAT, MAY 30</div>
-                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">Departure Day</div>
+                        <div id="desc-sat2" onclick="editConfigText('desc-sat2')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Departure Day</div>
                     </div>
                     <div class="row-agenda">
                         <button class="details-toggle-btn" onclick="toggleDetails(this)">
@@ -965,7 +965,7 @@ window.unlockApp = async function() {
 
   function renderMessage(m, room, container, currentUser, allMsgs) {
     const isOwner = (m.user === currentUser);
-    const isAdmin = (currentUser === "CHUCK");
+    const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
     const canManage = isOwner || isAdmin;
     const indentClass = m.parentId ? 'is-reply' : '';
     const actions = canManage ? `<span class="reply-btn" style="color:var(--accent)" onclick="deleteMsg('${m.id}')">delete</span><span class="reply-btn" onclick="editMsg('${m.id}', '${m.msg.replace(/'/g, "\\'")}')">edit</span>` : '';
@@ -1291,7 +1291,7 @@ onValue(ref(db, 'userVotes'), (snap) => {
           
           msgs.forEach(m => {
               const displayUser = m.user === "SYSTEM" ? "CHUCK" : m.user;
-              const canEdit = (displayUser === currentUser || currentUser === "CHUCK");
+              const canEdit = (displayUser === currentUser || currentUser === "CHUCK" || currentUser === "BEN");
               let actions = "";
               if (canEdit) {
                   const safeStr = m.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
@@ -1300,7 +1300,7 @@ onValue(ref(db, 'userVotes'), (snap) => {
                       ${m.lastEditedBy ? '(Last edited by ' + m.lastEditedBy + ')' : ''} 
                       <span style="float:right;">
                           <a href="javascript:void(0)" onclick="editItinerary('${day}', '${m.id}', '${safeStr}')" style="color:var(--primary); text-decoration:none;">edit</a> <span style="color:#ccc;">/</span> 
-                          <a href="javascript:void(0)" onclick="deleteItinerary('${day}', '${m.id}')" style="color:var(--accent); text-decoration:none;">del</a>
+                          <a href="javascript:void(0)" onclick="deleteItinerary('${day}', '${m.id}')" style="color:var(--accent); text-decoration:none; font-weight:bold;">X</a>
                       </span>
                   </div>`;
               } else {
@@ -1379,7 +1379,7 @@ onValue(ref(db, 'userVotes'), (snap) => {
           msgs.sort((a,b) => (a.time || 0) - (b.time || 0));
           
           msgs.forEach(m => {
-              const canEditDelete = (m.user === currentUser || currentUser === "CHUCK");
+              const canEditDelete = (m.user === currentUser || currentUser === "CHUCK" || currentUser === "BEN");
               let links = "";
               if (canEditDelete) {
                   const escapedMsg = m.msg.replace(/'/g, "\\'").replace(/"/g, '&quot;');
@@ -1432,10 +1432,27 @@ onValue(ref(db, 'userVotes'), (snap) => {
   }
 
   window.deleteCustomActivity = (btn) => {
-      if(confirm('Delete this custom activity?')) {
-          const item = btn.closest('.agenda-item');
-          item.remove();
-          saveAgendaState();
+      const item = btn.closest('.agenda-item');
+      const list = item.closest('.sortable-list');
+      
+      if (list && list.id === 'day-pool') {
+          if(confirm('Permanently delete this custom activity?')) {
+              item.remove();
+              saveAgendaState();
+          }
+      } else {
+          if(confirm('Move this activity back to the Options Pool?')) {
+              const pool = document.getElementById('day-pool');
+              if (pool) {
+                  pool.appendChild(item);
+                  item.dataset.mover = "";
+                  const span = item.querySelector('span');
+                  if (span) {
+                      span.innerHTML = item.dataset.rawtext;
+                  }
+                  saveAgendaState();
+              }
+          }
       }
   };
 
@@ -1467,9 +1484,9 @@ onValue(ref(db, 'userVotes'), (snap) => {
       const safeText = val.replace(/"/g, '&quot;');
       pool.innerHTML += `<div class="agenda-item" data-creator="${currentUser}" data-mover="" data-rawtext="${safeText}">
           <span>${val}</span>
-          <div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; display:flex; gap:6px; align-items:center;">
+          <div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; padding-left: 15px; display:flex; gap:6px; align-items:center;">
               <span onclick="editCustomActivity(this)" style="cursor:pointer; text-decoration:underline;">edit</span> <span style="color:#ccc;">/</span>
-              <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:underline; color:var(--accent);">del</span>
+              <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:none; font-weight:bold; color:var(--accent);">X</span>
           </div>
       </div>`;
       input.value = "";
@@ -1503,24 +1520,24 @@ onValue(ref(db, 'userVotes'), (snap) => {
                       
                       const isCreator = (creator === currentUser);
                       const isMover = (mover === currentUser);
-                      const isAdmin = (currentUser === "CHUCK");
+                      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
                       const canDelete = (isCreator || isMover || isAdmin);
 
                       if (creator !== "SYSTEM") {
                           if (isCreator || isAdmin) {
-                              actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; display:flex; gap:6px; align-items:center;">
+                              actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; padding-left: 15px; display:flex; gap:6px; align-items:center;">
                                   <span onclick="editCustomActivity(this)" style="cursor:pointer; text-decoration:underline;">edit</span> <span style="color:#ccc;">/</span>
-                                  <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:underline; color:var(--accent);">del</span>
+                                  <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:none; font-weight:bold; color:var(--accent);">X</span>
                               </div>`;
                           } else if (canDelete) {
-                              actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; display:flex; gap:6px; align-items:center;">
-                                  <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:underline; color:var(--accent);">del</span>
+                              actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; padding-left: 15px; display:flex; gap:6px; align-items:center;">
+                                  <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:none; font-weight:bold; color:var(--accent);">X</span>
                               </div>`;
                           }
                       } else {
                           if (canDelete) {
-                              actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; display:flex; gap:6px; align-items:center;">
-                                  <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:underline; color:var(--accent);">del</span>
+                              actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; padding-left: 15px; display:flex; gap:6px; align-items:center;">
+                                  <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:none; font-weight:bold; color:var(--accent);">X</span>
                               </div>`;
                           }
                       }
@@ -1577,7 +1594,7 @@ onValue(ref(db, 'userVotes'), (snap) => {
       msgs.sort((a,b) => (a.time || 0) - (b.time || 0)); 
       
       msgs.forEach(m => {
-          const canDelete = (m.user === currentUser || currentUser === "CHUCK");
+          const canDelete = (m.user === currentUser || currentUser === "CHUCK" || currentUser === "BEN");
           const delBtn = canDelete ? `<span class="reply-btn" style="color:var(--accent); cursor:pointer;" onclick="if(confirm('Delete message?')) window.deleteAgendaMsg('${m.id}')">delete</span>` : "";
           box.innerHTML += `<div class="chat-msg" style="border-bottom: 1px solid #eee; padding: 5px 0; position:relative;"><strong>${m.user}:</strong> ${m.msg}${delBtn}</div>`;
       });
@@ -1595,6 +1612,43 @@ window.showToast = (msg) => {
     t.className = "show";
     setTimeout(() => { t.className = t.className.replace("show", ""); }, 3000);
 };
+
+// --- CONFIG TEXT EDITING ---
+window.editConfigText = (key) => {
+    const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+    if (currentUser !== "CHUCK" && currentUser !== "BEN") return;
+    
+    const el = document.getElementById(key);
+    const currentText = el.innerText;
+    const newText = prompt(`Edit text:`, currentText);
+    if (newText !== null && newText.trim() !== "") {
+        set(ref(db, `agendaConfig/${key}`), newText.trim());
+    }
+};
+
+onValue(ref(db, 'agendaConfig'), (snap) => {
+    const config = snap.val() || {};
+    const keys = ['title-main', 'title-sub', 'desc-sat', 'desc-sun', 'desc-mon', 'desc-tue', 'desc-wed', 'desc-thu', 'desc-fri', 'desc-sat2'];
+    const defaults = {
+        'title-main': '📅 OUR AGENDA',
+        'title-sub': 'Celebrating Together!',
+        'desc-sat': 'Arrival Day',
+        'desc-sun': 'Local Charm',
+        'desc-mon': 'Iconic Sights & Depths',
+        'desc-tue': 'Wildlife & Waterfalls',
+        'desc-wed': 'The Royal Gorge Experience',
+        'desc-thu': 'The Summit',
+        'desc-fri': 'Open Day',
+        'desc-sat2': 'Departure Day'
+    };
+    
+    keys.forEach(k => {
+        const el = document.getElementById(k);
+        if (el) {
+            el.innerText = config[k] || defaults[k];
+        }
+    });
+});
 
 // Add this inside your <script type="module"> section
 document.addEventListener('change', (e) => {
