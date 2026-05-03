@@ -23,6 +23,7 @@
             padding: clamp(10px, 2vw, 20px); 
             color: #2d3436;
             -webkit-tap-highlight-color: transparent; 
+            touch-action: manipulation; /* Prevents double-tap to zoom */
         }
 
         /* The keyframes that make the background slowly pan back and forth */
@@ -49,8 +50,11 @@
 
         .auth-input, #voterName, #voterPass, #locPicker, #chatTagPicker { text-transform: uppercase; }
 
+        /* PREVENT IOS ZOOM: All inputs must be at least 16px */
+        input, select, textarea { font-size: 16px !important; }
+
         input[type="text"], input[type="password"], select { 
-            padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin: 5px; width: 85%; font-size: 16px !important; 
+            padding: 12px; border-radius: 8px; border: 1px solid #ddd; margin: 5px; width: 85%; 
         }
 
         #chatInput { text-transform: none !important; width: auto; flex-grow: 1; }
@@ -92,19 +96,22 @@
         @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
         
         @media (max-width: 600px) {
-            .agenda-row { flex-direction:column; margin-bottom: 15px; border-radius: 12px; border: 1px solid #cdd4d9; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-            .row-header { flex-direction: row !important; flex-wrap: wrap; align-items: center; justify-content: space-between; text-align: left; padding: 12px 15px; }
-            .row-header > div:nth-child(1) { order: 1; font-size: 0.95rem; }
-            .row-header > div:nth-child(3) { order: 2; margin-top: 0; margin-left: auto; }
-            .row-header > div:nth-child(2) { order: 3; flex-basis: 100%; text-align: left; margin-top: 4px !important; font-size: 0.75rem !important; }
+            .agenda-row { flex-direction:column; margin-bottom: 12px; border-radius: 12px; border: 1px solid #cdd4d9; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
+            .row-header { flex: none; flex-direction: row !important; flex-wrap: nowrap; align-items: center; justify-content: flex-start; text-align: left; padding: 10px 12px; gap: 6px; }
+            .row-header > div:nth-child(1) { order: 1; font-size: 0.9rem; font-weight: 900; margin: 0; flex-shrink: 0; }
+            .row-header > div:nth-child(2) { order: 2; font-size: 0.75rem !important; margin-top: 0 !important; color: rgba(255,255,255,0.9) !important; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .row-header > div:nth-child(2)::before { content: "- "; }
+            .row-header > div:nth-child(3) { order: 3; margin-top: 0; margin-left: auto; flex-shrink: 0; }
             
-            .row-agenda { border-right:none; border-bottom:1px solid #eee; padding: 15px; }
-            .row-comments { flex:none; padding:15px; }
+            .row-agenda { border-right:none; border-bottom:1px solid #eee; padding: 10px 12px 5px 12px; }
+            .details-toggle-btn { width: 100%; justify-content: center; padding: 8px; margin-bottom: 0px; background: #f8fafc; }
+            
+            .row-comments { flex:none; padding:10px 12px; }
             .agenda-table-headers { display:none !important; }
-            .agenda-row:not(:last-child) .row-comments::before { content: "💬 Day Discussion"; display: block; font-size: 0.75rem; font-weight: 800; color: #888; margin-bottom: 8px; text-transform: uppercase; }
+            .agenda-row:not(:last-child) .row-comments::before { content: "💬 Day Discussion"; display: block; font-size: 0.7rem; font-weight: 800; color: #888; margin-bottom: 6px; text-transform: uppercase; }
             
-            .sortable-list { flex-direction: column; align-items: stretch; gap: 10px; min-height: 55px; }
-            .agenda-item { width: 100%; box-sizing: border-box; padding: 12px; font-size: 0.9rem; }
+            .sortable-list { flex-direction: column; align-items: stretch; gap: 6px; min-height: 5px; margin-top: 5px; }
+            .agenda-item { width: 100%; box-sizing: border-box; padding: 10px 12px; font-size: 0.85rem; border-radius: 8px; }
         }
 
         .video-module { grid-area: video; } .info-module { grid-area: info; } 
@@ -153,7 +160,7 @@
         #countdown { animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
-        #chatTagPicker { width: 100%; font-size: 0.8rem !important; padding: 8px; border-color: var(--primary); border-width: 2px; background: white; margin: 0 0 10px 0; }
+        #chatTagPicker { width: 100%; font-size: 16px !important; padding: 8px; border-color: var(--primary); border-width: 2px; background: white; margin: 0 0 10px 0; }
 
         .chart-module { 
             grid-area: chart; 
@@ -432,7 +439,7 @@
 
         <div class="bento-item agenda-module">
             <h2 style="margin-top:0; text-align:center; color: var(--primary);">📅 PROPOSED AGENDA</h2>
-            <p style="text-align:center; font-size:0.9rem; color:#555; margin-bottom:15px; font-weight: bold;">Drag & Drop activities to propose schedule changes! Comments below are specific to the agenda.</p>
+            <p style="text-align:center; font-size:0.9rem; color:#555; margin-bottom:15px; font-weight: bold;">Take a moment to interact, comment & vote on proposed agenda. This is just something so we can start planning.</p>
             
             <div class="agenda-table-headers" style="display:flex; gap:10px; padding: 0 10px 5px 10px; font-weight:800; font-size:0.75rem; color:#666; text-transform:uppercase;">
                 <div style="flex:0 0 120px; text-align:center;">DAY</div>
@@ -632,7 +639,10 @@
                     </div>
                 </div>
                 <div class="agenda-row" style="background:#fff3cd; border:2px dashed #f39c12;">
-                    <div class="row-header" style="background:#f39c12;">OPTIONS POOL</div>
+                    <div class="row-header" style="flex-direction:column; background:#f39c12; align-items:center;">
+                        <div>OPTIONS POOL</div>
+                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; padding: 0 4px;">Drag & Drop activities to proposed agenda!</div>
+                    </div>
                     <div class="row-agenda" style="background:transparent; border:none;"><div class="sortable-list" id="day-pool" data-day="pool"></div></div>
                     <div class="row-comments" style="background:transparent; justify-content:center; gap:5px; align-items:center;">
                         <input type="text" id="customActivityInput" placeholder="Other Activity..." style="width:100%; border:1px solid #ddd; padding:8px; border-radius:5px; font-size:0.8rem; box-sizing:border-box;">
