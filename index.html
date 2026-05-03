@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Colorado Springs 2026 Family Hub</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
         :root {
             --primary: #0083B8; --accent: #D9534F; --bg: #f0f4f8;
@@ -59,11 +60,41 @@
         .logout-link { color: var(--accent); cursor: pointer; font-weight: bold; text-decoration: underline; font-size: 0.85rem; }
         .how-to-blurb { max-width: 600px; font-size: 0.85rem; color: #555; text-align: center; line-height: 1.4; background: rgba(255,255,255,0.4); padding: 10px; border-radius: 10px; }
 
-        .bento-grid { display: none; gap: 15px; grid-template-areas: "video" "info" "chat" "poll" "voters" "chart"; }
+        .bento-grid { display: none; gap: 15px; grid-template-areas: "agenda" "video" "info" "chat" "poll" "voters" "chart"; }
         .unlocked { display: grid !important; }
 
         @media (min-width: 1100px) {
-            .bento-grid { grid-template-columns: repeat(4, 1fr); grid-template-areas: "video video video video" "info info chat chat" "poll poll voters voters" "chart chart chart chart"; }
+            .bento-grid { grid-template-columns: repeat(4, 1fr); grid-template-areas: "agenda agenda agenda agenda" "video video video video" "info info chat chat" "poll poll voters voters" "chart chart chart chart"; }
+        }
+        
+        .agenda-module { grid-area: agenda; width:100%; box-sizing:border-box; }
+        .agenda-row { display:flex; background:#fff; border-radius:10px; overflow:hidden; border:1px solid #e1e8ed; margin-bottom: 8px; align-items:stretch; flex-direction:row; }
+        .row-header { flex:0 0 120px; background:var(--primary); color:white; padding:10px; font-weight:800; font-size:0.8rem; display:flex; align-items:center; justify-content:center; text-align:center; line-height: 1.2; }
+        .row-agenda { flex:2; padding:10px; border-right:1px solid #eee; background:#f8f9fa; }
+        .row-comments { flex:1; padding:10px; display:flex; flex-direction:column; background:#fdfdfd; }
+        .row-comments textarea { width:100%; height:100%; flex-grow:1; border:1px solid #ddd; padding:8px; border-radius:5px; font-size:0.8rem; background:white; font-family:'Inter', sans-serif; box-sizing: border-box; resize:vertical; min-height:60px; }
+        .sortable-list { min-height:45px; display:flex; flex-direction:row; flex-wrap:wrap; gap:8px; align-items:flex-start; height: 100%; box-sizing: border-box; }
+        .agenda-item { background:white; padding:8px 12px; border-radius:8px; font-size:0.8rem; font-weight:700; color:#333; cursor:grab; box-shadow:0 2px 5px rgba(0,0,0,0.05); border:1px solid #eee; display:flex; justify-content:space-between; align-items:center; }
+        .agenda-item:active { cursor:grabbing; }
+        .agenda-comments-container { flex:1; min-width:300px; background:var(--glass); border-radius:15px; padding:15px; display:flex; flex-direction:column; border: 1px solid rgba(255,255,255,0.6); }
+        .agenda-details-wrapper { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease, margin-bottom 0.4s ease; opacity: 0; margin-bottom: 0; }
+        .agenda-details-wrapper.expanded { max-height: 500px; opacity: 1; margin-bottom: 8px; }
+        .agenda-details-box { font-size:0.75rem; color:#555; background:#fff; padding:10px; border-radius:6px; border:1px solid #e1e8ed; line-height:1.4; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin:0; }
+        .details-toggle-btn { background: transparent; border: 1px dashed #ccc; color: #666; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 8px; width: fit-content; }
+        .details-toggle-btn:hover { background: #f1f5f9; border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
+        .details-toggle-btn.active { background: #ebf4ff; border: 1px solid var(--primary); color: var(--primary); }
+        .comment-meta { font-size: 0.65rem; color: #888; text-align: right; margin-top: 4px; min-height: 12px; font-style: italic; }
+        .day-vote-btn { margin-top: 8px; background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; font-weight: bold; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.3); }
+        .day-vote-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
+        .day-vote-btn.voted { background: #ff4757; border-color: #ff4757; box-shadow: 0 0 10px rgba(255, 71, 87, 0.5); animation: pop 0.3s ease; }
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        
+        @media (max-width: 600px) {
+            .agenda-row { flex-direction:column; }
+            .row-header { flex:none; padding:8px; }
+            .row-agenda { border-right:none; border-bottom:1px solid #eee; }
+            .row-comments { flex:none; padding:8px; }
+            .agenda-table-headers { display:none !important; }
         }
 
         .video-module { grid-area: video; } .info-module { grid-area: info; } 
@@ -387,6 +418,227 @@
         <div class="bento-item chart-module">
             <h2 style="text-align:center; margin-top:0;">📊 FAMILY RANKING</h2>
             <canvas id="voteChart"></canvas>
+        </div>
+
+        <div class="bento-item agenda-module">
+            <h2 style="margin-top:0; text-align:center; color: var(--primary);">📅 PROPOSED AGENDA</h2>
+            <p style="text-align:center; font-size:0.9rem; color:#555; margin-bottom:15px; font-weight: bold;">Drag & Drop activities to propose schedule changes! Comments below are specific to the agenda.</p>
+            
+            <div class="agenda-table-headers" style="display:flex; gap:10px; padding: 0 10px 5px 10px; font-weight:800; font-size:0.75rem; color:#666; text-transform:uppercase;">
+                <div style="flex:0 0 120px; text-align:center;">DAY</div>
+                <div style="flex:2; padding-left:10px;">SUGGESTED AGENDA</div>
+                <div style="flex:1; padding-left:10px;">COMMENTS</div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:5px; margin-bottom: 15px;">
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>SAT, MAY 23</div>
+                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">Arrival Day</div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-sat" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('sat')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-sat" data-day="sat"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-sat" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-sat" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('sat')">
+                            <button onclick="addDayComment('sat')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>SUN, MAY 24</div>
+                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">Local Charm</div>
+                        <div class="day-vote-btn" onclick="toggleDayVote('sun')" id="vote-btn-sun" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-sun" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('sun')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-sun" data-day="sun"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-sun" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-sun" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('sun')">
+                            <button onclick="addDayComment('sun')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>MON, MAY 25</div>
+                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">Iconic Sights & Depths</div>
+                        <div class="day-vote-btn" onclick="toggleDayVote('mon')" id="vote-btn-mon" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-mon" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('mon')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-mon" data-day="mon"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-mon" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-mon" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('mon')">
+                            <button onclick="addDayComment('mon')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>TUE, MAY 26</div>
+                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">Wildlife & Waterfalls</div>
+                        <div class="day-vote-btn" onclick="toggleDayVote('tue')" id="vote-btn-tue" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-tue" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('tue')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-tue" data-day="tue"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-tue" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-tue" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('tue')">
+                            <button onclick="addDayComment('tue')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>WED, MAY 27</div>
+                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">The Royal Gorge Experience</div>
+                        <div class="day-vote-btn" onclick="toggleDayVote('wed')" id="vote-btn-wed" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-wed" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('wed')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-wed" data-day="wed"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-wed" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-wed" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('wed')">
+                            <button onclick="addDayComment('wed')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>THU, MAY 28</div>
+                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">The Summit</div>
+                        <div class="day-vote-btn" onclick="toggleDayVote('thu')" id="vote-btn-thu" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-thu" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('thu')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-thu" data-day="thu"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-thu" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-thu" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('thu')">
+                            <button onclick="addDayComment('thu')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>FRI, MAY 29</div>
+                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">Open Day</div>
+                        <div class="day-vote-btn" onclick="toggleDayVote('fri')" id="vote-btn-fri" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-fri" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('fri')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-fri" data-day="fri"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-fri" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-fri" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('fri')">
+                            <button onclick="addDayComment('fri')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>SAT, MAY 30</div>
+                        <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2;">Departure Day</div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-sat2" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('sat2')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-sat2" data-day="sat2"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-sat2" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-sat2" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('sat2')">
+                            <button onclick="addDayComment('sat2')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="agenda-row" style="background:#fff3cd; border:2px dashed #f39c12;">
+                    <div class="row-header" style="background:#f39c12;">OPTIONS POOL</div>
+                    <div class="row-agenda" style="background:transparent; border:none;"><div class="sortable-list" id="day-pool" data-day="pool"></div></div>
+                    <div class="row-comments" style="background:transparent; justify-content:center; gap:5px; align-items:center;">
+                        <input type="text" id="customActivityInput" placeholder="Other Activity..." style="width:100%; border:1px solid #ddd; padding:8px; border-radius:5px; font-size:0.8rem; box-sizing:border-box;">
+                        <button onclick="addCustomActivity()" style="background:var(--primary); color:white; border:none; padding:8px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:0.8rem; width:100%;">Add to Pool</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="agenda-comments-container">
+                <h3 style="margin-top:0; font-size:1rem; color:var(--primary); text-transform:uppercase;">💬 Agenda Discussion</h3>
+                <div id="agendaChatMessages" style="flex-grow:1; height:200px; overflow-y:auto; margin-bottom:10px; background:#fff; padding:10px; border-radius:8px; border:1px solid #ddd; scrollbar-width:thin;"></div>
+                <div style="display:flex; gap:5px;">
+                    <input type="text" id="agendaChatInput" style="flex-grow:1; padding:8px; border-radius:8px; border:1px solid #ddd;" placeholder="Share your thoughts on the agenda...">
+                    <button onclick="sendAgendaChat()" style="background:var(--primary); border:none; color:white; padding:8px 15px; border-radius:8px; cursor:pointer; font-weight:bold;">SEND</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -885,6 +1137,394 @@ onValue(ref(db, 'userVotes'), (snap) => {
     myChart.data.datasets[0].hoverBackgroundColor = sorted.map(e => locationColors[e[0]]);
     myChart.update();
 });
+  // --- TOGGLE ITINERARY ---
+  window.toggleDetails = (btn) => {
+      btn.classList.toggle('active');
+      const wrapper = btn.nextElementSibling;
+      const icon = btn.querySelector('.toggle-icon');
+      if (wrapper.classList.contains('expanded')) {
+          wrapper.classList.remove('expanded');
+          icon.textContent = '👀';
+          btn.innerHTML = `<span class="toggle-icon">👀</span> Show Itinerary`;
+      } else {
+          wrapper.classList.add('expanded');
+          btn.innerHTML = `<span class="toggle-icon">✨</span> Hide Itinerary`;
+      }
+  };
+
+  // --- DAY VOTING LOGIC ---
+  window.toggleDayVote = (day) => {
+      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+      if(currentUser === "GUEST") {
+          if (window.showToast) window.showToast("Please log in to vote!");
+          return;
+      }
+      const voteRef = ref(db, `dayVotes/${day}/${currentUser}`);
+      get(voteRef).then(snap => {
+          if (snap.exists()) {
+              remove(voteRef); // untoggle
+          } else {
+              set(voteRef, true); // toggle on
+          }
+      });
+  };
+
+  onValue(ref(db, 'dayVotes'), (snap) => {
+      const state = snap.val() || {};
+      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+      const agendaDays = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat2'];
+      
+      agendaDays.forEach(day => {
+          const btn = document.getElementById(`vote-btn-${day}`);
+          if(!btn) return;
+          const dayData = state[day] || {};
+          const voters = Object.keys(dayData);
+          const count = voters.length;
+          const hasVoted = voters.includes(currentUser);
+          
+          btn.querySelector('.count').innerText = count;
+          if (hasVoted) {
+              btn.classList.add('voted');
+          } else {
+              btn.classList.remove('voted');
+          }
+          
+          if(count > 0) {
+              btn.title = "Voted by: " + voters.join(", ");
+          } else {
+              btn.title = "Love this day plan? Vote!";
+          }
+      });
+  });
+
+  // --- ITINERARY DETAILS LOGIC ---
+  window.addItinerary = (day) => {
+      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+      if(currentUser === "GUEST") {
+          if (window.showToast) window.showToast("Please log in to add details!");
+          return;
+      }
+      const text = prompt("Enter new itinerary detail:");
+      if(text && text.trim()) {
+          push(ref(db, `itineraryDetails/${day}`), {
+              user: currentUser,
+              text: text.trim(),
+              time: serverTimestamp()
+          });
+      }
+  };
+
+  window.editItinerary = (day, id, currentText) => {
+      const text = prompt("Edit itinerary detail:", currentText);
+      if(text && text.trim()) {
+          update(ref(db, `itineraryDetails/${day}/${id}`), {
+              text: text.trim(),
+              time: serverTimestamp(),
+              lastEditedBy: localStorage.getItem('family_voterName') || "GUEST"
+          });
+      }
+  };
+
+  window.deleteItinerary = (day, id) => {
+      if(confirm("Delete this itinerary detail?")) {
+          remove(ref(db, `itineraryDetails/${day}/${id}`));
+      }
+  };
+
+  onValue(ref(db, 'itineraryDetails'), (snap) => {
+      const state = snap.val();
+      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+      const agendaDays = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat2'];
+
+      if (!state) {
+          const defaultItinerary = {
+              sat: "Arrive and settle in for an amazing family vacation!",
+              sun: "<em>Ease into the trip with some casual exploration near the base of the mountains.</em><br><br><strong>Late Afternoon / Evening:</strong> Explore Manitou Springs (Rank 4). Walk the downtown area, check out the vintage penny arcade, and grab dinner to kick off the trip.",
+              mon: "<em>A day of breathtaking natural wonders above and below ground.</em><br><br><strong>Morning (Early):</strong> Garden of the Gods (Rank 1). Best experienced around sunrise before the crowds. Enjoy the easy paved trails and majestic red rock spires.<br><strong>Lunch:</strong> Picnic in the park or grab food at a nearby local spot.<br><strong>Afternoon:</strong> Cave of the Winds (Rank 4). Escape the afternoon heat with a cave tour (the lantern tour is highly rated!) and try the cliff swing if you're feeling adventurous.",
+              tue: "<em>A day of unique interactions and magical scenery.</em><br><br><strong>Morning / Early Afternoon:</strong> Cheyenne Mountain Zoo (Rank 2). Feed the giraffes and explore America's only mountain zoo. It's steep, so wear comfortable walking shoes!<br><strong>Late Afternoon / Evening:</strong> Seven Falls (Rank 4). Head over in the late afternoon, climb the 224 stairs, and stay into the evening to experience the magical night lighting.",
+              wed: "<em>A full-day excursion south to Cañon City for breathtaking canyon views.</em><br><br><strong>Morning:</strong> Royal Gorge Bridge (Rank 4). Walk across the highest suspension bridge in the US and take in the thrilling panoramic views.<br><strong>Lunch / Afternoon:</strong> Royal Gorge Railroad (Rank 3). Enjoy a premier scenic train ride through the canyon floor alongside the river. This is a great opportunity to enjoy a high-quality dining experience on the train.",
+              thu: "<em>End the trip on a literal high note before heading home.</em><br><br><strong>Morning:</strong> Pikes Peak Cog Railway (Rank 4). Ride the legendary train up to the 14,115-foot summit. Take in the views that inspired \"America the Beautiful\" and grab the famous high-altitude donuts!",
+              fri: "<em>An open day for any last-minute activities or relaxed exploration before heading home!</em>",
+              sat2: "<em>Pack up, share favorite memories, and depart for home. Safe travels!</em>"
+          };
+          agendaDays.forEach(day => {
+              push(ref(db, `itineraryDetails/${day}`), {
+                  user: "CHUCK",
+                  text: defaultItinerary[day],
+                  time: serverTimestamp()
+              });
+          });
+          return;
+      }
+
+      agendaDays.forEach(day => {
+          const box = document.getElementById(`itin-${day}`);
+          if (!box) return;
+          box.innerHTML = "";
+          
+          let dayData = state[day];
+          if (!dayData) return;
+          
+          let msgs = [];
+          Object.keys(dayData).forEach(k => msgs.push({ id: k, ...dayData[k] }));
+          msgs.sort((a,b) => (a.time || 0) - (b.time || 0));
+          
+          msgs.forEach(m => {
+              const displayUser = m.user === "SYSTEM" ? "CHUCK" : m.user;
+              const canEdit = (displayUser === currentUser || currentUser === "CHUCK");
+              let actions = "";
+              if (canEdit) {
+                  const safeStr = m.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                  actions = `<div style="font-size:0.65rem; color:#888; margin-top:4px;">
+                      Added by ${displayUser} 
+                      ${m.lastEditedBy ? '(Last edited by ' + m.lastEditedBy + ')' : ''} 
+                      <span style="float:right;">
+                          <a href="javascript:void(0)" onclick="editItinerary('${day}', '${m.id}', '${safeStr}')" style="color:var(--primary); text-decoration:none;">edit</a> <span style="color:#ccc;">/</span> 
+                          <a href="javascript:void(0)" onclick="deleteItinerary('${day}', '${m.id}')" style="color:var(--accent); text-decoration:none;">del</a>
+                      </span>
+                  </div>`;
+              } else {
+                  actions = `<div style="font-size:0.65rem; color:#888; margin-top:4px; text-align:right;">Added by ${displayUser} ${m.lastEditedBy ? '(Last edited by ' + m.lastEditedBy + ')' : ''}</div>`;
+              }
+              
+              box.innerHTML += `<div class="agenda-details-box" style="margin:0;">
+                  <div style="line-height:1.4;">${m.text}</div>
+                  ${actions}
+              </div>`;
+          });
+      });
+  });
+
+  // --- AGENDA LOGIC ---
+  const days = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat2', 'pool'];
+  let isAgendaLocalUpdate = false;
+  
+  // Day Comments Sync (Chat-like logic)
+  window.addDayComment = (day) => {
+      const input = document.getElementById(`input-${day}`);
+      const m = input.value.trim();
+      if(!m) return;
+      push(ref(db, `sharedAgendaComments/${day}`), { 
+          user: localStorage.getItem('family_voterName') || "GUEST", 
+          msg: m, 
+          time: serverTimestamp() 
+      });
+      input.value = "";
+  };
+
+  window.deleteDayComment = (day, id) => {
+      remove(ref(db, `sharedAgendaComments/${day}/${id}`));
+  };
+
+  window.editDayComment = (day, id, currentMsg) => {
+      const m = prompt("Edit comment:", currentMsg);
+      if(m !== null && m.trim() !== "") {
+          update(ref(db, `sharedAgendaComments/${day}/${id}`), {
+              msg: m.trim(),
+              time: serverTimestamp()
+          });
+      }
+  };
+
+  onValue(ref(db, 'sharedAgendaComments'), (snap) => {
+      const state = snap.val() || {};
+      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+      
+      const agendaDays = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat2'];
+      agendaDays.forEach(day => {
+          const logBox = document.getElementById(`log-${day}`);
+          if (!logBox) return;
+          logBox.innerHTML = "";
+          
+          let dayData = state[day];
+          let msgs = [];
+          
+          if (dayData) {
+              if (typeof dayData === 'string' && dayData.trim() !== '') {
+                  push(ref(db, `sharedAgendaComments/${day}`), { user: "Family", msg: dayData, time: serverTimestamp() });
+              } else if (typeof dayData === 'object' && dayData.text && dayData.text.trim() !== '') {
+                  push(ref(db, `sharedAgendaComments/${day}`), { user: dayData.user || "Family", msg: dayData.text, time: serverTimestamp() });
+                  remove(ref(db, `sharedAgendaComments/${day}/text`));
+                  remove(ref(db, `sharedAgendaComments/${day}/user`));
+                  remove(ref(db, `sharedAgendaComments/${day}/time`));
+              } else {
+                  Object.keys(dayData).forEach(k => {
+                      if (k !== 'text' && k !== 'user' && k !== 'time' && typeof dayData[k] === 'object') {
+                          msgs.push({ id: k, ...dayData[k] });
+                      }
+                  });
+              }
+          }
+
+          msgs.sort((a,b) => (a.time || 0) - (b.time || 0));
+          
+          msgs.forEach(m => {
+              const canEditDelete = (m.user === currentUser || currentUser === "CHUCK");
+              let links = "";
+              if (canEditDelete) {
+                  const escapedMsg = m.msg.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                  links = ` <a href="javascript:void(0)" onclick="editDayComment('${day}', '${m.id}', '${escapedMsg}')" style="color:var(--primary); font-size:0.7rem; text-decoration:none;">edit</a><span style="color:#ccc; margin:0 3px;">/</span><a href="javascript:void(0)" onclick="if(confirm('Delete?')) deleteDayComment('${day}', '${m.id}')" style="color:var(--accent); font-size:0.7rem; text-decoration:none;">delete</a>`;
+              }
+              logBox.innerHTML += `<div style="margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid #f1f1f1; position:relative; line-height:1.3;">
+                  <span style="color:#333;">${m.msg}</span>
+                  <span style="color:#888; font-size:0.75rem; font-style:italic;"> - ${m.user}</span>${links ? ' <span style="float:right;">' + links + '</span>' : ''}
+              </div>`;
+          });
+          logBox.scrollTop = logBox.scrollHeight;
+      });
+  });
+
+  // Initialize Sortable for each day
+  days.forEach(day => {
+      new Sortable(document.getElementById(`day-${day}`), {
+          group: 'shared-agenda',
+          animation: 150,
+          onEnd: function (evt) {
+              saveAgendaState();
+          }
+      });
+  });
+
+  function saveAgendaState() {
+      isAgendaLocalUpdate = true;
+      const newState = {};
+      days.forEach(day => {
+          const items = Array.from(document.getElementById(`day-${day}`).children).map(el => {
+              const span = el.querySelector('span');
+              const text = span ? span.textContent.trim() : el.textContent.trim();
+              return {
+                  text: text,
+                  creator: el.dataset.creator || "SYSTEM"
+              };
+          });
+          newState[day] = items;
+      });
+      set(ref(db, 'sharedAgenda'), newState).then(() => {
+          setTimeout(() => { isAgendaLocalUpdate = false; }, 800);
+      });
+  }
+
+  window.deleteCustomActivity = (btn) => {
+      if(confirm('Delete this custom activity?')) {
+          const item = btn.closest('.agenda-item');
+          item.remove();
+          saveAgendaState();
+      }
+  };
+
+  window.editCustomActivity = (btn) => {
+      const item = btn.closest('.agenda-item');
+      const span = item.querySelector('span');
+      const newText = prompt('Edit activity:', span.textContent);
+      if (newText !== null && newText.trim() !== "") {
+          span.textContent = newText.trim();
+          saveAgendaState();
+      }
+  };
+
+  window.addCustomActivity = () => {
+      const input = document.getElementById('customActivityInput');
+      const val = input.value.trim();
+      if (!val) return;
+      const pool = document.getElementById('day-pool');
+      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+      pool.innerHTML += `<div class="agenda-item" data-creator="${currentUser}">
+          <span>${val}</span>
+          <div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; display:flex; gap:6px; align-items:center;">
+              <span onclick="editCustomActivity(this)" style="cursor:pointer; text-decoration:underline;">edit</span> <span style="color:#ccc;">/</span>
+              <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:underline; color:var(--accent);">del</span>
+          </div>
+      </div>`;
+      input.value = "";
+      saveAgendaState();
+  };
+
+  // Listen to remote changes
+  onValue(ref(db, 'sharedAgenda'), (snap) => {
+      if (isAgendaLocalUpdate) return; // Prevent snap-back during local dragging
+      const state = snap.val();
+      if (state) {
+          days.forEach(day => {
+              const list = document.getElementById(`day-${day}`);
+              if (!list) return;
+              list.innerHTML = "";
+              if (state[day]) {
+                  state[day].forEach(itemObj => {
+                      let text, creator;
+                      if (typeof itemObj === 'string') {
+                          text = itemObj;
+                          creator = "SYSTEM";
+                      } else {
+                          text = itemObj.text;
+                          creator = itemObj.creator;
+                      }
+
+                      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+                      let actions = "";
+                      if (creator !== "SYSTEM" && (creator === currentUser || currentUser === "CHUCK")) {
+                          actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; display:flex; gap:6px; align-items:center;">
+                              <span onclick="editCustomActivity(this)" style="cursor:pointer; text-decoration:underline;">edit</span> <span style="color:#ccc;">/</span>
+                              <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:underline; color:var(--accent);">del</span>
+                          </div>`;
+                      }
+
+                      list.innerHTML += `<div class="agenda-item" data-creator="${creator}">
+                          <span>${text}</span>
+                          ${actions}
+                      </div>`;
+                  });
+              }
+          });
+      } else {
+          // Default State based on top picks
+          const defaultState = {
+              sat: [],
+              sun: ["Manitou Springs"],
+              mon: ["Garden of the Gods", "Cave of the Winds"],
+              tue: ["Cheyenne Mountain Zoo", "Seven Falls"],
+              wed: ["Royal Gorge Bridge", "Royal Gorge Railroad"],
+              thu: ["Pikes Peak Cog Railway"],
+              fri: [],
+              sat2: [],
+              pool: ["Colorado Wolf and Wildlife Center", "Territory Days Fest", "Santa's Workshop", "Olympic Museum"]
+          };
+          set(ref(db, 'sharedAgenda'), defaultState);
+      }
+  });
+
+  // --- AGENDA CHAT LOGIC ---
+  window.sendAgendaChat = () => {
+      const m = document.getElementById('agendaChatInput').value.trim();
+      if(!m) return;
+      push(ref(db, 'agendaChat'), { 
+          user: localStorage.getItem('family_voterName') || "GUEST", 
+          msg: m, 
+          time: serverTimestamp() 
+      });
+      document.getElementById('agendaChatInput').value = "";
+  };
+
+  onValue(ref(db, 'agendaChat'), (snap) => {
+      const box = document.getElementById('agendaChatMessages'); 
+      if(!box) return;
+      box.innerHTML = "";
+      const currentUser = localStorage.getItem('family_voterName');
+      let msgs = []; 
+      snap.forEach(c => { let d = c.val(); if(d) { d.id = c.key; msgs.push(d); } });
+      msgs.sort((a,b) => (a.time || 0) - (b.time || 0)); 
+      
+      msgs.forEach(m => {
+          const canDelete = (m.user === currentUser || currentUser === "CHUCK");
+          const delBtn = canDelete ? `<span class="reply-btn" style="color:var(--accent); cursor:pointer;" onclick="if(confirm('Delete message?')) window.deleteAgendaMsg('${m.id}')">delete</span>` : "";
+          box.innerHTML += `<div class="chat-msg" style="border-bottom: 1px solid #eee; padding: 5px 0; position:relative;"><strong>${m.user}:</strong> ${m.msg}${delBtn}</div>`;
+      });
+      box.scrollTop = box.scrollHeight;
+  });
+  
+  window.deleteAgendaMsg = (id) => {
+      remove(ref(db, `agendaChat/${id}`));
+  };
+
 // Utility to show toast
 window.showToast = (msg) => {
     const t = document.getElementById("toast");
