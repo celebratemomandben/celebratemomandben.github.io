@@ -1,0 +1,46 @@
+Here is the standard workflow to commit and sync your Antigravity AI app to a Git repository using the terminal. 
+
+Assuming you have already initialized Git in your project folder (`git init`) and linked it to a remote repository (`git remote add origin <url>`), follow these steps:
+
+### 1. Check your status (Optional but recommended)
+Before committing, it is always a good idea to see which files have been modified, added, or deleted.
+
+git status
+
+
+### 2. Stage your changes
+You need to tell Git which files you want to include in your next commit. 
+
+To stage **all** modified and new files in your project directory:
+
+git add .
+
+*(If you only want to stage a specific file, use `git add filename.py` instead).*
+
+### 3. Commit your changes
+A commit saves your staged changes to your local repository. You need to include a brief, descriptive message explaining what you changed.
+
+git commit -m "Update antigravity physics models and fix UI bugs"
+
+
+### 4. Sync: Pull before you Push
+If you are working with others, or if you made changes directly on your remote repository (like GitHub/GitLab), you should sync your local environment with the remote before pushing. This prevents merge conflicts.
+
+git pull origin main
+
+*(Note: Replace `main` with `master` or your specific branch name if you are using a different one).*
+
+### 5. Push to the remote repository
+Finally, upload your local commits to the remote repository so they are backed up and synced.
+
+git push origin main
+
+
+---
+
+### The Quick-Sync One-Liner
+If you are iterating quickly and want to stage, commit, and push all at once, you can chain the commands together using `&&`:
+
+```bash
+git add . && git commit -m "Minor AI tweaks" && git push origin main
+```
