@@ -74,26 +74,33 @@
         .unlocked { display: block !important; }
 
         @media (min-width: 1100px) {
-            body { padding-bottom: 20px; }
+            body { padding-bottom: 20px; padding-top: 80px; }
+            
             .bento-grid { 
-                display: grid !important;
-                gap: 15px; 
-                grid-template-columns: repeat(4, 1fr); 
-                grid-template-areas: 
-                    "agenda agenda agenda agenda" 
-                    "video video video video" 
-                    "info info chat chat" 
-                    "poll poll voters voters" 
-                    "chart chart chart chart"; 
-            }
-            .bottom-nav { display: none !important; }
-            .bento-item { 
-                opacity: 1 !important;
-                visibility: visible !important;
-                position: static !important;
-                transform: none !important;
                 display: block !important;
+                width: 100%;
             }
+            
+            .bento-item {
+                display: none;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                position: relative;
+            }
+            
+            .bento-item.active-tab {
+                display: block;
+                animation: fadeInTab 0.3s ease forwards;
+            }
+            
+            .chat-module.active-tab {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .bottom-nav { display: none !important; }
+            .desktop-nav { display: flex !important; }
         }
         
         /* FIXED: Use opacity and visibility instead of display for smooth transitions */
@@ -192,13 +199,6 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
             overflow: hidden; 
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        @media (min-width: 1100px) {
-            .bento-item:hover { 
-                transform: translateY(-3px); 
-                box-shadow: 0 15px 40px rgba(0,0,0,0.12); 
-            }
         }
         
         #locPicker { width: 100%; border: 3px solid var(--primary); background: var(--active-bg); font-weight: 800; margin-bottom: 15px; cursor: pointer; color: var(--primary); }
@@ -320,6 +320,68 @@
         #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
         @keyframes fadein { from {bottom: 80px; opacity: 0;} to {bottom: 100px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 100px; opacity: 1;} to {bottom: 80px; opacity: 0;} }
+
+        /* Desktop horizontal navigation */
+        .desktop-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: none;
+            justify-content: center;
+            gap: 20px;
+            padding: 15px 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            z-index: 9999;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transform: translateZ(0);
+        }
+        
+        .desktop-nav .nav-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            color: #64748b;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+            border: 2px solid transparent;
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .desktop-nav .nav-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: rgba(0, 131, 184, 0.2);
+        }
+        
+        .desktop-nav .nav-item.active {
+            color: white;
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(0, 131, 184, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .desktop-nav .nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+            transition: transform 0.2s;
+        }
+        
+        .desktop-nav .nav-item.active .nav-icon {
+            transform: scale(1.1);
+        }
 
         /* FIXED: Bottom navigation improvements */
         .bottom-nav {
@@ -694,6 +756,13 @@
 
 </div>
 
+<div class="desktop-nav" id="desktopNav">
+    <button class="nav-item active" onclick="switchTab('explore', this)"><span class="nav-icon">🌍</span>Explore</button>
+    <button class="nav-item" onclick="switchTab('chat', this)"><span class="nav-icon">💬</span>Chat</button>
+    <button class="nav-item" onclick="switchTab('vote', this)"><span class="nav-icon">🗳️</span>Vote</button>
+    <button class="nav-item" onclick="switchTab('agenda', this)"><span class="nav-icon">📅</span>Agenda</button>
+</div>
+
 <div class="bottom-nav" id="mobileNav">
     <button class="nav-item active" onclick="switchTab('explore', this)"><span class="nav-icon">🌍</span>Explore</button>
     <button class="nav-item" onclick="switchTab('chat', this)"><span class="nav-icon">💬</span>Chat</button>
@@ -864,15 +933,14 @@ const tierColors = [
   };
 
   // FIXED: Improved tab switching without flickering
+  // FIXED: Improved tab switching for both desktop and mobile
   window.switchTab = (tabName, btnElement) => {
-      if (window.innerWidth >= 1100) return;
-
-      // Update nav buttons
+      // Update nav buttons (works for both desktop and mobile nav)
       document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
       if(btnElement) btnElement.classList.add('active');
       else document.querySelector(`.nav-item[onclick*="${tabName}"]`)?.classList.add('active');
 
-      // Smooth tab switching using opacity
+      // Smooth tab switching
       document.querySelectorAll('.bento-item').forEach(item => {
           if (item.getAttribute('data-tab') === tabName) {
               item.classList.add('active-tab');
@@ -898,16 +966,10 @@ const tierColors = [
   window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-          if (window.innerWidth >= 1100) {
-              document.querySelectorAll('.bento-item').forEach(item => {
-                  item.classList.remove('active-tab');
-              });
-          } else {
-              const activeBtn = document.querySelector('.nav-item.active');
-              if(activeBtn) {
-                  const match = activeBtn.getAttribute('onclick').match(/'([^']+)'/);
-                  if(match) switchTab(match[1]);
-              }
+          const activeBtn = document.querySelector('.nav-item.active');
+          if(activeBtn) {
+              const match = activeBtn.getAttribute('onclick').match(/'([^']+)'/);
+              if(match) switchTab(match[1]);
           }
       }, 100);
   });
@@ -927,13 +989,13 @@ window.unlockApp = async function() {
         document.getElementById('userHubBanner').innerText = `${nInput}'S TRIP HUB`; 
         document.getElementById('userControls').style.display = "flex"; 
         document.getElementById('mobileNav').style.display = "flex";
+        document.getElementById('desktopNav').style.display = "flex";
         
-        if (window.innerWidth < 1100) {
-             setTimeout(() => {
-                 const firstBtn = document.querySelector('.nav-item');
-                 if(firstBtn) firstBtn.click();
-             }, 50);
-        }
+        // Initialize first tab for both desktop and mobile
+        setTimeout(() => {
+            const firstBtn = document.querySelector('.nav-item');
+            if(firstBtn) firstBtn.click();
+        }, 50);
 
         playCelebration(); 
 
