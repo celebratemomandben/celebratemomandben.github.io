@@ -13,26 +13,39 @@
             --glass: rgba(255, 255, 255, 0.85); --gold: #f39c12;
             --active-bg: #e0f2fe;
         }
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-            background: linear-gradient(-45deg, #cfdef3, #e0eafc, #e3eeff, #f3e7e9); 
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            margin: 0; 
-            padding: clamp(10px, 2vw, 20px); 
-            padding-bottom: 90px;
-            color: #2d3436;
-            -webkit-tap-highlight-color: transparent; 
-            touch-action: manipulation;
-        }
 
 ```
+    * {
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    body { 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+        background: linear-gradient(-45deg, #cfdef3, #e0eafc, #e3eeff, #f3e7e9); 
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        margin: 0; 
+        padding: clamp(10px, 2vw, 20px); 
+        padding-bottom: 90px;
+        color: #2d3436;
+        touch-action: manipulation;
+        overflow-x: hidden;
+        min-height: 100vh;
+        position: relative;
+    }
+
     @keyframes gradientBG {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
     }
-    .container { max-width: 1300px; margin: auto; }
+    
+    .container { 
+        max-width: 1300px; 
+        margin: auto;
+        position: relative;
+        z-index: 1;
+    }
     
     .main-title { text-align: center; font-size: clamp(1.5rem, 4vw, 2.5rem); font-weight: 900; margin: 10px 0 5px 0; letter-spacing: 1px; color: #1a1a1a; }
     .user-hub-banner { text-align: center; font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 5px; display: none; text-transform: uppercase; }
@@ -52,14 +65,61 @@
     .logout-link { color: var(--accent); cursor: pointer; font-weight: bold; text-decoration: underline; font-size: 0.85rem; }
     .how-to-blurb { max-width: 600px; font-size: 0.85rem; color: #555; text-align: center; line-height: 1.4; background: rgba(255,255,255,0.6); padding: 12px; border-radius: 10px; }
 
-    .bento-grid { display: none; gap: 15px; grid-template-columns: 1fr; }
-    .unlocked { display: grid !important; }
+    /* FIXED: Mobile tab container to prevent flickering */
+    .bento-grid { 
+        display: none; 
+        position: relative;
+        min-height: 70vh;
+    }
+    
+    .unlocked { display: block !important; }
 
     @media (min-width: 1100px) {
         body { padding-bottom: 20px; }
-        .bento-grid { grid-template-columns: repeat(4, 1fr); grid-template-areas: "agenda agenda agenda agenda" "video video video video" "info info chat chat" "poll poll voters voters" "chart chart chart chart"; }
+        .bento-grid { 
+            display: grid !important;
+            gap: 15px; 
+            grid-template-columns: repeat(4, 1fr); 
+            grid-template-areas: 
+                "agenda agenda agenda agenda" 
+                "video video video video" 
+                "info info chat chat" 
+                "poll poll voters voters" 
+                "chart chart chart chart"; 
+        }
         .bottom-nav { display: none !important; }
-        .bento-item { display: block !important; animation: none !important; }
+        .bento-item { 
+            opacity: 1 !important;
+            visibility: visible !important;
+            position: relative !important;
+            transform: none !important;
+        }
+    }
+    
+    /* FIXED: Use opacity and visibility instead of display for smooth transitions */
+    @media (max-width: 1099px) {
+        .bento-grid {
+            display: block !important;
+        }
+        
+        .bento-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+            will-change: opacity, transform;
+        }
+        
+        .bento-item.active-tab {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            position: relative;
+        }
     }
     
     .agenda-module { grid-area: agenda; width:100%; box-sizing:border-box; }
@@ -108,8 +168,24 @@
     .video-module { grid-area: video; } .info-module { grid-area: info; } 
     .chat-module { grid-area: chat; } .poll-module { grid-area: poll; } .voters-module { grid-area: voters; } .chart-module { grid-area: chart; }
 
-    .bento-item { background: var(--glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
-    .bento-item:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
+    .bento-item { 
+        background: var(--glass); 
+        backdrop-filter: blur(16px); 
+        -webkit-backdrop-filter: blur(16px); 
+        border: 1px solid rgba(255, 255, 255, 0.6); 
+        border-radius: 20px; 
+        padding: 20px; 
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+        overflow: hidden; 
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    @media (min-width: 1100px) {
+        .bento-item:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12); 
+        }
+    }
     
     #locPicker { width: 100%; border: 3px solid var(--primary); background: var(--active-bg); font-weight: 800; margin-bottom: 15px; cursor: pointer; color: var(--primary); }
 
@@ -152,11 +228,28 @@
     @media (max-width: 1100px) { .chart-module { aspect-ratio: 1 / 1.2; } }
     .chart-module canvas { display: block; width: 100% !important; height: 100% !important; }
     
-    .fullscreen-chat { position: fixed !important; top: 0; left: 0; width: 100vw !important; height: 100dvh !important; box-sizing: border-box !important; max-width: none !important; z-index: 10000; margin: 0 !important; border-radius: 0 !important; display: flex; flex-direction: column; background: var(--bg); }
+    /* FIXED: Fullscreen chat improvements */
+    .fullscreen-chat { 
+        position: fixed !important; 
+        top: 0; 
+        left: 0; 
+        width: 100vw !important; 
+        height: 100dvh !important; 
+        box-sizing: border-box !important; 
+        max-width: none !important; 
+        z-index: 10000; 
+        margin: 0 !important; 
+        border-radius: 0 !important; 
+        display: flex; 
+        flex-direction: column; 
+        background: var(--bg);
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+    }
     .fullscreen-chat #chatMessages { flex-grow: 1; height: 0 !important; max-height: none; overflow-y: auto; }
     
     @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
-    @keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
     .btn-update-picks { width: 100%; background: #2ecc71; color: white; border: none; padding: 15px; border-radius: 15px; font-weight: 800; margin-top: 10px; cursor: pointer; font-size: 1.1rem; text-transform: uppercase; box-shadow: 0 6px 0 #27ae60, 0 10px 20px rgba(46, 204, 113, 0.4); transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .btn-update-picks:hover { transform: translateY(-2px); box-shadow: 0 8px 0 #27ae60, 0 15px 25px rgba(46, 204, 113, 0.5); background: #34d878; }
@@ -179,9 +272,12 @@
     @keyframes fadein { from {bottom: 80px; opacity: 0;} to {bottom: 100px; opacity: 1;} }
     @keyframes fadeout { from {bottom: 100px; opacity: 1;} to {bottom: 80px; opacity: 0;} }
 
+    /* FIXED: Bottom navigation improvements */
     .bottom-nav {
         position: fixed;
-        bottom: 0; left: 0; right: 0;
+        bottom: 0; 
+        left: 0; 
+        right: 0;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
@@ -191,17 +287,40 @@
         box-shadow: 0 -5px 20px rgba(0,0,0,0.08);
         z-index: 9999;
         border-top: 1px solid rgba(0,0,0,0.05);
+        transform: translateZ(0);
     }
+    
     .nav-item {
-        display: flex; flex-direction: column; align-items: center;
-        color: #94a3b8; font-size: 0.75rem; font-weight: 800;
-        cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        background: none; border: none; flex: 1; padding: 5px 0;
-        text-transform: uppercase; letter-spacing: 0.5px;
+        display: flex; 
+        flex-direction: column; 
+        align-items: center;
+        color: #94a3b8; 
+        font-size: 0.75rem; 
+        font-weight: 800;
+        cursor: pointer; 
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        background: none; 
+        border: none; 
+        flex: 1; 
+        padding: 5px 0;
+        text-transform: uppercase; 
+        letter-spacing: 0.5px;
     }
-    .nav-item.active { color: var(--primary); transform: translateY(-4px); }
-    .nav-icon { font-size: 1.5rem; margin-bottom: 4px; transition: transform 0.2s; }
-    .nav-item.active .nav-icon { transform: scale(1.15); }
+    
+    .nav-item.active { 
+        color: var(--primary); 
+        transform: translateY(-4px); 
+    }
+    
+    .nav-icon { 
+        font-size: 1.5rem; 
+        margin-bottom: 4px; 
+        transition: transform 0.2s; 
+    }
+    
+    .nav-item.active .nav-icon { 
+        transform: scale(1.15); 
+    }
 </style>
 ```
 
@@ -667,7 +786,7 @@ const tierColors = [
 
     const title = document.createElement('h1');
     title.innerHTML = "🎉 Happy Retirement Mom! 🎉<br><br>🎓 Congrats on Graduating Ben! 🎓";
-    title.style.cssText = "text-align:center; color:var(--primary); font-size:clamp(1.5rem, 4vw, 3rem); text-shadow: 0 4px 15px rgba(0,0,0,0.1); animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; padding: 20px;";
+    title.style.cssText = "text-align:center; color:var(--primary); font-size:clamp(1.5rem, 4vw, 3rem); text-shadow: 0 4px 15px rgba(0,0,0,0.1); animation: none; padding: 20px;";
     
     overlay.appendChild(title);
     document.body.appendChild(overlay);
@@ -699,36 +818,53 @@ const tierColors = [
     }, 4000);
   };
 
+  // FIXED: Improved tab switching without flickering
   window.switchTab = (tabName, btnElement) => {
       if (window.innerWidth >= 1100) return;
 
+      // Update nav buttons
       document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
       if(btnElement) btnElement.classList.add('active');
-      else document.querySelector(`.nav-item[onclick*="${tabName}"]`).classList.add('active');
+      else document.querySelector(`.nav-item[onclick*="${tabName}"]`)?.classList.add('active');
 
+      // Smooth tab switching using opacity
       document.querySelectorAll('.bento-item').forEach(item => {
           if (item.getAttribute('data-tab') === tabName) {
-              item.style.display = 'block';
-              item.style.animation = 'none';
-              item.offsetHeight;
-              item.style.animation = 'popIn 0.4s ease forwards';
-              
-              if(tabName === 'vote' && window.myChart) {
-                  setTimeout(() => window.myChart.resize(), 50);
-              }
+              item.classList.add('active-tab');
           } else {
-              item.style.display = 'none';
+              item.classList.remove('active-tab');
           }
       });
+      
+      // Resize chart after transition completes (if vote tab)
+      if(tabName === 'vote' && window.myChart) {
+          setTimeout(() => {
+              try {
+                  window.myChart.resize();
+              } catch(e) {
+                  console.log('Chart resize skipped');
+              }
+          }, 350);
+      }
   };
 
+  // FIXED: Debounced resize handler
+  let resizeTimeout;
   window.addEventListener('resize', () => {
-      if (window.innerWidth >= 1100) {
-          document.querySelectorAll('.bento-item').forEach(item => item.style.display = '');
-      } else {
-          const activeBtn = document.querySelector('.nav-item.active');
-          if(activeBtn) activeBtn.click();
-      }
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+          if (window.innerWidth >= 1100) {
+              document.querySelectorAll('.bento-item').forEach(item => {
+                  item.classList.remove('active-tab');
+              });
+          } else {
+              const activeBtn = document.querySelector('.nav-item.active');
+              if(activeBtn) {
+                  const match = activeBtn.getAttribute('onclick').match(/'([^']+)'/);
+                  if(match) switchTab(match[1]);
+              }
+          }
+      }, 100);
   });
 
 
@@ -748,7 +884,10 @@ window.unlockApp = async function() {
         document.getElementById('mobileNav').style.display = "flex";
         
         if (window.innerWidth < 1100) {
-             document.querySelector('.nav-item').click();
+             setTimeout(() => {
+                 const firstBtn = document.querySelector('.nav-item');
+                 if(firstBtn) firstBtn.click();
+             }, 50);
         }
 
         playCelebration(); 
@@ -903,7 +1042,6 @@ window.submitVotes = function() {
   });
 
 
-  // ===== FIXED: onValue userVotes handler =====
   onValue(ref(db, 'userVotes'), (snap) => {
       const data = snap.val() || {};
       const counts = {};
@@ -919,7 +1057,6 @@ window.submitVotes = function() {
           }
       });
 
-      // FIX 1: sort by vote count (index [1]), not by the full array
       const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
 
       let h = "";
@@ -927,7 +1064,6 @@ window.submitVotes = function() {
       let lastVoteCount = -1;
 
       for (let i = 0; i < sorted.length; i++) {
-          // FIX 2: properly destructure name and vote count from each entry
           const name = sorted[i][0];
           const votes = sorted[i][1];
 
@@ -959,15 +1095,12 @@ window.submitVotes = function() {
 
       document.getElementById('voterDetails').innerHTML = h || "<p style='text-align:center; color:#666;'>Waiting for the first picks...</p>";
 
-      // FIX 3: use datasets[0] to correctly target the dataset object
-      // FIX 4: use e[0] (the name string) as the locationColors key, not the full array
       window.myChart.data.labels = sorted.map(e => e[0]);
       window.myChart.data.datasets[0].data = sorted.map(e => e[1]);
       window.myChart.data.datasets[0].backgroundColor = sorted.map(e => locationColors[e[0]] || '#cccccc');
       window.myChart.data.datasets[0].hoverBackgroundColor = sorted.map(e => locationColors[e[0]] || '#cccccc');
       window.myChart.update();
   });
-  // ===== END FIX =====
 
 
   window.toggleDetails = (btn) => {
@@ -1138,7 +1271,10 @@ window.submitVotes = function() {
       if (el) {
           new Sortable(el, {
               group: 'shared-agenda',
-              animation: 150, delay: 150, delayOnTouchOnly: true,
+              animation: 150, 
+              delay: 150, 
+              delayOnTouchOnly: true,
+              forceFallback: true,
               onAdd: function (evt) { const currentUser = localStorage.getItem('family_voterName') || "GUEST"; evt.item.dataset.mover = currentUser; },
               onEnd: function (evt) { saveAgendaState(); }
           });
