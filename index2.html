@@ -74,9 +74,11 @@
         .unlocked { display: block !important; }
 
         @media (min-width: 1100px) {
-            body { padding-bottom: 20px; padding-top: 80px; }
+            body { padding-bottom: 20px; }
             
-            .bento-grid { 
+            body.unlocked { padding-top: 80px; }
+            
+            .bento-grid.unlocked { 
                 display: block !important;
                 width: 100%;
             }
@@ -100,12 +102,11 @@
             }
             
             .bottom-nav { display: none !important; }
-            .desktop-nav { display: flex !important; }
         }
         
         /* FIXED: Use opacity and visibility instead of display for smooth transitions */
         @media (max-width: 1099px) {
-            .bento-grid {
+            .bento-grid.unlocked {
                 display: block !important;
                 width: 100%;
             }
@@ -983,6 +984,7 @@ window.unlockApp = async function() {
         localStorage.setItem('family_voterName', nInput);
         localStorage.setItem('family_voterPass', "congrats"); 
         
+        document.body.classList.add('unlocked');
         document.getElementById('appBody').classList.add('unlocked'); 
         document.getElementById('authBox').style.display = "none";
         document.getElementById('userHubBanner').style.display = "block"; 
