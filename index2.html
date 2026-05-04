@@ -326,6 +326,181 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>SUN, MAY 24</div>
+                        <div id="desc-sun" onclick="editConfigText('desc-sun')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Local Charm</div>
+                        <div class="day-vote-btn" onclick="toggleDayVote('sun')" id="vote-btn-sun" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-sun" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('sun')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-sun" data-day="sun"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-sun" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-sun" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('sun')">
+                            <button onclick="addDayComment('sun')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>MON, MAY 25</div>
+                        <div id="desc-mon" onclick="editConfigText('desc-mon')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Iconic Sights & Depths</div>
+                        <div class="day-vote-btn" onclick="toggleDayVote('mon')" id="vote-btn-mon" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-mon" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('mon')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-mon" data-day="mon"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-mon" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-mon" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('mon')">
+                            <button onclick="addDayComment('mon')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>TUE, MAY 26</div>
+                        <div id="desc-tue" onclick="editConfigText('desc-tue')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Wildlife & Waterfalls</div>
+                        <div class="day-vote-btn" onclick="toggleDayVote('tue')" id="vote-btn-tue" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-tue" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('tue')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-tue" data-day="tue"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-tue" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-tue" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('tue')">
+                            <button onclick="addDayComment('tue')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>WED, MAY 27</div>
+                        <div id="desc-wed" onclick="editConfigText('desc-wed')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">The Royal Gorge Experience</div>
+                        <div class="day-vote-btn" onclick="toggleDayVote('wed')" id="vote-btn-wed" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-wed" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('wed')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-wed" data-day="wed"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-wed" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-wed" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('wed')">
+                            <button onclick="addDayComment('wed')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>THU, MAY 28</div>
+                        <div id="desc-thu" onclick="editConfigText('desc-thu')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">The Summit</div>
+                        <div class="day-vote-btn" onclick="toggleDayVote('thu')" id="vote-btn-thu" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-thu" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('thu')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-thu" data-day="thu"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-thu" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-thu" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('thu')">
+                            <button onclick="addDayComment('thu')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>FRI, MAY 29</div>
+                        <div id="desc-fri" onclick="editConfigText('desc-fri')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Open Day</div>
+                        <div class="day-vote-btn" onclick="toggleDayVote('fri')" id="vote-btn-fri" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-fri" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('fri')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-fri" data-day="fri"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-fri" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-fri" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('fri')">
+                            <button onclick="addDayComment('fri')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="agenda-row">
+                    <div class="row-header" style="flex-direction:column;">
+                        <div>SAT, MAY 30</div>
+                        <div id="desc-sat2" onclick="editConfigText('desc-sat2')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Departure Day</div>
+                    </div>
+                    <div class="row-agenda">
+                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">👀</span> Show Itinerary
+                        </button>
+                        <div class="agenda-details-wrapper">
+                            <div class="agenda-details-box" id="itin-sat2" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
+                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('sat2')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                        </div>
+                        <div class="sortable-list" id="day-sat2" data-day="sat2"></div>
+                    </div>
+                    <div class="row-comments">
+                        <div id="log-sat2" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
+                        <div style="display:flex; gap:4px; margin-top:auto;">
+                            <input type="text" id="input-sat2" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('sat2')">
+                            <button onclick="addDayComment('sat2')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="agenda-row" style="background:#fff3cd; border:2px dashed #f39c12;">
                     <div class="row-header" style="flex-direction:column; background:#f39c12; align-items:center;">
                         <div>OPTIONS POOL</div>
@@ -537,6 +712,11 @@ const tierColors = [
               item.style.animation = 'none';
               item.offsetHeight; /* trigger reflow */
               item.style.animation = 'popIn 0.4s ease forwards';
+              
+              // Force Chart.js to resize itself when its tab becomes visible!
+              if(tabName === 'vote' && window.myChart) {
+                  setTimeout(() => window.myChart.resize(), 50);
+              }
           } else {
               item.style.display = 'none';
           }
@@ -705,7 +885,7 @@ window.submitVotes = function() {
 };
 
   const ctx = document.getElementById('voteChart').getContext('2d');
-  let myChart = new Chart(ctx, { 
+  window.myChart = new Chart(ctx, { 
     type: 'bar', 
     data: { 
         labels: [], 
@@ -765,11 +945,11 @@ onValue(ref(db, 'userVotes'), (snap) => {
 
     document.getElementById('voterDetails').innerHTML = h || "<p style='text-align:center; color:#666;'>Waiting for the first picks...</p>";
     
-    myChart.data.labels = sorted.map(e => e); 
-    myChart.data.datasets.data = sorted.map(e => e); 
-    myChart.data.datasets.backgroundColor = sorted.map(e => locationColors[e]);
-    myChart.data.datasets.hoverBackgroundColor = sorted.map(e => locationColors[e]);
-    myChart.update();
+    window.myChart.data.labels = sorted.map(e => e); 
+    window.myChart.data.datasets.data = sorted.map(e => e); 
+    window.myChart.data.datasets.backgroundColor = sorted.map(e => locationColors[e]);
+    window.myChart.data.datasets.hoverBackgroundColor = sorted.map(e => locationColors[e]);
+    window.myChart.update();
 });
 
   window.toggleDetails = (btn) => {
@@ -936,12 +1116,15 @@ onValue(ref(db, 'userVotes'), (snap) => {
   });
 
   days.forEach(day => {
-      new Sortable(document.getElementById(`day-${day}`), {
-          group: 'shared-agenda',
-          animation: 150, delay: 150, delayOnTouchOnly: true,
-          onAdd: function (evt) { const currentUser = localStorage.getItem('family_voterName') || "GUEST"; evt.item.dataset.mover = currentUser; },
-          onEnd: function (evt) { saveAgendaState(); }
-      });
+      const el = document.getElementById(`day-${day}`);
+      if (el) {
+          new Sortable(el, {
+              group: 'shared-agenda',
+              animation: 150, delay: 150, delayOnTouchOnly: true,
+              onAdd: function (evt) { const currentUser = localStorage.getItem('family_voterName') || "GUEST"; evt.item.dataset.mover = currentUser; },
+              onEnd: function (evt) { saveAgendaState(); }
+          });
+      }
   });
 
   function saveAgendaState() {
