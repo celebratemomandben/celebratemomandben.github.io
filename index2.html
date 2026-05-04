@@ -117,6 +117,11 @@
             animation: fadeInTab 0.3s ease forwards;
         }
         
+        .chat-module.active-tab {
+            display: flex;
+            flex-direction: column;
+        }
+        
         @keyframes fadeInTab {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -167,8 +172,16 @@
     }
 
     .video-module { grid-area: video; } .info-module { grid-area: info; } 
-    .chat-module { grid-area: chat; display: flex; flex-direction: column; } 
+    .chat-module { grid-area: chat; } 
     .poll-module { grid-area: poll; } .voters-module { grid-area: voters; } .chart-module { grid-area: chart; }
+    
+    /* Apply flex layout to chat only when visible */
+    @media (min-width: 1100px) {
+        .chat-module {
+            display: flex;
+            flex-direction: column;
+        }
+    }
 
     .bento-item { 
         background: var(--glass); 
