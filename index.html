@@ -138,12 +138,12 @@
         .agenda-module { grid-area: agenda; width:100%; box-sizing:border-box; }
         .agenda-row { display:flex; background:#fff; border-radius:10px; overflow:hidden; border:1px solid #e1e8ed; margin-bottom: 8px; align-items:stretch; flex-direction:row; }
         .row-header { flex:0 0 120px; background:var(--primary); color:white; padding:10px; font-weight:800; font-size:0.8rem; display:flex; align-items:center; justify-content:center; text-align:center; line-height: 1.2; }
-        .row-agenda { flex:2; padding:10px; border-right:1px solid #eee; background:#f8f9fa; }
-        .row-comments { flex:1; padding:10px; display:flex; flex-direction:column; background:#fdfdfd; }
+        .row-agenda { flex:1; padding:10px; background:#f8f9fa; }
+        .row-comments { flex:1; padding:10px; display:flex; flex-direction:column; background:#fdfdfd; border-left:1px solid #eee; }
         .row-comments textarea { width:100%; height:100%; flex-grow:1; border:1px solid #ddd; padding:8px; border-radius:5px; font-size:0.8rem; background:white; font-family:'Inter', sans-serif; box-sizing: border-box; resize:vertical; min-height:60px; }
         .sortable-list { min-height:45px; display:flex; flex-direction:row; flex-wrap:wrap; gap:8px; align-items:flex-start; height: 100%; box-sizing: border-box; }
-        .agenda-item { background:white; padding:8px 12px; border-radius:8px; font-size:0.8rem; font-weight:700; color:#333; cursor:grab; box-shadow:0 2px 5px rgba(0,0,0,0.05); border:1px solid #eee; display:flex; justify-content:flex-start; align-items:center; }
-        .agenda-item::before { content: "⋮⋮"; color: #cbd5e0; margin-right: 8px; font-size: 1.1rem; line-height: 1; letter-spacing: -2px; padding-right: 2px; }
+        .agenda-item { background:white; padding:8px 12px; border-radius:8px; font-size:0.8rem; font-weight:700; color:#333; box-shadow:0 2px 5px rgba(0,0,0,0.05); border:1px solid #eee; display:flex; justify-content:flex-start; align-items:center; }
+        .drag-handle { color: #cbd5e0; margin-right: 8px; font-size: 1.1rem; line-height: 1; letter-spacing: -2px; padding-right: 2px; cursor: grab; user-select: none; display: inline-block; }
         .agenda-item > span { flex-grow: 1; display: flex; align-items: center; flex-wrap: wrap; }
         .tap-hint-icon {
             display: inline-flex; align-items: center; justify-content: center;
@@ -447,6 +447,16 @@
         .nav-item.active .nav-icon { 
             transform: scale(1.15); 
         }
+        
+        /* Admin-only visibility helper */
+        body:not(.is-admin) .admin-only {
+            display: none !important;
+        }
+        
+        /* Chuck-only visibility helper */
+        body:not(.is-chuck) .chuck-only {
+            display: none !important;
+        }
     </style>
 
 </head>
@@ -547,8 +557,7 @@
 
             <div class="agenda-table-headers" style="display:flex; gap:10px; padding: 0 10px 5px 10px; font-weight:800; font-size:0.75rem; color:#666; text-transform:uppercase;">
                 <div style="flex:0 0 120px; text-align:center;">DAY</div>
-                <div style="flex:2; padding-left:10px;">SUGGESTED AGENDA</div>
-                <div style="flex:1; padding-left:10px;">COMMENTS</div>
+                <div style="flex:1; padding-left:10px;">SUGGESTED AGENDA</div>
             </div>
 
             <div style="display:flex; flex-direction:column; gap:5px; margin-bottom: 15px;">
@@ -558,21 +567,14 @@
                         <div id="desc-sat" onclick="editConfigText('desc-sat')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Arrival Day</div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">👀</span> Show Itinerary
+                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">✨</span> Hide Itinerary
                         </button>
-                        <div class="agenda-details-wrapper">
+                        <div class="agenda-details-wrapper expanded">
                             <div class="agenda-details-box" id="itin-sat" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
-                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('sat')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                            <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('sat')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
                         <div class="sortable-list" id="day-sat" data-day="sat"></div>
-                    </div>
-                    <div class="row-comments">
-                        <div id="log-sat" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
-                        <div style="display:flex; gap:4px; margin-top:auto;">
-                            <input type="text" id="input-sat" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('sat')">
-                            <button onclick="addDayComment('sat')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
-                        </div>
                     </div>
                 </div>
                 
@@ -583,21 +585,14 @@
                         <div class="day-vote-btn" onclick="toggleDayVote('sun')" id="vote-btn-sun" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">👀</span> Show Itinerary
+                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">✨</span> Hide Itinerary
                         </button>
-                        <div class="agenda-details-wrapper">
+                        <div class="agenda-details-wrapper expanded">
                             <div class="agenda-details-box" id="itin-sun" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
-                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('sun')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                            <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('sun')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
                         <div class="sortable-list" id="day-sun" data-day="sun"></div>
-                    </div>
-                    <div class="row-comments">
-                        <div id="log-sun" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
-                        <div style="display:flex; gap:4px; margin-top:auto;">
-                            <input type="text" id="input-sun" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('sun')">
-                            <button onclick="addDayComment('sun')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
-                        </div>
                     </div>
                 </div>
 
@@ -608,21 +603,14 @@
                         <div class="day-vote-btn" onclick="toggleDayVote('mon')" id="vote-btn-mon" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">👀</span> Show Itinerary
+                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">✨</span> Hide Itinerary
                         </button>
-                        <div class="agenda-details-wrapper">
+                        <div class="agenda-details-wrapper expanded">
                             <div class="agenda-details-box" id="itin-mon" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
-                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('mon')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                            <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('mon')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
                         <div class="sortable-list" id="day-mon" data-day="mon"></div>
-                    </div>
-                    <div class="row-comments">
-                        <div id="log-mon" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
-                        <div style="display:flex; gap:4px; margin-top:auto;">
-                            <input type="text" id="input-mon" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('mon')">
-                            <button onclick="addDayComment('mon')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
-                        </div>
                     </div>
                 </div>
 
@@ -633,21 +621,14 @@
                         <div class="day-vote-btn" onclick="toggleDayVote('tue')" id="vote-btn-tue" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">👀</span> Show Itinerary
+                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">✨</span> Hide Itinerary
                         </button>
-                        <div class="agenda-details-wrapper">
+                        <div class="agenda-details-wrapper expanded">
                             <div class="agenda-details-box" id="itin-tue" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
-                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('tue')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                            <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('tue')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
                         <div class="sortable-list" id="day-tue" data-day="tue"></div>
-                    </div>
-                    <div class="row-comments">
-                        <div id="log-tue" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
-                        <div style="display:flex; gap:4px; margin-top:auto;">
-                            <input type="text" id="input-tue" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('tue')">
-                            <button onclick="addDayComment('tue')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
-                        </div>
                     </div>
                 </div>
 
@@ -658,21 +639,14 @@
                         <div class="day-vote-btn" onclick="toggleDayVote('wed')" id="vote-btn-wed" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">👀</span> Show Itinerary
+                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">✨</span> Hide Itinerary
                         </button>
-                        <div class="agenda-details-wrapper">
+                        <div class="agenda-details-wrapper expanded">
                             <div class="agenda-details-box" id="itin-wed" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
-                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('wed')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                            <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('wed')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
                         <div class="sortable-list" id="day-wed" data-day="wed"></div>
-                    </div>
-                    <div class="row-comments">
-                        <div id="log-wed" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
-                        <div style="display:flex; gap:4px; margin-top:auto;">
-                            <input type="text" id="input-wed" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('wed')">
-                            <button onclick="addDayComment('wed')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
-                        </div>
                     </div>
                 </div>
 
@@ -683,21 +657,14 @@
                         <div class="day-vote-btn" onclick="toggleDayVote('thu')" id="vote-btn-thu" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">👀</span> Show Itinerary
+                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">✨</span> Hide Itinerary
                         </button>
-                        <div class="agenda-details-wrapper">
+                        <div class="agenda-details-wrapper expanded">
                             <div class="agenda-details-box" id="itin-thu" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
-                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('thu')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                            <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('thu')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
                         <div class="sortable-list" id="day-thu" data-day="thu"></div>
-                    </div>
-                    <div class="row-comments">
-                        <div id="log-thu" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
-                        <div style="display:flex; gap:4px; margin-top:auto;">
-                            <input type="text" id="input-thu" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('thu')">
-                            <button onclick="addDayComment('thu')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
-                        </div>
                     </div>
                 </div>
 
@@ -708,21 +675,14 @@
                         <div class="day-vote-btn" onclick="toggleDayVote('fri')" id="vote-btn-fri" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">👀</span> Show Itinerary
+                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">✨</span> Hide Itinerary
                         </button>
-                        <div class="agenda-details-wrapper">
+                        <div class="agenda-details-wrapper expanded">
                             <div class="agenda-details-box" id="itin-fri" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
-                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('fri')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                            <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('fri')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
                         <div class="sortable-list" id="day-fri" data-day="fri"></div>
-                    </div>
-                    <div class="row-comments">
-                        <div id="log-fri" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
-                        <div style="display:flex; gap:4px; margin-top:auto;">
-                            <input type="text" id="input-fri" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('fri')">
-                            <button onclick="addDayComment('fri')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
-                        </div>
                     </div>
                 </div>
 
@@ -732,33 +692,28 @@
                         <div id="desc-sat2" onclick="editConfigText('desc-sat2')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Departure Day</div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">👀</span> Show Itinerary
+                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
+                            <span class="toggle-icon">✨</span> Hide Itinerary
                         </button>
-                        <div class="agenda-details-wrapper">
+                        <div class="agenda-details-wrapper expanded">
                             <div class="agenda-details-box" id="itin-sat2" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
-                            <div style="text-align:right; margin-top:4px;"><button onclick="addItinerary('sat2')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
+                            <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('sat2')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
                         <div class="sortable-list" id="day-sat2" data-day="sat2"></div>
                     </div>
-                    <div class="row-comments">
-                        <div id="log-sat2" style="flex:1; overflow-y:auto; margin-bottom:5px; font-size:0.8rem; display:flex; flex-direction:column; gap:4px; max-height: 120px;"></div>
-                        <div style="display:flex; gap:4px; margin-top:auto;">
-                            <input type="text" id="input-sat2" placeholder="Add comment..." style="flex:1; padding:4px; font-size:0.75rem; border:1px solid #ddd; border-radius:4px;" onkeypress="if(event.key==='Enter') addDayComment('sat2')">
-                            <button onclick="addDayComment('sat2')" style="padding:4px 8px; font-size:0.75rem; background:var(--primary); color:white; border:none; border-radius:4px; cursor:pointer;">Add</button>
-                        </div>
-                    </div>
                 </div>
 
-                <div class="agenda-row" style="background:#fff3cd; border:2px dashed #f39c12;">
+                <div class="agenda-row chuck-only" style="background:#fff3cd; border:2px dashed #f39c12;">
                     <div class="row-header" style="flex-direction:column; background:#f39c12; align-items:center;">
                         <div>OPTIONS POOL</div>
                         <div style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; padding: 0 4px;">Drag & Drop activities to proposed agenda!</div>
                     </div>
                     <div class="row-agenda" style="background:transparent; border:none;"><div class="sortable-list" id="day-pool" data-day="pool"></div></div>
                     <div class="row-comments" style="background:transparent; justify-content:center; gap:5px; align-items:center;">
-                        <input type="text" id="customActivityInput" placeholder="Other Activity..." style="width:100%; border:1px solid #ddd; padding:8px; border-radius:5px; font-size:0.8rem; box-sizing:border-box;">
-                        <button onclick="addCustomActivity()" style="background:var(--primary); color:white; border:none; padding:8px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:0.8rem; width:100%;">Add to Pool</button>
+                        <div class="admin-only" style="width:100%; display:flex; flex-direction:column; gap:5px; align-items:center;">
+                            <input type="text" id="customActivityInput" placeholder="Other Activity..." style="width:100%; border:1px solid #ddd; padding:8px; border-radius:5px; font-size:0.8rem; box-sizing:border-box;">
+                            <button onclick="addCustomActivity()" style="background:var(--primary); color:white; border:none; padding:8px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:0.8rem; width:100%;">Add to Pool</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -957,8 +912,12 @@ const tierColors = [
   window.switchTab = (tabName, btnElement) => {
       // Update nav buttons (works for both desktop and mobile nav)
       document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-      if(btnElement) btnElement.classList.add('active');
-      else document.querySelector(`.nav-item[onclick*="${tabName}"]`)?.classList.add('active');
+      
+      document.querySelectorAll('.nav-item').forEach(btn => {
+          if (btn.getAttribute('onclick')?.includes(`'${tabName}'`)) {
+              btn.classList.add('active');
+          }
+      });
 
       // Smooth tab switching
       document.querySelectorAll('.bento-item').forEach(item => {
@@ -1019,6 +978,9 @@ window.unlockApp = async function() {
         }, 50);
 
         playCelebration(); 
+        
+        // Update admin privileges (classes + Sortable state)
+        if (window.updateAdminPrivileges) window.updateAdminPrivileges();
 
         const randomLocIndex = Math.floor(Math.random() * locations.length); 
         document.getElementById('locPicker').value = randomLocIndex;
@@ -1288,17 +1250,33 @@ window.submitVotes = function() {
 
   window.addItinerary = (day) => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      if(currentUser === "GUEST") { if (window.showToast) window.showToast("Please log in to add details!"); return; }
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      if (!isAdmin) {
+          if (window.showToast) window.showToast("⚠️ Only BEN or CHUCK can edit the itinerary!");
+          return;
+      }
       const text = prompt("Enter new itinerary detail:");
       if(text && text.trim()) { push(ref(db, `itineraryDetails/${day}`), { user: currentUser, text: text.trim(), time: serverTimestamp() }); }
   };
 
   window.editItinerary = (day, id, currentText) => {
+      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      if (!isAdmin) {
+          if (window.showToast) window.showToast("⚠️ Only BEN or CHUCK can edit the itinerary!");
+          return;
+      }
       const text = prompt("Edit itinerary detail:", currentText);
-      if(text && text.trim()) { update(ref(db, `itineraryDetails/${day}/${id}`), { text: text.trim(), time: serverTimestamp(), lastEditedBy: localStorage.getItem('family_voterName') || "GUEST" }); }
+      if(text && text.trim()) { update(ref(db, `itineraryDetails/${day}/${id}`), { text: text.trim(), time: serverTimestamp(), lastEditedBy: currentUser }); }
   };
 
   window.deleteItinerary = (day, id) => {
+      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      if (!isAdmin) {
+          if (window.showToast) window.showToast("⚠️ Only BEN or CHUCK can edit the itinerary!");
+          return;
+      }
       if(confirm("Delete this itinerary detail?")) { remove(ref(db, `itineraryDetails/${day}/${id}`)); }
   };
 
@@ -1336,9 +1314,9 @@ window.submitVotes = function() {
           
           msgs.forEach(m => {
               const displayUser = m.user === "SYSTEM" ? "CHUCK" : m.user;
-              const canEdit = (displayUser === currentUser || currentUser === "CHUCK" || currentUser === "BEN");
+              const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
               let actions = "";
-              if (canEdit) {
+              if (isAdmin) {
                   const safeStr = m.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                   actions = `<div style="font-size:0.65rem; color:#888; margin-top:4px;">Added by ${displayUser} ${m.lastEditedBy ? '(Last edited by ' + m.lastEditedBy + ')' : ''} <span style="float:right;"><a href="javascript:void(0)" onclick="editItinerary('${day}', '${m.id}', '${safeStr}')" style="color:var(--primary); text-decoration:none;">edit</a> <span style="color:#ccc;">/</span> <a href="javascript:void(0)" onclick="deleteItinerary('${day}', '${m.id}')" style="color:var(--accent); text-decoration:none; font-weight:bold;">X</a></span></div>`;
               } else {
@@ -1352,83 +1330,59 @@ window.submitVotes = function() {
   const days = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat2', 'pool'];
   let isAgendaLocalUpdate = false;
   
-  window.addDayComment = (day) => {
-      const input = document.getElementById(`input-${day}`);
-      const m = input.value.trim();
-      if(!m) return;
-      push(ref(db, `sharedAgendaComments/${day}`), { user: localStorage.getItem('family_voterName') || "GUEST", msg: m, time: serverTimestamp() });
-      input.value = "";
-  };
+  // Daily comments removed per user request. Global Agenda Discussion chat is preserved below.
 
-  window.deleteDayComment = (day, id) => { remove(ref(db, `sharedAgendaComments/${day}/${id}`)); };
-
-  window.editDayComment = (day, id, currentMsg) => {
-      const m = prompt("Edit comment:", currentMsg);
-      if(m !== null && m.trim() !== "") { update(ref(db, `sharedAgendaComments/${day}/${id}`), { msg: m.trim(), time: serverTimestamp() }); }
-  };
-
-  onValue(ref(db, 'sharedAgendaComments'), (snap) => {
-      const state = snap.val() || {};
-      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      
-      const agendaDays = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat2'];
-      agendaDays.forEach(day => {
-          const logBox = document.getElementById(`log-${day}`);
-          if (!logBox) return;
-          logBox.innerHTML = "";
-          
-          let dayData = state[day];
-          let msgs = [];
-          
-          if (dayData) {
-              if (typeof dayData === 'string' && dayData.trim() !== '') {
-                  push(ref(db, `sharedAgendaComments/${day}`), { user: "Family", msg: dayData, time: serverTimestamp() });
-              } else if (typeof dayData === 'object' && dayData.text && dayData.text.trim() !== '') {
-                  push(ref(db, `sharedAgendaComments/${day}`), { user: dayData.user || "Family", msg: dayData.text, time: serverTimestamp() });
-                  remove(ref(db, `sharedAgendaComments/${day}/text`));
-                  remove(ref(db, `sharedAgendaComments/${day}/user`));
-                  remove(ref(db, `sharedAgendaComments/${day}/time`));
-              } else {
-                  Object.keys(dayData).forEach(k => { if (k !== 'text' && k !== 'user' && k !== 'time' && typeof dayData[k] === 'object') { msgs.push({ id: k, ...dayData[k] }); } });
-              }
-          }
-
-          msgs.sort((a,b) => (a.time || 0) - (b.time || 0));
-          
-          msgs.forEach(m => {
-              const canEditDelete = (m.user === currentUser || currentUser === "CHUCK" || currentUser === "BEN");
-              let links = "";
-              if (canEditDelete) {
-                  const escapedMsg = m.msg.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                  links = ` <a href="javascript:void(0)" onclick="editDayComment('${day}', '${m.id}', '${escapedMsg}')" style="color:var(--primary); font-size:0.7rem; text-decoration:none;">edit</a><span style="color:#ccc; margin:0 3px;">/</span><a href="javascript:void(0)" onclick="if(confirm('Delete?')) deleteDayComment('${day}', '${m.id}')" style="color:var(--accent); font-size:0.7rem; text-decoration:none;">delete</a>`;
-              }
-              logBox.innerHTML += `<div style="margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid #f1f1f1; position:relative; line-height:1.3;"><span style="color:#333;">${m.msg}</span><span style="color:#888; font-size:0.75rem; font-style:italic;"> - ${m.user}</span>${links ? ' <span style="float:right;">' + links + '</span>' : ''}</div>`;
-          });
-          logBox.scrollTop = logBox.scrollHeight;
-      });
-  });
-
+  window.sortables = [];
   days.forEach(day => {
       const el = document.getElementById(`day-${day}`);
       if (el) {
-          new Sortable(el, {
+          const s = new Sortable(el, {
               group: 'shared-agenda',
               animation: 150, 
-              delay: 150, 
-              delayOnTouchOnly: true,
+              handle: '.drag-handle',
               forceFallback: true,
               onAdd: function (evt) { const currentUser = localStorage.getItem('family_voterName') || "GUEST"; evt.item.dataset.mover = currentUser; },
               onEnd: function (evt) { saveAgendaState(); }
           });
+          window.sortables.push(s);
       }
   });
 
+  window.updateAdminPrivileges = () => {
+      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      const isChuck = (currentUser === "CHUCK");
+      
+      if (isAdmin) {
+          document.body.classList.add('is-admin');
+      } else {
+          document.body.classList.remove('is-admin');
+      }
+      
+      if (isChuck) {
+          document.body.classList.add('is-chuck');
+      } else {
+          document.body.classList.remove('is-chuck');
+      }
+      
+      if (window.sortables) {
+          window.sortables.forEach(s => {
+              s.option('disabled', !isAdmin);
+          });
+      }
+  };
+  window.updateAdminPrivileges();
+
   function saveAgendaState() {
+      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      if (!isAdmin) return;
+
       isAgendaLocalUpdate = true;
       const newState = {};
       days.forEach(day => {
           const items = Array.from(document.getElementById(`day-${day}`).children).map(el => {
-              const span = el.querySelector('span');
+              const span = el.querySelector('span:not(.drag-handle)');
               const text = el.dataset.rawtext || (span ? span.textContent.trim() : el.textContent.trim());
               return { text: text, creator: el.dataset.creator || "SYSTEM", mover: el.dataset.mover || "" };
           });
@@ -1438,6 +1392,12 @@ window.submitVotes = function() {
   }
 
   window.deleteCustomActivity = (btn) => {
+      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      if (!isAdmin) {
+          if (window.showToast) window.showToast("⚠️ Only BEN or CHUCK can delete activities!");
+          return;
+      }
       const item = btn.closest('.agenda-item');
       const list = item.closest('.sortable-list');
       
@@ -1446,21 +1406,27 @@ window.submitVotes = function() {
       } else {
           if(confirm('Move this activity back to the Options Pool?')) {
               const pool = document.getElementById('day-pool');
-              if (pool) { pool.appendChild(item); item.dataset.mover = ""; const span = item.querySelector('span'); if (span) span.innerHTML = item.dataset.rawtext; saveAgendaState(); }
+              if (pool) { pool.appendChild(item); item.dataset.mover = ""; const span = item.querySelector('span:not(.drag-handle)'); if (span) span.innerHTML = item.dataset.rawtext; saveAgendaState(); }
           }
       }
   };
 
   window.editCustomActivity = (btn) => {
+      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      if (!isAdmin) {
+          if (window.showToast) window.showToast("⚠️ Only BEN or CHUCK can edit activities!");
+          return;
+      }
       const item = btn.closest('.agenda-item');
-      const currentText = item.dataset.rawtext || item.querySelector('span').textContent.trim();
+      const currentText = item.dataset.rawtext || item.querySelector('span:not(.drag-handle)').textContent.trim();
       const newText = prompt('Edit activity:', currentText);
       if (newText !== null && newText.trim() !== "") {
           const safeText = newText.trim().replace(/"/g, '&quot;'); item.dataset.rawtext = safeText;
           const mover = item.dataset.mover || ""; let moverDisplay = "";
           const isPool = item.closest('.sortable-list').id === 'day-pool';
           if (!isPool && mover) moverDisplay = ` <span style="color:#888; font-size:0.75rem; font-style:italic; font-weight:normal;">(${mover})</span>`;
-          const span = item.querySelector('span');
+          const span = item.querySelector('span:not(.drag-handle)');
           span.innerHTML = `${newText.trim()}${moverDisplay}<span class="tap-hint-icon"></span>`;
           const safeNameForClick = newText.trim().replace(/'/g, "\\'").replace(/"/g, '&quot;');
           span.setAttribute('onclick', `viewActivity('${safeNameForClick}')`);
@@ -1469,13 +1435,18 @@ window.submitVotes = function() {
   };
 
   window.addCustomActivity = () => {
+      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      if (!isAdmin) {
+          if (window.showToast) window.showToast("⚠️ Only BEN or CHUCK can add activities!");
+          return;
+      }
       const input = document.getElementById('customActivityInput');
       const val = input.value.trim(); if (!val) return;
       const pool = document.getElementById('day-pool');
-      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
       const safeText = val.replace(/"/g, '&quot;');
       const safeNameForClick = val.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-      pool.innerHTML += `<div class="agenda-item" data-creator="${currentUser}" data-mover="" data-rawtext="${safeText}"><span onclick="viewActivity('${safeNameForClick}')" style="cursor:pointer;" title="Tap to explore this activity">${val}<span class="tap-hint-icon"></span></span><div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; padding-left: 15px; display:flex; gap:6px; align-items:center;"><span onclick="editCustomActivity(this)" style="cursor:pointer; text-decoration:underline;">edit</span> <span style="color:#ccc;">/</span> <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:none; font-weight:bold; color:var(--accent);">X</span></div></div>`;
+      pool.innerHTML += `<div class="agenda-item" data-creator="${currentUser}" data-mover="" data-rawtext="${safeText}"><span class="drag-handle">⋮⋮</span><span onclick="viewActivity('${safeNameForClick}')" style="cursor:pointer;" title="Tap to explore this activity">${val}<span class="tap-hint-icon"></span></span><div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; padding-left: 15px; display:flex; gap:6px; align-items:center;"><span onclick="editCustomActivity(this)" style="cursor:pointer; text-decoration:underline;">edit</span> <span style="color:#ccc;">/</span> <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:none; font-weight:bold; color:var(--accent);">X</span></div></div>`;
       input.value = ""; saveAgendaState();
   };
 
@@ -1492,20 +1463,19 @@ window.submitVotes = function() {
                       if (typeof itemObj === 'string') { text = itemObj; creator = "SYSTEM"; mover = ""; } else { text = itemObj.text; creator = itemObj.creator; mover = itemObj.mover || ""; }
 
                       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+                      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
                       let actions = "";
                       
-                      const isCreator = (creator === currentUser); const isMover = (mover === currentUser); const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN"); const canDelete = (isCreator || isMover || isAdmin);
-
-                      if (creator !== "SYSTEM") {
-                          if (isCreator || isAdmin) { actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; padding-left: 15px; display:flex; gap:6px; align-items:center;"><span onclick="editCustomActivity(this)" style="cursor:pointer; text-decoration:underline;">edit</span> <span style="color:#ccc;">/</span> <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:none; font-weight:bold; color:var(--accent);">X</span></div>`; } else if (canDelete) { actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; padding-left: 15px; display:flex; gap:6px; align-items:center;"><span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:none; font-weight:bold; color:var(--accent);">X</span></div>`; }
-                      } else { if (canDelete) { actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; padding-left: 15px; display:flex; gap:6px; align-items:center;"><span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:none; font-weight:bold; color:var(--accent);">X</span></div>`; } }
+                      if (isAdmin) {
+                          actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; padding-left: 15px; display:flex; gap:6px; align-items:center;"><span onclick="editCustomActivity(this)" style="cursor:pointer; text-decoration:underline;">edit</span> <span style="color:#ccc;">/</span> <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:none; font-weight:bold; color:var(--accent);">X</span></div>`;
+                      }
 
                       let moverDisplay = "";
                       if (day !== 'pool' && mover) moverDisplay = ` <span style="color:#888; font-size:0.75rem; font-style:italic; font-weight:normal;">(${mover})</span>`;
 
                       const safeText = text.replace(/"/g, '&quot;');
                       const safeNameForClick = text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                      list.innerHTML += `<div class="agenda-item" data-creator="${creator}" data-mover="${mover}" data-rawtext="${safeText}"><span onclick="viewActivity('${safeNameForClick}')" style="cursor:pointer;" title="Tap to explore this activity">${text}${moverDisplay}<span class="tap-hint-icon"></span></span>${actions}</div>`;
+                      list.innerHTML += `<div class="agenda-item" data-creator="${creator}" data-mover="${mover}" data-rawtext="${safeText}"><span class="drag-handle">⋮⋮</span><span onclick="viewActivity('${safeNameForClick}')" style="cursor:pointer;" title="Tap to explore this activity">${text}${moverDisplay}<span class="tap-hint-icon"></span></span>${actions}</div>`;
                   });
               }
           });
