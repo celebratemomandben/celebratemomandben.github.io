@@ -1250,9 +1250,9 @@ window.submitVotes = function() {
 
   window.addItinerary = (day) => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK");
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
       if (!isAdmin) {
-          if (window.showToast) window.showToast("⚠️ Only CHUCK can edit the itinerary!");
+          if (window.showToast) window.showToast("⚠️ Only CHUCK and BEN can edit the itinerary!");
           return;
       }
       const text = prompt("Enter new itinerary detail:");
@@ -1261,9 +1261,9 @@ window.submitVotes = function() {
 
   window.editItinerary = (day, id, currentText) => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK");
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
       if (!isAdmin) {
-          if (window.showToast) window.showToast("⚠️ Only CHUCK can edit the itinerary!");
+          if (window.showToast) window.showToast("⚠️ Only CHUCK and BEN can edit the itinerary!");
           return;
       }
       const text = prompt("Edit itinerary detail:", currentText);
@@ -1272,9 +1272,9 @@ window.submitVotes = function() {
 
   window.deleteItinerary = (day, id) => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK");
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
       if (!isAdmin) {
-          if (window.showToast) window.showToast("⚠️ Only CHUCK can edit the itinerary!");
+          if (window.showToast) window.showToast("⚠️ Only CHUCK and BEN can edit the itinerary!");
           return;
       }
       if(confirm("Delete this itinerary detail?")) { remove(ref(db, `itineraryDetails/${day}/${id}`)); }
@@ -1314,7 +1314,7 @@ window.submitVotes = function() {
           
           msgs.forEach(m => {
               const displayUser = m.user === "SYSTEM" ? "CHUCK" : m.user;
-              const isAdmin = (currentUser === "CHUCK");
+              const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
               let actions = "";
               if (isAdmin) {
                   const safeStr = m.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
@@ -1350,8 +1350,8 @@ window.submitVotes = function() {
 
   window.updateAdminPrivileges = () => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK");
-      const isChuck = (currentUser === "CHUCK");
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      const isChuck = (currentUser === "CHUCK" || currentUser === "BEN");
       
       if (isAdmin) {
           document.body.classList.add('is-admin');
@@ -1375,7 +1375,7 @@ window.submitVotes = function() {
 
   function saveAgendaState() {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK");
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
       if (!isAdmin) return;
 
       isAgendaLocalUpdate = true;
@@ -1393,9 +1393,9 @@ window.submitVotes = function() {
 
   window.deleteCustomActivity = (btn) => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK");
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
       if (!isAdmin) {
-          if (window.showToast) window.showToast("⚠️ Only CHUCK can delete activities!");
+          if (window.showToast) window.showToast("⚠️ Only CHUCK and BEN can delete activities!");
           return;
       }
       const item = btn.closest('.agenda-item');
@@ -1413,9 +1413,9 @@ window.submitVotes = function() {
 
   window.editCustomActivity = (btn) => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK");
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
       if (!isAdmin) {
-          if (window.showToast) window.showToast("⚠️ Only CHUCK can edit activities!");
+          if (window.showToast) window.showToast("⚠️ Only CHUCK and BEN can edit activities!");
           return;
       }
       const item = btn.closest('.agenda-item');
@@ -1436,9 +1436,9 @@ window.submitVotes = function() {
 
   window.addCustomActivity = () => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK");
+      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
       if (!isAdmin) {
-          if (window.showToast) window.showToast("⚠️ Only CHUCK can add activities!");
+          if (window.showToast) window.showToast("⚠️ Only CHUCK and BEN can add activities!");
           return;
       }
       const input = document.getElementById('customActivityInput');
@@ -1454,30 +1454,69 @@ window.submitVotes = function() {
       if (isAgendaLocalUpdate) return; 
       const state = snap.val();
       if (state) {
-          days.forEach(day => {
-              const list = document.getElementById(`day-${day}`);
-              if (!list) return; list.innerHTML = "";
+          // Find all used activities across agenda days (except the pool)
+          const usedInAgenda = new Set();
+          const agendaDaysOnly = ['sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat2'];
+          agendaDaysOnly.forEach(day => {
               if (state[day]) {
                   state[day].forEach(itemObj => {
-                      let text, creator, mover;
-                      if (typeof itemObj === 'string') { text = itemObj; creator = "SYSTEM"; mover = ""; } else { text = itemObj.text; creator = itemObj.creator; mover = itemObj.mover || ""; }
-
-                      const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-                      const isAdmin = (currentUser === "CHUCK");
-                      let actions = "";
-                      
-                      if (isAdmin) {
-                          actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; padding-left: 15px; display:flex; gap:6px; align-items:center;"><span onclick="editCustomActivity(this)" style="cursor:pointer; text-decoration:underline;">edit</span> <span style="color:#ccc;">/</span> <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:none; font-weight:bold; color:var(--accent);">X</span></div>`;
+                      const text = typeof itemObj === 'string' ? itemObj : itemObj.text;
+                      if (text) {
+                          usedInAgenda.add(text.trim().toLowerCase());
                       }
-
-                      let moverDisplay = "";
-                      if (day !== 'pool' && mover) moverDisplay = ` <span style="color:#888; font-size:0.75rem; font-style:italic; font-weight:normal;">(${mover})</span>`;
-
-                      const safeText = text.replace(/"/g, '&quot;');
-                      const safeNameForClick = text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                      list.innerHTML += `<div class="agenda-item" data-creator="${creator}" data-mover="${mover}" data-rawtext="${safeText}"><span class="drag-handle">⋮⋮</span><span onclick="viewActivity('${safeNameForClick}')" style="cursor:pointer;" title="Tap to explore this activity">${text}${moverDisplay}<span class="tap-hint-icon"></span></span>${actions}</div>`;
                   });
               }
+          });
+
+          // Find master locations not used in any of the agenda days
+          const unusedLocations = locations.filter(l => !usedInAgenda.has(l.name.trim().toLowerCase()));
+
+          days.forEach(day => {
+              const list = document.getElementById(`day-${day}`);
+              if (!list) return;
+              list.innerHTML = "";
+              
+              let items = [];
+              if (state[day]) {
+                  items = [...state[day]];
+              }
+              
+              // If pool day, insert any unused master locations not already present in the list
+              if (day === 'pool') {
+                  unusedLocations.forEach(loc => {
+                      const alreadyInPool = items.some(itemObj => {
+                          const text = typeof itemObj === 'string' ? itemObj : itemObj.text;
+                          return text && text.trim().toLowerCase() === loc.name.trim().toLowerCase();
+                      });
+                      if (!alreadyInPool) {
+                          items.push({ text: loc.name, creator: "SYSTEM", mover: "" });
+                      }
+                  });
+              }
+
+              items.forEach(itemObj => {
+                  let text, creator, mover;
+                  if (typeof itemObj === 'string') {
+                      text = itemObj; creator = "SYSTEM"; mover = "";
+                  } else {
+                      text = itemObj.text; creator = itemObj.creator; mover = itemObj.mover || "";
+                  }
+
+                  const currentUser = localStorage.getItem('family_voterName') || "GUEST";
+                  const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+                  let actions = "";
+                  
+                  if (isAdmin) {
+                      actions = `<div class="custom-actions" style="font-size:0.7rem; color:var(--primary); margin-left:auto; padding-left: 15px; display:flex; gap:6px; align-items:center;"><span onclick="editCustomActivity(this)" style="cursor:pointer; text-decoration:underline;">edit</span> <span style="color:#ccc;">/</span> <span onclick="deleteCustomActivity(this)" style="cursor:pointer; text-decoration:none; font-weight:bold; color:var(--accent);">X</span></div>`;
+                  }
+
+                  let moverDisplay = "";
+                  if (day !== 'pool' && mover) moverDisplay = ` <span style="color:#888; font-size:0.75rem; font-style:italic; font-weight:normal;">(${mover})</span>`;
+
+                  const safeText = text.replace(/"/g, '&quot;');
+                  const safeNameForClick = text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                  list.innerHTML += `<div class="agenda-item" data-creator="${creator}" data-mover="${mover}" data-rawtext="${safeText}"><span class="drag-handle">⋮⋮</span><span onclick="viewActivity('${safeNameForClick}')" style="cursor:pointer;" title="Tap to explore this activity">${text}${moverDisplay}<span class="tap-hint-icon"></span></span>${actions}</div>`;
+              });
           });
       } else {
           const defaultState = { sat: [], sun: ["Manitou Springs"], mon: ["Garden of the Gods", "Cave of the Winds"], tue: ["Cheyenne Mountain Zoo", "Seven Falls"], wed: ["Royal Gorge Bridge", "Royal Gorge Railroad"], thu: ["Pikes Peak Cog Railway"], fri: [], sat2: [], pool: ["Colorado Wolf and Wildlife Center", "Territory Days Fest", "Santa's Workshop", "Olympic Museum"] };
@@ -1498,7 +1537,7 @@ window.submitVotes = function() {
       msgs.sort((a,b) => (a.time || 0) - (b.time || 0)); 
       
       msgs.forEach(m => {
-          const canDelete = (m.user === currentUser || currentUser === "CHUCK");
+          const canDelete = (m.user === currentUser || currentUser === "CHUCK" || currentUser === "BEN");
           const delBtn = canDelete ? `<span class="reply-btn" style="color:var(--accent); cursor:pointer;" onclick="if(confirm('Delete message?')) window.deleteAgendaMsg('${m.id}')">delete</span>` : "";
           box.innerHTML += `<div class="chat-msg" style="border-bottom: 1px solid #eee; padding: 5px 0; position:relative;"><strong>${m.user}:</strong> ${m.msg}${delBtn}</div>`;
       });
@@ -1514,7 +1553,7 @@ window.showToast = (msg) => {
 
 window.editConfigText = (key) => {
     const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-    if (currentUser !== "CHUCK") return;
+    if (currentUser !== "CHUCK" && currentUser !== "BEN") return;
     
     const el = document.getElementById(key);
     const currentText = el.innerText;
