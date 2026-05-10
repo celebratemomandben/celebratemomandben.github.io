@@ -1318,9 +1318,9 @@ window.submitVotes = function() {
               let actions = "";
               if (isAdmin) {
                   const safeStr = m.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-                  actions = `<div style="font-size:0.65rem; color:#888; margin-top:4px;">Added by ${displayUser} ${m.lastEditedBy ? '(Last edited by ' + m.lastEditedBy + ')' : ''} <span style="float:right;"><a href="javascript:void(0)" onclick="editItinerary('${day}', '${m.id}', '${safeStr}')" style="color:var(--primary); text-decoration:none;">edit</a> <span style="color:#ccc;">/</span> <a href="javascript:void(0)" onclick="deleteItinerary('${day}', '${m.id}')" style="color:var(--accent); text-decoration:none; font-weight:bold;">X</a></span></div>`;
+                  actions = `<div style="font-size:0.65rem; color:#888; margin-top:4px;">Updated by ${m.lastEditedBy || displayUser} <span style="float:right;"><a href="javascript:void(0)" onclick="editItinerary('${day}', '${m.id}', '${safeStr}')" style="color:var(--primary); text-decoration:none;">edit</a> <span style="color:#ccc;">/</span> <a href="javascript:void(0)" onclick="deleteItinerary('${day}', '${m.id}')" style="color:var(--accent); text-decoration:none; font-weight:bold;">X</a></span></div>`;
               } else {
-                  actions = `<div style="font-size:0.65rem; color:#888; margin-top:4px; text-align:right;">Added by ${displayUser} ${m.lastEditedBy ? '(Last edited by ' + m.lastEditedBy + ')' : ''}</div>`;
+                  actions = `<div style="font-size:0.65rem; color:#888; margin-top:4px; text-align:right;">Updated by ${m.lastEditedBy || displayUser}</div>`;
               }
               box.innerHTML += `<div class="agenda-details-box" style="margin:0;"><div style="line-height:1.4;">${m.text}</div>${actions}</div>`;
           });
