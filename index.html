@@ -1250,9 +1250,9 @@ window.submitVotes = function() {
 
   window.addItinerary = (day) => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      const isAdmin = (currentUser === "CHUCK");
       if (!isAdmin) {
-          if (window.showToast) window.showToast("⚠️ Only BEN or CHUCK can edit the itinerary!");
+          if (window.showToast) window.showToast("⚠️ Only CHUCK can edit the itinerary!");
           return;
       }
       const text = prompt("Enter new itinerary detail:");
@@ -1261,9 +1261,9 @@ window.submitVotes = function() {
 
   window.editItinerary = (day, id, currentText) => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      const isAdmin = (currentUser === "CHUCK");
       if (!isAdmin) {
-          if (window.showToast) window.showToast("⚠️ Only BEN or CHUCK can edit the itinerary!");
+          if (window.showToast) window.showToast("⚠️ Only CHUCK can edit the itinerary!");
           return;
       }
       const text = prompt("Edit itinerary detail:", currentText);
@@ -1272,9 +1272,9 @@ window.submitVotes = function() {
 
   window.deleteItinerary = (day, id) => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      const isAdmin = (currentUser === "CHUCK");
       if (!isAdmin) {
-          if (window.showToast) window.showToast("⚠️ Only BEN or CHUCK can edit the itinerary!");
+          if (window.showToast) window.showToast("⚠️ Only CHUCK can edit the itinerary!");
           return;
       }
       if(confirm("Delete this itinerary detail?")) { remove(ref(db, `itineraryDetails/${day}/${id}`)); }
@@ -1314,7 +1314,7 @@ window.submitVotes = function() {
           
           msgs.forEach(m => {
               const displayUser = m.user === "SYSTEM" ? "CHUCK" : m.user;
-              const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+              const isAdmin = (currentUser === "CHUCK");
               let actions = "";
               if (isAdmin) {
                   const safeStr = m.text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
@@ -1350,7 +1350,7 @@ window.submitVotes = function() {
 
   window.updateAdminPrivileges = () => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      const isAdmin = (currentUser === "CHUCK");
       const isChuck = (currentUser === "CHUCK");
       
       if (isAdmin) {
@@ -1375,7 +1375,7 @@ window.submitVotes = function() {
 
   function saveAgendaState() {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      const isAdmin = (currentUser === "CHUCK");
       if (!isAdmin) return;
 
       isAgendaLocalUpdate = true;
@@ -1393,9 +1393,9 @@ window.submitVotes = function() {
 
   window.deleteCustomActivity = (btn) => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      const isAdmin = (currentUser === "CHUCK");
       if (!isAdmin) {
-          if (window.showToast) window.showToast("⚠️ Only BEN or CHUCK can delete activities!");
+          if (window.showToast) window.showToast("⚠️ Only CHUCK can delete activities!");
           return;
       }
       const item = btn.closest('.agenda-item');
@@ -1413,9 +1413,9 @@ window.submitVotes = function() {
 
   window.editCustomActivity = (btn) => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      const isAdmin = (currentUser === "CHUCK");
       if (!isAdmin) {
-          if (window.showToast) window.showToast("⚠️ Only BEN or CHUCK can edit activities!");
+          if (window.showToast) window.showToast("⚠️ Only CHUCK can edit activities!");
           return;
       }
       const item = btn.closest('.agenda-item');
@@ -1436,9 +1436,9 @@ window.submitVotes = function() {
 
   window.addCustomActivity = () => {
       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+      const isAdmin = (currentUser === "CHUCK");
       if (!isAdmin) {
-          if (window.showToast) window.showToast("⚠️ Only BEN or CHUCK can add activities!");
+          if (window.showToast) window.showToast("⚠️ Only CHUCK can add activities!");
           return;
       }
       const input = document.getElementById('customActivityInput');
@@ -1463,7 +1463,7 @@ window.submitVotes = function() {
                       if (typeof itemObj === 'string') { text = itemObj; creator = "SYSTEM"; mover = ""; } else { text = itemObj.text; creator = itemObj.creator; mover = itemObj.mover || ""; }
 
                       const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-                      const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
+                      const isAdmin = (currentUser === "CHUCK");
                       let actions = "";
                       
                       if (isAdmin) {
@@ -1498,7 +1498,7 @@ window.submitVotes = function() {
       msgs.sort((a,b) => (a.time || 0) - (b.time || 0)); 
       
       msgs.forEach(m => {
-          const canDelete = (m.user === currentUser || currentUser === "CHUCK" || currentUser === "BEN");
+          const canDelete = (m.user === currentUser || currentUser === "CHUCK");
           const delBtn = canDelete ? `<span class="reply-btn" style="color:var(--accent); cursor:pointer;" onclick="if(confirm('Delete message?')) window.deleteAgendaMsg('${m.id}')">delete</span>` : "";
           box.innerHTML += `<div class="chat-msg" style="border-bottom: 1px solid #eee; padding: 5px 0; position:relative;"><strong>${m.user}:</strong> ${m.msg}${delBtn}</div>`;
       });
@@ -1514,7 +1514,7 @@ window.showToast = (msg) => {
 
 window.editConfigText = (key) => {
     const currentUser = localStorage.getItem('family_voterName') || "GUEST";
-    if (currentUser !== "CHUCK" && currentUser !== "BEN") return;
+    if (currentUser !== "CHUCK") return;
     
     const el = document.getElementById(key);
     const currentText = el.innerText;
