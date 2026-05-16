@@ -960,9 +960,15 @@ window.unlockApp = async function() {
     const nInput = (document.getElementById('voterName').value.trim().toUpperCase()) || localStorage.getItem('family_voterName'); 
     const pInput = document.getElementById('voterPass').value.trim().toLowerCase(); 
     
-    if (nInput && (pInput === "congrats" || localStorage.getItem('family_voterPass'))) { 
+    let correctPass = "congrats";
+    try {
+        const snap = await get(ref(db, 'globalPasscode'));
+        if (snap.exists()) correctPass = String(snap.val()).trim().toLowerCase();
+    } catch(e) { console.error(e); }
+    
+    if (nInput && (pInput === correctPass || localStorage.getItem('family_voterPass'))) { 
         localStorage.setItem('family_voterName', nInput);
-        localStorage.setItem('family_voterPass', "congrats"); 
+        localStorage.setItem('family_voterPass', "true"); 
         
         document.body.classList.add('unlocked');
         document.getElementById('appBody').classList.add('unlocked'); 

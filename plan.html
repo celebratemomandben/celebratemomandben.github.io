@@ -1,43 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Plan The Plan - Final Agenda</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Outfit:wght@500;700;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Outfit:wght@500;700;900&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --primary: #0083B8; 
+            --primary: #0083B8;
             --secondary: #10b981;
-            --accent: #D9534F; 
+            --accent: #D9534F;
             --bg: #f0f4f8;
-            --glass: rgba(255, 255, 255, 0.85); 
+            --glass: rgba(255, 255, 255, 0.85);
             --gold: #f39c12;
             --dark: #1e293b;
         }
-        
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: linear-gradient(135deg, #e0eafc, #cfdef3, #e3eeff); 
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #e0eafc, #cfdef3, #e3eeff);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
-            margin: 0; 
-            padding: clamp(15px, 3vw, 30px); 
+            margin: 0;
+            padding: clamp(15px, 3vw, 30px);
             color: #334155;
             min-height: 100vh;
         }
 
         @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
-        
-        .container { 
-            max-width: 1200px; 
+
+        .container {
+            max-width: 1200px;
             margin: auto;
         }
 
@@ -46,15 +60,15 @@
             margin-bottom: 40px;
         }
 
-        .main-title { 
+        .main-title {
             font-family: 'Outfit', sans-serif;
-            font-size: clamp(2.5rem, 5vw, 4rem); 
-            font-weight: 900; 
-            margin: 0; 
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin: 0;
             background: linear-gradient(to right, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0px 10px 20px rgba(0,0,0,0.05);
+            text-shadow: 0px 10px 20px rgba(0, 0, 0, 0.05);
             letter-spacing: -1px;
         }
 
@@ -76,10 +90,13 @@
             background: white;
             padding: 8px 16px;
             border-radius: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             transition: transform 0.2s;
         }
-        .nav-back:hover { transform: translateY(-2px); }
+
+        .nav-back:hover {
+            transform: translateY(-2px);
+        }
 
         .dashboard-grid {
             display: grid;
@@ -88,46 +105,92 @@
         }
 
         @media (max-width: 900px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 600px) {
-            body { padding: 10px; }
-            .card { padding: 15px; border-radius: 16px; margin-bottom: 15px; }
-            .day-header { flex-direction: column; gap: 8px; }
-            .day-title { font-size: 1.4rem; }
-            .day-date { align-self: flex-start; font-size: 0.75rem; padding: 4px 10px; }
-            .info-grid { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
-            .dashboard-grid { gap: 15px; }
-            .tips-section { padding: 12px; flex-direction: column; }
-            .mini-stat { flex-wrap: wrap; }
-            .section-title { font-size: 1rem; }
-            .checklist-section, .chat-section, .activity-analytics { padding: 12px; }
-            .main-title { font-size: 2rem; }
+            body {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 15px;
+                border-radius: 16px;
+                margin-bottom: 15px;
+            }
+
+            .day-header {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .day-title {
+                font-size: 1.4rem;
+            }
+
+            .day-date {
+                align-self: flex-start;
+                font-size: 0.75rem;
+                padding: 4px 10px;
+            }
+
+            .info-grid {
+                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+                gap: 10px;
+            }
+
+            .dashboard-grid {
+                gap: 15px;
+            }
+
+            .tips-section {
+                padding: 12px;
+                flex-direction: column;
+            }
+
+            .mini-stat {
+                flex-wrap: wrap;
+            }
+
+            .section-title {
+                font-size: 1rem;
+            }
+
+            .checklist-section,
+            .chat-section,
+            .activity-analytics {
+                padding: 12px;
+            }
+
+            .main-title {
+                font-size: 2rem;
+            }
         }
 
         .card {
             background: var(--glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.7);
+            border: 1px solid rgba(255, 255, 255, 0.7);
             border-radius: 24px;
             padding: 25px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
             margin-bottom: 25px;
             transition: transform 0.3s ease;
         }
 
         .day-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 50px rgba(0,0,0,0.12);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
         }
 
         .day-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            border-bottom: 2px solid rgba(0,0,0,0.05);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.05);
             padding-bottom: 15px;
             margin-bottom: 15px;
         }
@@ -158,10 +221,10 @@
         }
 
         .info-item {
-            background: rgba(255,255,255,0.6);
+            background: rgba(255, 255, 255, 0.6);
             padding: 12px;
             border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.9);
+            border: 1px solid rgba(255, 255, 255, 0.9);
         }
 
         .info-label {
@@ -177,7 +240,7 @@
             color: #1e293b;
             font-weight: 600;
         }
-        
+
         .info-val a {
             color: var(--primary);
             text-decoration: none;
@@ -196,8 +259,9 @@
             gap: 10px;
         }
 
-        .checklist-section, .chat-section {
-            background: rgba(255,255,255,0.5);
+        .checklist-section,
+        .chat-section {
+            background: rgba(255, 255, 255, 0.5);
             padding: 15px;
             border-radius: 16px;
             margin-top: 15px;
@@ -259,7 +323,7 @@
             flex-grow: 1;
         }
 
-        .check-item input[type="checkbox"]:checked + label {
+        .check-item input[type="checkbox"]:checked+label {
             color: #94a3b8;
             text-decoration: line-through;
         }
@@ -304,6 +368,7 @@
             font-weight: 500;
             text-decoration: none;
         }
+
         .msg-action:hover {
             color: var(--accent);
         }
@@ -348,17 +413,21 @@
             width: 100%;
             margin-bottom: 20px;
         }
-        
+
         /* Auth Modal */
         #authOverlay {
             position: fixed;
-            top:0; left:0; right:0; bottom:0;
-            background: rgba(0,0,0,0.8);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
             z-index: 9999;
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
         .auth-box {
             background: white;
             padding: 30px;
@@ -367,6 +436,7 @@
             max-width: 400px;
             text-align: center;
         }
+
         .auth-box input {
             width: 100%;
             padding: 12px;
@@ -376,6 +446,7 @@
             font-size: 1rem;
             text-transform: uppercase;
         }
+
         .auth-box button {
             width: 100%;
             background: var(--primary);
@@ -398,6 +469,7 @@
             background: #e2e8f0;
             color: #64748b;
         }
+
         .status-badge.complete {
             background: #dcfce7;
             color: #166534;
@@ -405,12 +477,13 @@
 
         /* Individual Activity Analytics */
         .activity-analytics {
-            background: rgba(255,255,255,0.7);
+            background: rgba(255, 255, 255, 0.7);
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.9);
+            border: 1px solid rgba(255, 255, 255, 0.9);
         }
+
         .mini-stat {
             display: flex;
             align-items: center;
@@ -420,9 +493,11 @@
             color: #475569;
             margin-bottom: 8px;
         }
+
         .mini-stat:last-child {
             margin-bottom: 0;
         }
+
         .stat-bar {
             flex-grow: 1;
             height: 8px;
@@ -431,6 +506,7 @@
             overflow: hidden;
             min-width: 100px;
         }
+
         .stat-fill {
             height: 100%;
             transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -444,241 +520,280 @@
         }
 
         @media (min-width: 601px) {
-            .chat-section { order: 1; }
-            .checklist-section { order: 2; }
+            .chat-section {
+                order: 1;
+            }
+
+            .checklist-section {
+                order: 2;
+            }
         }
+
         @media (max-width: 600px) {
-            .chat-section { order: 2; }
-            .checklist-section { order: 1; }
+            .chat-section {
+                order: 2;
+            }
+
+            .checklist-section {
+                order: 1;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<div id="authOverlay">
-    <div class="auth-box">
-        <h2>Family Login</h2>
-        <p style="color:#64748b; font-size:0.9rem; margin-bottom:20px;">Please identify yourself to join the discussion and update tasks!</p>
-        <input type="text" id="userName" placeholder="ENTER FIRST NAME">
-        <button onclick="login()">ENTER PLANNER</button>
-    </div>
-</div>
-
-<div class="container">
-    <a href="index.html" class="nav-back">← Back to Hub</a>
-    
-    <div class="header">
-        <h1 class="main-title">PLAN THE PLAN</h1>
-        <div class="sub-title">Finalizing Our Agenda, Reservations & Activities</div>
-    </div>
-
-    <div class="dashboard-grid">
-        <div class="days-column" id="daysContainer">
-            <!-- Cards will be injected here via JS -->
+    <div id="authOverlay">
+        <div class="auth-box">
+            <h2>Family Login</h2>
+            <p style="color:#64748b; font-size:0.9rem; margin-bottom:20px;">Please identify yourself to join the
+                discussion and update tasks!</p>
+            <input type="text" id="userName" placeholder="ENTER FIRST NAME">
+            <input type="password" id="passcode" placeholder="ENTER PASSCODE">
+            <button onclick="login()">ENTER PLANNER</button>
         </div>
-        
-        <div class="sidebar">
-            <div class="card analytics-card">
-                <h3 class="section-title">📊 Trip Analytics</h3>
-                
-                <div style="margin-bottom: 15px;">
-                    <span class="info-label">Estimated Activity Cost</span>
-                    <div style="font-size: 2rem; font-weight: 900; color: var(--secondary);">$<span id="totalCost">0</span></div>
-                </div>
+    </div>
 
-                <div class="activity-analytics" style="padding: 12px; margin-bottom: 20px; background: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.5);">
-                    <h4 style="margin: 0 0 10px 0; font-size: 0.8rem; color: #475569; text-transform: uppercase;">Overall Status</h4>
-                    <div class="mini-stat">
-                        <span style="width: 80px;">Avg Thrill</span>
-                        <div class="stat-bar"><div class="stat-fill" id="avgThrillBar" style="width: 0%; background: var(--accent);"></div></div>
-                        <span id="avgThrillText" style="width: 35px; text-align: right;">0/10</span>
-                    </div>
-                    <div class="mini-stat" style="margin-top: 8px;">
-                        <span style="width: 80px;">All Tasks</span>
-                        <div class="stat-bar"><div class="stat-fill" id="overallTaskBar" style="width: 0%; background: var(--secondary);"></div></div>
-                        <span id="overallTaskText" style="width: 35px; text-align: right;">0%</span>
-                    </div>
-                </div>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Hub</a>
 
-                <div class="chart-container">
-                    <canvas id="costChart"></canvas>
-                </div>
-                
-                <div class="chart-container">
-                    <canvas id="thrillChart"></canvas>
-                </div>
-                
-                <div style="background: #e0f2fe; padding: 15px; border-radius: 12px; margin-top: 20px;">
-                    <h4 style="margin:0 0 5px 0; color: var(--primary);">Quick Links</h4>
-                    <ul style="margin:0; padding-left: 20px; font-size: 0.9rem;">
-                        <li><a href="https://gardenofgods.com/" target="_blank">Garden of Gods</a></li>
-                        <li><a href="https://www.broadmoor.com/seven-falls" target="_blank">Seven Falls Tickets</a></li>
-                        <li><a href="https://cmzoo.org" target="_blank">Zoo Reservations</a></li>
-                        <li><a href="https://royalgorgebridge.com" target="_blank">Royal Gorge</a></li>
-                    </ul>
+        <div class="header">
+            <h1 class="main-title">PLAN THE PLAN</h1>
+            <div class="sub-title">Finalizing Our Agenda, Reservations & Activities</div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="days-column" id="daysContainer">
+                <!-- Cards will be injected here via JS -->
+            </div>
+
+            <div class="sidebar">
+                <div class="card analytics-card">
+                    <h3 class="section-title">📊 Trip Analytics</h3>
+
+                    <div style="margin-bottom: 15px;">
+                        <span class="info-label">Estimated Activity Cost</span>
+                        <div style="font-size: 2rem; font-weight: 900; color: var(--secondary);">$<span
+                                id="totalCost">0</span></div>
+                    </div>
+
+                    <div class="activity-analytics"
+                        style="padding: 12px; margin-bottom: 20px; background: rgba(255,255,255,0.4); border-color: rgba(255,255,255,0.5);">
+                        <h4 style="margin: 0 0 10px 0; font-size: 0.8rem; color: #475569; text-transform: uppercase;">
+                            Overall Status</h4>
+                        <div class="mini-stat">
+                            <span style="width: 80px;">Avg Thrill</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill" id="avgThrillBar" style="width: 0%; background: var(--accent);">
+                                </div>
+                            </div>
+                            <span id="avgThrillText" style="width: 35px; text-align: right;">0/10</span>
+                        </div>
+                        <div class="mini-stat" style="margin-top: 8px;">
+                            <span style="width: 80px;">All Tasks</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill" id="overallTaskBar"
+                                    style="width: 0%; background: var(--secondary);"></div>
+                            </div>
+                            <span id="overallTaskText" style="width: 35px; text-align: right;">0%</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="costChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="thrillChart"></canvas>
+                    </div>
+
+                    <div style="background: #e0f2fe; padding: 15px; border-radius: 12px; margin-top: 20px;">
+                        <h4 style="margin:0 0 5px 0; color: var(--primary);">Quick Links</h4>
+                        <ul style="margin:0; padding-left: 20px; font-size: 0.9rem;">
+                            <li><a href="https://gardenofgods.com/" target="_blank">Garden of Gods</a></li>
+                            <li><a href="https://www.broadmoor.com/seven-falls" target="_blank">Seven Falls Tickets</a>
+                            </li>
+                            <li><a href="https://cmzoo.org" target="_blank">Zoo Reservations</a></li>
+                            <li><a href="https://royalgorgebridge.com" target="_blank">Royal Gorge</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, onValue, set, push, serverTimestamp, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, onValue, set, push, serverTimestamp, remove, update, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyAByJd5SpzqtK7LAA80I-nONrXQqhgG2uQ",
-        authDomain: "celebratemomandben.firebaseapp.com",
-        databaseURL: "https://celebratemomandben-default-rtdb.firebaseio.com",
-        projectId: "celebratemomandben",
-        storageBucket: "celebratemomandben.firebasestorage.app",
-        messagingSenderId: "567044784692",
-        appId: "1:567044784692:web:dba496160575757517c061"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyAByJd5SpzqtK7LAA80I-nONrXQqhgG2uQ",
+            authDomain: "celebratemomandben.firebaseapp.com",
+            databaseURL: "https://celebratemomandben-default-rtdb.firebaseio.com",
+            projectId: "celebratemomandben",
+            storageBucket: "celebratemomandben.firebasestorage.app",
+            messagingSenderId: "567044784692",
+            appId: "1:567044784692:web:dba496160575757517c061"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-    const currentUser = { name: "" };
+        const currentUser = { name: "" };
 
-    const savedName = localStorage.getItem('family_voterName');
-    if (savedName) {
-        currentUser.name = savedName;
-        document.getElementById('authOverlay').style.display = 'none';
-        setTimeout(initData, 0);
-    }
+        const savedName = localStorage.getItem('family_voterName');
+        if (savedName) {
+            currentUser.name = savedName;
+            document.getElementById('authOverlay').style.display = 'none';
+            setTimeout(initData, 0);
+        }
 
-    window.login = function() {
-        const name = document.getElementById('userName').value.trim().toUpperCase();
-        if(name) {
+        window.login = async function () {
+            const name = document.getElementById('userName').value.trim().toUpperCase();
+            const code = document.getElementById('passcode').value.trim().toLowerCase();
+
+            if (!name) {
+                alert("Please enter a name!");
+                return;
+            }
+
+            let correctPass = "congrats";
+            try {
+                const snap = await get(ref(db, 'globalPasscode'));
+                if (snap.exists()) correctPass = String(snap.val()).trim().toLowerCase();
+            } catch(e) { console.error(e); }
+
+            if (code !== correctPass) {
+                alert("Incorrect passcode! Please try again.");
+                return;
+            }
+
             currentUser.name = name;
             localStorage.setItem('family_voterName', name);
+            localStorage.setItem('family_voterPass', "true");
             document.getElementById('authOverlay').style.display = 'none';
             initData();
-        } else {
-            alert("Please enter a name!");
         }
-    }
 
-    const agendaData = [
-        {
-            id: "garden_gods",
-            date: "Sunday, May 24",
-            title: "Garden of the Gods",
-            costStr: "FREE",
-            resStr: "No. First-come, first-served.",
-            times: "5:00 AM - 10:00 PM",
-            website: "https://gardenofgods.com/",
-            phone: "(719) 634-6666",
-            tips: "Arrive early for sunrise! The Visitor Center opens at 9:00 AM.",
-            costNum: 0,
-            thrillNum: 4,
-            tasks: [
-                { id: "gg_water", label: "Plan water/snacks for hike" },
-                { id: "gg_map", label: "Download offline trail map" }
-            ]
-        },
-        {
-            id: "seven_falls",
-            date: "Monday, May 25",
-            title: "Seven Falls",
-            costStr: "Adults $25 (morn) / $21 (aft). Walk-up +$2",
-            resStr: "Highly recommended online.",
-            times: "9:00 AM - 7:00 PM",
-            website: "https://www.broadmoor.com/seven-falls",
-            phone: "(855) 498-7558",
-            tips: "Park at Norris Penrose Event Center (1045 Lower Gold Camp Rd) for the free shuttle. No parking at falls!",
-            costNum: 25,
-            thrillNum: 6,
-            tasks: [
-                { id: "sf_res", label: "Book timed-entry tickets online" },
-                { id: "sf_shoes", label: "Verify everyone has good walking shoes" }
-            ]
-        },
-        {
-            id: "cave_winds",
-            date: "Tuesday, May 26",
-            title: "Cave of the Winds",
-            costStr: "Discovery: $29 | Lantern: $35",
-            resStr: "Strongly recommended.",
-            times: "9:00 AM - 6:00 PM (Tours every 20-30m)",
-            website: "https://caveofthewinds.com",
-            phone: "(719) 685-5444",
-            tips: "Booking your specific tour time online ensures you won't have to wait around for an open slot.",
-            costNum: 35,
-            thrillNum: 7,
-            tasks: [
-                { id: "cw_res", label: "Book Discovery or Lantern tour slot" },
-                { id: "cw_jacket", label: "Remind everyone to bring light jackets (caves are cool)" }
-            ]
-        },
-        {
-            id: "zoo",
-            date: "Wednesday, May 27",
-            title: "Cheyenne Mountain Zoo",
-            costStr: "Morn: $39.75 | Aft (2-3pm): $29.75",
-            resStr: "YES. 100% REQUIRED.",
-            times: "9:00 AM - 5:00 PM",
-            website: "https://cmzoo.org",
-            phone: "(719) 633-9925",
-            tips: "Walk-up tickets are NOT sold at the gate. Must purchase timed e-tickets.",
-            costNum: 40,
-            thrillNum: 5,
-            tasks: [
-                { id: "zoo_res", label: "Purchase timed e-tickets online" },
-                { id: "zoo_feed", label: "Plan budget for giraffe feeding" }
-            ]
-        },
-        {
-            id: "chill",
-            date: "Thursday, May 28",
-            title: "Chill Day!",
-            costStr: "FREE",
-            resStr: "None needed.",
-            times: "All Day",
-            website: "#",
-            phone: "N/A",
-            tips: "Sleep in, relax, and maybe find a local spot for lunch.",
-            costNum: 0,
-            thrillNum: 1,
-            tasks: [
-                { id: "chill_lunch", label: "Research local lunch spots" },
-                { id: "chill_games", label: "Pack family games" }
-            ]
-        },
-        {
-            id: "royal_gorge",
-            date: "Friday, May 29",
-            title: "Royal Gorge Day",
-            costStr: "Bridge: $29 | Train: $79-$249",
-            resStr: "Train: Highly Recommended",
-            times: "Park: 9am-7pm | Train: 9, 12:30, 3:30, 6:30",
-            website: "https://royalgorgebridge.com",
-            phone: "(888) 333-4497",
-            tips: "Located in Cañon City (1-1.5 hr drive). Vista Dome train cars sell out weeks ahead!",
-            costNum: 108,
-            thrillNum: 8,
-            tasks: [
-                { id: "rg_bridge", label: "Buy Bridge tickets online (Saves $3)" },
-                { id: "rg_train", label: "Book train tickets (Vista Dome?)" },
-                { id: "rg_drive", label: "Plan 1.5hr drive playlist!" }
-            ]
-        }
-    ];
+        const agendaData = [
+            {
+                id: "garden_gods",
+                date: "Sunday, May 24",
+                title: "Garden of the Gods",
+                costStr: "FREE",
+                resStr: "No. First-come, first-served.",
+                times: "5:00 AM - 10:00 PM",
+                website: "https://gardenofgods.com/",
+                phone: "(719) 634-6666",
+                tips: "Arrive early for sunrise! The Visitor Center opens at 9:00 AM.",
+                costNum: 0,
+                thrillNum: 4,
+                tasks: [
+                    { id: "gg_water", label: "Plan water/snacks for hike" },
+                    { id: "gg_map", label: "Download offline trail map" }
+                ]
+            },
+            {
+                id: "seven_falls",
+                date: "Monday, May 25",
+                title: "Seven Falls",
+                costStr: "Adults $25 (morn) / $21 (aft). Walk-up +$2",
+                resStr: "Highly recommended online.",
+                times: "9:00 AM - 7:00 PM",
+                website: "https://www.broadmoor.com/seven-falls",
+                phone: "(855) 498-7558",
+                tips: "Park at Norris Penrose Event Center (1045 Lower Gold Camp Rd) for the free shuttle. No parking at falls!",
+                costNum: 25,
+                thrillNum: 6,
+                tasks: [
+                    { id: "sf_res", label: "Book timed-entry tickets online" },
+                    { id: "sf_shoes", label: "Verify everyone has good walking shoes" }
+                ]
+            },
+            {
+                id: "cave_winds",
+                date: "Tuesday, May 26",
+                title: "Cave of the Winds",
+                costStr: "Discovery: $29 | Lantern: $35",
+                resStr: "Strongly recommended.",
+                times: "9:00 AM - 6:00 PM (Tours every 20-30m)",
+                website: "https://caveofthewinds.com",
+                phone: "(719) 685-5444",
+                tips: "Booking your specific tour time online ensures you won't have to wait around for an open slot.",
+                costNum: 35,
+                thrillNum: 7,
+                tasks: [
+                    { id: "cw_res", label: "Book Discovery or Lantern tour slot" },
+                    { id: "cw_jacket", label: "Remind everyone to bring light jackets (caves are cool)" }
+                ]
+            },
+            {
+                id: "zoo",
+                date: "Wednesday, May 27",
+                title: "Cheyenne Mountain Zoo",
+                costStr: "Morn: $39.75 | Aft (2-3pm): $29.75",
+                resStr: "YES. 100% REQUIRED.",
+                times: "9:00 AM - 5:00 PM",
+                website: "https://cmzoo.org",
+                phone: "(719) 633-9925",
+                tips: "Walk-up tickets are NOT sold at the gate. Must purchase timed e-tickets.",
+                costNum: 40,
+                thrillNum: 5,
+                tasks: [
+                    { id: "zoo_res", label: "Purchase timed e-tickets online" },
+                    { id: "zoo_feed", label: "Plan budget for giraffe feeding" }
+                ]
+            },
+            {
+                id: "chill",
+                date: "Thursday, May 28",
+                title: "Chill Day!",
+                costStr: "FREE",
+                resStr: "None needed.",
+                times: "All Day",
+                website: "#",
+                phone: "N/A",
+                tips: "Sleep in, relax, and maybe find a local spot for lunch.",
+                costNum: 0,
+                thrillNum: 1,
+                tasks: [
+                    { id: "chill_lunch", label: "Research local lunch spots" },
+                    { id: "chill_games", label: "Pack family games" }
+                ]
+            },
+            {
+                id: "royal_gorge",
+                date: "Friday, May 29",
+                title: "Royal Gorge Day",
+                costStr: "Bridge: $29 | Train: $79-$249",
+                resStr: "Train: Highly Recommended",
+                times: "Park: 9am-7pm | Train: 9, 12:30, 3:30, 6:30",
+                website: "https://royalgorgebridge.com",
+                phone: "(888) 333-4497",
+                tips: "Located in Cañon City (1-1.5 hr drive). Vista Dome train cars sell out weeks ahead!",
+                costNum: 108,
+                thrillNum: 8,
+                tasks: [
+                    { id: "rg_bridge", label: "Buy Bridge tickets online (Saves $3)" },
+                    { id: "rg_train", label: "Book train tickets (Vista Dome?)" },
+                    { id: "rg_drive", label: "Plan 1.5hr drive playlist!" }
+                ]
+            }
+        ];
 
-    function renderCards() {
-        const container = document.getElementById('daysContainer');
-        let html = '';
+        function renderCards() {
+            const container = document.getElementById('daysContainer');
+            let html = '';
 
-        agendaData.forEach(day => {
-            let tasksHtml = day.tasks.map(t => `
+            agendaData.forEach(day => {
+                let tasksHtml = day.tasks.map(t => `
                 <div class="check-item">
                     <input type="checkbox" id="chk_${t.id}" onchange="toggleTask('${t.id}', this.checked)">
                     <label for="chk_${t.id}">${t.label}</label>
                 </div>
             `).join('');
 
-            html += `
+                html += `
                 <div class="card day-card">
                     <div class="day-header">
                         <h2 class="day-title">${day.title}</h2>
@@ -743,110 +858,110 @@
                     </div>
                 </div>
             `;
-        });
-
-        container.innerHTML = html;
-        setupCharts();
-    }
-
-    window.toggleTask = function(taskId, isChecked) {
-        set(ref(db, `planTasks/${taskId}`), isChecked);
-    }
-
-    window.sendMsg = function(dayId) {
-        const input = document.getElementById(`input_${dayId}`);
-        const msg = input.value.trim();
-        if(msg && currentUser.name) {
-            push(ref(db, `planChats/${dayId}`), {
-                user: currentUser.name,
-                text: msg,
-                timestamp: serverTimestamp()
             });
-            input.value = '';
+
+            container.innerHTML = html;
+            setupCharts();
         }
-    }
 
-    window.deleteMsg = function(dayId, msgId) {
-        if(confirm("Delete this comment?")) {
-            remove(ref(db, `planChats/${dayId}/${msgId}`));
+        window.toggleTask = function (taskId, isChecked) {
+            set(ref(db, `planTasks/${taskId}`), isChecked);
         }
-    }
 
-    window.editMsg = function(dayId, msgId, oldText) {
-        const newText = prompt("Edit your comment:", oldText);
-        if(newText !== null && newText.trim() !== "") {
-            update(ref(db, `planChats/${dayId}/${msgId}`), { text: newText.trim() });
+        window.sendMsg = function (dayId) {
+            const input = document.getElementById(`input_${dayId}`);
+            const msg = input.value.trim();
+            if (msg && currentUser.name) {
+                push(ref(db, `planChats/${dayId}`), {
+                    user: currentUser.name,
+                    text: msg,
+                    timestamp: serverTimestamp()
+                });
+                input.value = '';
+            }
         }
-    }
 
-    function linkify(text) {
-        if(!text) return "";
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
-        return text.replace(urlRegex, '<a href="$1" target="_blank" style="text-decoration: underline; color: var(--primary);">link</a>');
-    }
+        window.deleteMsg = function (dayId, msgId) {
+            if (confirm("Delete this comment?")) {
+                remove(ref(db, `planChats/${dayId}/${msgId}`));
+            }
+        }
 
-    function initData() {
-        renderCards();
+        window.editMsg = function (dayId, msgId, oldText) {
+            const newText = prompt("Edit your comment:", oldText);
+            if (newText !== null && newText.trim() !== "") {
+                update(ref(db, `planChats/${dayId}/${msgId}`), { text: newText.trim() });
+            }
+        }
 
-        // Listen for task changes
-        onValue(ref(db, 'planTasks'), (snapshot) => {
-            const data = snapshot.val() || {};
-            let globalTotalTasks = 0;
-            let globalCompletedTasks = 0;
+        function linkify(text) {
+            if (!text) return "";
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            return text.replace(urlRegex, '<a href="$1" target="_blank" style="text-decoration: underline; color: var(--primary);">link</a>');
+        }
 
-            agendaData.forEach(day => {
-                let completeCount = 0;
-                day.tasks.forEach(t => {
-                    globalTotalTasks++;
-                    const el = document.getElementById(`chk_${t.id}`);
-                    if(el) {
-                        el.checked = !!data[t.id];
-                        if(data[t.id]) {
-                            completeCount++;
-                            globalCompletedTasks++;
+        function initData() {
+            renderCards();
+
+            // Listen for task changes
+            onValue(ref(db, 'planTasks'), (snapshot) => {
+                const data = snapshot.val() || {};
+                let globalTotalTasks = 0;
+                let globalCompletedTasks = 0;
+
+                agendaData.forEach(day => {
+                    let completeCount = 0;
+                    day.tasks.forEach(t => {
+                        globalTotalTasks++;
+                        const el = document.getElementById(`chk_${t.id}`);
+                        if (el) {
+                            el.checked = !!data[t.id];
+                            if (data[t.id]) {
+                                completeCount++;
+                                globalCompletedTasks++;
+                            }
+                        }
+                    });
+
+                    const badge = document.getElementById(`badge_${day.id}`);
+                    if (badge) {
+                        const percent = day.tasks.length > 0 ? Math.round((completeCount / day.tasks.length) * 100) : 100;
+
+                        const progFill = document.getElementById(`progress_${day.id}`);
+                        const progText = document.getElementById(`progress_text_${day.id}`);
+                        if (progFill) progFill.style.width = `${percent}%`;
+                        if (progText) progText.textContent = `${percent}%`;
+
+                        if (completeCount === day.tasks.length && day.tasks.length > 0) {
+                            badge.textContent = "All Set!";
+                            badge.className = "status-badge complete";
+                        } else {
+                            badge.textContent = `${completeCount}/${day.tasks.length} Done`;
+                            badge.className = "status-badge";
                         }
                     }
                 });
-                
-                const badge = document.getElementById(`badge_${day.id}`);
-                if(badge) {
-                    const percent = day.tasks.length > 0 ? Math.round((completeCount / day.tasks.length) * 100) : 100;
-                    
-                    const progFill = document.getElementById(`progress_${day.id}`);
-                    const progText = document.getElementById(`progress_text_${day.id}`);
-                    if(progFill) progFill.style.width = `${percent}%`;
-                    if(progText) progText.textContent = `${percent}%`;
 
-                    if(completeCount === day.tasks.length && day.tasks.length > 0) {
-                        badge.textContent = "All Set!";
-                        badge.className = "status-badge complete";
-                    } else {
-                        badge.textContent = `${completeCount}/${day.tasks.length} Done`;
-                        badge.className = "status-badge";
-                    }
-                }
+                // Update overall tasks
+                const overallPercent = globalTotalTasks > 0 ? Math.round((globalCompletedTasks / globalTotalTasks) * 100) : 100;
+                const overallFill = document.getElementById('overallTaskBar');
+                const overallText = document.getElementById('overallTaskText');
+                if (overallFill) overallFill.style.width = `${overallPercent}%`;
+                if (overallText) overallText.textContent = `${overallPercent}%`;
             });
 
-            // Update overall tasks
-            const overallPercent = globalTotalTasks > 0 ? Math.round((globalCompletedTasks / globalTotalTasks) * 100) : 100;
-            const overallFill = document.getElementById('overallTaskBar');
-            const overallText = document.getElementById('overallTaskText');
-            if(overallFill) overallFill.style.width = `${overallPercent}%`;
-            if(overallText) overallText.textContent = `${overallPercent}%`;
-        });
-
-        // Listen for chat changes
-        agendaData.forEach(day => {
-            onValue(ref(db, `planChats/${day.id}`), (snapshot) => {
-                const data = snapshot.val() || {};
-                const chatBox = document.getElementById(`chat_${day.id}`);
-                if(chatBox) {
-                    chatBox.innerHTML = Object.entries(data).sort(([,a], [,b])=>a.timestamp-b.timestamp).map(([msgId, msg]) => {
-                        let actions = '';
-                        if (msg.user === currentUser.name) {
-                            actions = `<a class="msg-action" onclick="editMsg('${day.id}', '${msgId}', '${msg.text.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">✎ Edit</a><a class="msg-action" onclick="deleteMsg('${day.id}', '${msgId}')">🗑️ Del</a>`;
-                        }
-                        return `
+            // Listen for chat changes
+            agendaData.forEach(day => {
+                onValue(ref(db, `planChats/${day.id}`), (snapshot) => {
+                    const data = snapshot.val() || {};
+                    const chatBox = document.getElementById(`chat_${day.id}`);
+                    if (chatBox) {
+                        chatBox.innerHTML = Object.entries(data).sort(([, a], [, b]) => a.timestamp - b.timestamp).map(([msgId, msg]) => {
+                            let actions = '';
+                            if (msg.user === currentUser.name) {
+                                actions = `<a class="msg-action" onclick="editMsg('${day.id}', '${msgId}', '${msg.text.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">✎ Edit</a><a class="msg-action" onclick="deleteMsg('${day.id}', '${msgId}')">🗑️ Del</a>`;
+                            }
+                            return `
                         <div class="chat-msg">
                             <div class="author">
                                 <span>${msg.user}</span>
@@ -855,61 +970,62 @@
                             <div>${linkify(msg.text)}</div>
                         </div>
                         `;
-                    }).join('');
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                }
+                        }).join('');
+                        chatBox.scrollTop = chatBox.scrollHeight;
+                    }
+                });
             });
-        });
-    }
+        }
 
-    function setupCharts() {
-        const labels = agendaData.map(d => d.title.split(' ')[0]);
-        const costs = agendaData.map(d => d.costNum);
-        const thrills = agendaData.map(d => d.thrillNum);
-        
-        document.getElementById('totalCost').innerText = costs.reduce((a,b)=>a+b, 0) + " per person";
+        function setupCharts() {
+            const labels = agendaData.map(d => d.title.split(' ')[0]);
+            const costs = agendaData.map(d => d.costNum);
+            const thrills = agendaData.map(d => d.thrillNum);
 
-        // Update avg thrill
-        const avgThrill = Math.round((thrills.reduce((a,b)=>a+b, 0) / thrills.length) * 10) / 10;
-        const avgThrillBar = document.getElementById('avgThrillBar');
-        const avgThrillText = document.getElementById('avgThrillText');
-        if(avgThrillBar) avgThrillBar.style.width = `${avgThrill * 10}%`;
-        if(avgThrillText) avgThrillText.textContent = `${avgThrill}/10`;
+            document.getElementById('totalCost').innerText = costs.reduce((a, b) => a + b, 0) + " per person";
 
-        new Chart(document.getElementById('costChart'), {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Est. Cost ($)',
-                    data: costs,
-                    backgroundColor: 'rgba(16, 185, 129, 0.6)',
-                    borderColor: '#10b981',
-                    borderWidth: 2,
-                    borderRadius: 4
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, title: { display: true, text: 'Cost by Day' } } }
-        });
+            // Update avg thrill
+            const avgThrill = Math.round((thrills.reduce((a, b) => a + b, 0) / thrills.length) * 10) / 10;
+            const avgThrillBar = document.getElementById('avgThrillBar');
+            const avgThrillText = document.getElementById('avgThrillText');
+            if (avgThrillBar) avgThrillBar.style.width = `${avgThrill * 10}%`;
+            if (avgThrillText) avgThrillText.textContent = `${avgThrill}/10`;
 
-        new Chart(document.getElementById('thrillChart'), {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Thrill Level (1-10)',
-                    data: thrills,
-                    borderColor: '#D9534F',
-                    backgroundColor: 'rgba(217, 83, 79, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, title: { display: true, text: 'Thrill & Energy Level' } }, scales: { y: { beginAtZero: true, max: 10 } } }
-        });
-    }
+            new Chart(document.getElementById('costChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Est. Cost ($)',
+                        data: costs,
+                        backgroundColor: 'rgba(16, 185, 129, 0.6)',
+                        borderColor: '#10b981',
+                        borderWidth: 2,
+                        borderRadius: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, title: { display: true, text: 'Cost by Day' } } }
+            });
 
-</script>
+            new Chart(document.getElementById('thrillChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Thrill Level (1-10)',
+                        data: thrills,
+                        borderColor: '#D9534F',
+                        backgroundColor: 'rgba(217, 83, 79, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, title: { display: true, text: 'Thrill & Energy Level' } }, scales: { y: { beginAtZero: true, max: 10 } } }
+            });
+        }
+
+    </script>
 </body>
+
 </html>
