@@ -378,12 +378,14 @@
             gap: 8px;
         }
 
-        .chat-input-row input {
+        .chat-input-row textarea {
             flex-grow: 1;
             padding: 10px;
             border: 1px solid #cbd5e1;
             border-radius: 8px;
             font-family: inherit;
+            resize: vertical;
+            min-height: 40px;
         }
 
         .chat-input-row button {
@@ -678,11 +680,30 @@
 
         const agendaData = [
             {
+                id: "manitou_springs",
+                date: "Sunday, May 24",
+                title: "Morning: Manitou Springs",
+                costStr: "Varies (Penny Arcade, Shops)",
+                resStr: "None needed.",
+                weather: "⛅ Partly Cloudy, 68°/45°",
+                times: "Morning",
+                website: "https://manitousprings.org/",
+                phone: "(719) 685-5089",
+                tips: "Explore the 400+ vintage games at the penny arcade and grab coffee before heading to the park.",
+                costNum: 15,
+                thrillNum: 3,
+                tasks: [
+                    { id: "ms_coffee", label: "Find a good local coffee shop" },
+                    { id: "ms_pennies", label: "Bring quarters/pennies for the vintage arcade" }
+                ]
+            },
+            {
                 id: "garden_gods",
                 date: "Sunday, May 24",
                 title: "Garden of the Gods",
                 costStr: "FREE",
                 resStr: "No. First-come, first-served.",
+                weather: "⛅ Partly Cloudy, 68°/45°",
                 times: "5:00 AM - 10:00 PM",
                 website: "https://gardenofgods.com/",
                 phone: "(719) 634-6666",
@@ -700,6 +721,7 @@
                 title: "Seven Falls",
                 costStr: "Adults $25 (morn) / $21 (aft). Walk-up +$2",
                 resStr: "Highly recommended online.",
+                weather: "☀️ Sunny, 70°/46°",
                 times: "9:00 AM - 7:00 PM",
                 website: "https://www.broadmoor.com/seven-falls",
                 phone: "(855) 498-7558",
@@ -717,6 +739,7 @@
                 title: "Cave of the Winds",
                 costStr: "Discovery: $29 | Lantern: $35",
                 resStr: "Strongly recommended.",
+                weather: "🌤️ Mostly Sunny, 72°/48°",
                 times: "9:00 AM - 6:00 PM (Tours every 20-30m)",
                 website: "https://caveofthewinds.com",
                 phone: "(719) 685-5444",
@@ -734,6 +757,7 @@
                 title: "Cheyenne Mountain Zoo",
                 costStr: "Morn: $39.75 | Aft (2-3pm): $29.75",
                 resStr: "YES. 100% REQUIRED.",
+                weather: "⛈️ PM Thunderstorms, 65°/44°",
                 times: "9:00 AM - 5:00 PM",
                 website: "https://cmzoo.org",
                 phone: "(719) 633-9925",
@@ -751,6 +775,7 @@
                 title: "Chill Day!",
                 costStr: "FREE",
                 resStr: "None needed.",
+                weather: "☀️ Sunny, 75°/50°",
                 times: "All Day",
                 website: "#",
                 phone: "N/A",
@@ -768,6 +793,7 @@
                 title: "Royal Gorge Day",
                 costStr: "Bridge: $29 | Train: $79-$249",
                 resStr: "Train: Highly Recommended",
+                weather: "⛅ Partly Cloudy, 74°/49°",
                 times: "Park: 9am-7pm | Train: 9, 12:30, 3:30, 6:30",
                 website: "https://royalgorgebridge.com",
                 phone: "(888) 333-4497",
@@ -778,6 +804,25 @@
                     { id: "rg_bridge", label: '<a href="https://royalgorgebridge.com/hours-pricing/" target="_blank" style="color:var(--primary);text-decoration:underline;">Buy Bridge tickets online</a> (Saves $3)' },
                     { id: "rg_train", label: '<a href="https://royalgorgeroute.com/classes-of-service/vista-dome/" target="_blank" style="color:var(--primary);text-decoration:underline;">Book train tickets (Vista Dome?)</a>' },
                     { id: "rg_drive", label: "Plan 1.5hr drive playlist!" }
+                ]
+            },
+            {
+                id: "pikes_peak",
+                date: "Alternative Option (Any Day)",
+                title: "Pikes Peak",
+                costStr: "Train $67+ | Drive Toll $15/adult",
+                resStr: "Highly Recommended for Train",
+                weather: "🏔️ Variable (Cold/Windy at summit)",
+                times: "Morning/Afternoon",
+                website: "https://www.cograilway.com",
+                phone: "(719) 685-5401",
+                tips: "The summit is over 14,000 feet! Drink plenty of water before you go to avoid altitude sickness, and bring a warm jacket.",
+                costNum: 67,
+                thrillNum: 7,
+                tasks: [
+                    { id: "pp_res", label: 'Book <a href="https://www.cograilway.com/" target="_blank" style="color:var(--primary);text-decoration:underline;">Cog Railway tickets</a>' },
+                    { id: "pp_water", label: "Pack extra water and warm layers" },
+                    { id: "pp_oxy", label: 'Get <a href="https://boostoxygen.com/" target="_blank" style="color:var(--primary);text-decoration:underline;">Oxygen supplement</a> for altitude' }
                 ]
             }
         ];
@@ -813,6 +858,10 @@
                         <div class="info-item">
                             <div class="info-label">Hours</div>
                             <div class="info-val">${day.times}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Weather</div>
+                            <div class="info-val" style="color:var(--primary);">${day.weather || "N/A"}</div>
                         </div>
                         <div class="info-item">
                             <div class="info-label">Contact</div>
@@ -852,7 +901,7 @@
                             <h3 class="section-title">💬 Discussion</h3>
                             <div class="chat-messages" id="chat_${day.id}"></div>
                             <div class="chat-input-row">
-                                <input type="text" id="input_${day.id}" placeholder="Thoughts on ${day.title}?">
+                                <textarea id="input_${day.id}" placeholder="Thoughts on ${day.title}?"></textarea>
                                 <button onclick="sendMsg('${day.id}')">Send</button>
                             </div>
                         </div>
