@@ -561,6 +561,17 @@
         </div>
     </div>
 
+    <div id="editOverlay" style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); z-index: 9999; align-items: center; justify-content: center;">
+        <div class="auth-box" style="max-width: 500px;">
+            <h2 style="margin-top: 0;">Edit Comment</h2>
+            <textarea id="editMsgArea" style="width: 100%; box-sizing: border-box; height: 120px; padding: 12px; margin-bottom: 15px; border: 2px solid #e2e8f0; border-radius: 8px; font-family: inherit; resize: vertical; font-size: 1rem;"></textarea>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="saveEdit()" style="flex: 1;">SAVE</button>
+                <button onclick="closeEdit()" style="flex: 1; background: #64748b;">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <a href="index.html" class="nav-back">← Back to Hub</a>
 
@@ -996,11 +1007,29 @@
             }
         }
 
+        let currentEdit = null;
+
         window.editMsg = function (dayId, msgId, oldText) {
-            const newText = prompt("Edit your comment:", oldText);
+            currentEdit = { dayId, msgId };
+            document.getElementById('editMsgArea').value = oldText;
+            document.getElementById('editOverlay').style.display = 'flex';
+        }
+
+        window.closeEdit = function () {
+            document.getElementById('editOverlay').style.display = 'none';
+            currentEdit = null;
+        }
+
+        window.saveEdit = function () {
+            if (!currentEdit) return;
+            const newText = document.getElementById('editMsgArea').value;
             if (newText !== null && newText.trim() !== "") {
-                update(ref(db, `planChats/${dayId}/${msgId}`), { text: newText.trim() });
+                update(ref(db, `planChats/${currentEdit.dayId}/${currentEdit.msgId}`), { text: newText.trim() });
+            } else if (newText.trim() === "") {
+                alert("Comment cannot be empty!");
+                return;
             }
+            closeEdit();
         }
 
         function linkify(text) {
