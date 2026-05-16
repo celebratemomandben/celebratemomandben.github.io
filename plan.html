@@ -652,6 +652,7 @@
         const savedName = localStorage.getItem('family_voterName');
         if (savedName) {
             currentUser.name = savedName;
+            sessionStorage.setItem('celebrated', 'true');
             document.getElementById('authOverlay').style.display = 'none';
             setTimeout(initData, 0);
         }
@@ -679,6 +680,7 @@
             currentUser.name = name;
             localStorage.setItem('family_voterName', name);
             localStorage.setItem('family_voterPass', "true");
+            sessionStorage.setItem('celebrated', 'true');
             document.getElementById('authOverlay').style.display = 'none';
             initData();
         }
