@@ -474,7 +474,9 @@
     <div class="user-controls" id="userControls">
         <a class="logout-link" onclick="logout()">LOGOUT / RESET DEVICE</a>
         <div class="how-to-blurb">
-            Checkout the Agenda!
+            Checkout the Agenda! 
+            <br><br>
+            <a href="plan.html" style="background: var(--primary); color: white; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: 800; display: inline-block; margin-top: 5px;">📅 PLAN THE PLAN</a>
         </div>
     </div>
 
@@ -1070,6 +1072,12 @@ window.unlockApp = async function() {
     document.getElementById('chatInput').value = ""; cancelReply();
   };
 
+  function linkify(text) {
+      if(!text) return "";
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      return text.replace(urlRegex, '<a href="$1" target="_blank" style="text-decoration: underline; color: var(--primary);">link</a>');
+  }
+
   function renderMessage(m, room, container, currentUser, allMsgs) {
     const isOwner = (m.user === currentUser);
     const isAdmin = (currentUser === "CHUCK" || currentUser === "BEN");
@@ -1078,7 +1086,7 @@ window.unlockApp = async function() {
     const actions = canManage ? `<span class="reply-btn" style="color:var(--accent)" onclick="deleteMsg('${m.id}')">delete</span><span class="reply-btn" onclick="editMsg('${m.id}', '${m.msg.replace(/'/g, "\\'")}')">edit</span>` : '';
     const userName = m.user || "GUEST";
     const replyBtn = !m.parentId ? `<span class="reply-btn" onclick="setReply('${m.id}', '${userName}', '${room}')">reply</span>` : '';
-    container.innerHTML += `<div class="chat-msg ${indentClass}"><strong>${userName}:</strong> ${m.msg}${replyBtn}${actions}</div>`;
+    container.innerHTML += `<div class="chat-msg ${indentClass}"><strong>${userName}:</strong> ${linkify(m.msg)}${replyBtn}${actions}</div>`;
     allMsgs.filter(r => r.parentId === m.id).forEach(r => { renderMessage(r, room, container, currentUser, allMsgs); });
   }
 
@@ -1537,14 +1545,18 @@ window.submitVotes = function() {
       msgs.sort((a,b) => (a.time || 0) - (b.time || 0)); 
       
       msgs.forEach(m => {
-          const canDelete = (m.user === currentUser || currentUser === "CHUCK" || currentUser === "BEN");
-          const delBtn = canDelete ? `<span class="reply-btn" style="color:var(--accent); cursor:pointer;" onclick="if(confirm('Delete message?')) window.deleteAgendaMsg('${m.id}')">delete</span>` : "";
-          box.innerHTML += `<div class="chat-msg" style="border-bottom: 1px solid #eee; padding: 5px 0; position:relative;"><strong>${m.user}:</strong> ${m.msg}${delBtn}</div>`;
+          const canManage = (m.user === currentUser || currentUser === "CHUCK" || currentUser === "BEN");
+          const actions = canManage ? `<span class="reply-btn" style="color:var(--accent); cursor:pointer;" onclick="if(confirm('Delete message?')) window.deleteAgendaMsg('${m.id}')">delete</span><span class="reply-btn" style="cursor:pointer;" onclick="window.editAgendaMsg('${m.id}', '${m.msg.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">edit</span>` : "";
+          box.innerHTML += `<div class="chat-msg" style="border-bottom: 1px solid #eee; padding: 5px 0; position:relative;"><strong>${m.user}:</strong> ${linkify(m.msg)}${actions}</div>`;
       });
       box.scrollTop = box.scrollHeight;
   });
   
   window.deleteAgendaMsg = (id) => { remove(ref(db, `agendaChat/${id}`)); };
+  window.editAgendaMsg = (id, oldMsg) => {
+      const newText = prompt("Edit your message:", oldMsg);
+      if(newText !== null && newText.trim() !== "") update(ref(db, `agendaChat/${id}`), { msg: newText.trim() });
+  };
 
 window.showToast = (msg) => {
     const t = document.getElementById("toast"); t.innerText = msg; t.className = "show";
