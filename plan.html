@@ -560,6 +560,7 @@
         <div class="header">
             <h1 class="main-title">PLAN THE PLAN</h1>
             <div class="sub-title">Finalizing Our Agenda, Reservations & Activities</div>
+            <div id="greetingBanner" style="font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-top: 15px; display: none;"></div>
         </div>
 
         <div class="dashboard-grid">
@@ -657,13 +658,13 @@
                 return;
             }
 
-            let correctPass = "congrats";
+            let correctPass = null;
             try {
                 const snap = await get(ref(db, 'globalPasscode'));
                 if (snap.exists()) correctPass = String(snap.val()).trim().toLowerCase();
             } catch(e) { console.error(e); }
 
-            if (code !== correctPass) {
+            if (!correctPass || code !== correctPass) {
                 alert("Incorrect passcode! Please try again.");
                 return;
             }
@@ -901,6 +902,12 @@
         }
 
         function initData() {
+            const greeting = document.getElementById('greetingBanner');
+            if (greeting && currentUser.name) {
+                greeting.innerText = `Hey, ${currentUser.name}, Let's plan the plan for your Fam!`;
+                greeting.style.display = 'block';
+            }
+            
             renderCards();
 
             // Listen for task changes
