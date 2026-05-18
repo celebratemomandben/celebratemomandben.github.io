@@ -581,9 +581,21 @@
             <div id="greetingBanner" style="font-size: 1.2rem; font-weight: 700; color: var(--primary); margin-top: 15px; display: none;"></div>
         </div>
 
+        <div class="dashboard-controls" style="margin-bottom: 25px; text-align: center;">
+            <select id="viewFilter" onchange="changeView(this.value)" style="padding: 12px 20px; font-size: 1rem; font-weight: 800; border-radius: 12px; border: 2px solid var(--primary); background: white; color: var(--primary); cursor: pointer; width: 100%; max-width: 400px; box-shadow: 0 4px 15px rgba(0, 131, 184, 0.1); text-align: center; transition: all 0.2s;">
+                <option value="brief">📝 Agenda Brief (Summary View)</option>
+                <option value="all">📅 View All Days</option>
+                <option value="tasks">✅ Action Items Only</option>
+                <option disabled>──────────────</option>
+            </select>
+        </div>
+
         <div class="dashboard-grid">
-            <div class="days-column" id="daysContainer">
-                <!-- Cards will be injected here via JS -->
+            <div class="days-column">
+                <div id="briefContainer" style="display: none; width: 100%;"></div>
+                <div id="daysContainer" style="width: 100%;">
+                    <!-- Cards will be injected here via JS -->
+                </div>
             </div>
 
             <div class="sidebar">
@@ -698,9 +710,31 @@
 
         const agendaData = [
             {
+                id: "arrival",
+                date: "Saturday, May 23",
+                title: "Arrival & Grocery Shopping",
+                costStr: "Varies",
+                resStr: "None needed.",
+                weather: "⛅ Check Forecast",
+                clothing: "Travel wear",
+                altitude: "6,035 ft (Colorado Springs avg)",
+                tiktok: "https://www.tiktok.com/discover/colorado-springs",
+                vidId: "og9bUIM6S1E",
+                times: "Afternoon/Evening",
+                website: "#",
+                phone: "N/A",
+                tips: "Get settled in, do grocery shopping, and relax before dinner.",
+                costNum: 50,
+                thrillNum: 2,
+                tasks: [
+                    { id: "arr_groceries", label: "Grocery Shopping" },
+                    { id: "arr_dinner", label: "Dinner out (suggested: Lazy Dog)" }
+                ]
+            },
+            {
                 id: "manitou_springs",
                 date: "Sunday, May 24",
-                title: "Morning: Manitou Springs",
+                title: "Manitou Springs & Lunch",
                 costStr: "Varies (Penny Arcade, Shops)",
                 resStr: "None needed.",
                 weather: "⛅ Partly Cloudy, 68°/45°",
@@ -708,7 +742,7 @@
                 altitude: "6,320 ft",
                 tiktok: "https://www.tiktok.com/discover/manitou-springs-colorado",
                 vidId: "h_vH_yh9WiM",
-                times: "Morning",
+                times: "Morning/Lunch",
                 website: "https://manitousprings.org/",
                 phone: "(719) 685-5089",
                 tips: "Explore the 400+ vintage games at the penny arcade and grab coffee before heading to the park.",
@@ -716,7 +750,8 @@
                 thrillNum: 3,
                 tasks: [
                     { id: "ms_coffee", label: "Find a good local coffee shop" },
-                    { id: "ms_pennies", label: "Bring quarters/pennies for the vintage arcade" }
+                    { id: "ms_lunch", label: "Lunch at Adam's Mountain Cafe" },
+                    { id: "sun_dinner", label: "Dinner by Nathan & Rachel" }
                 ]
             },
             {
@@ -730,7 +765,7 @@
                 altitude: "6,400 ft",
                 tiktok: "https://www.tiktok.com/discover/garden-of-the-gods-colorado",
                 vidId: "mhMQFx-D_74",
-                times: "5:00 AM - 10:00 PM",
+                times: "Afternoon",
                 website: "https://gardenofgods.com/",
                 phone: "(719) 634-6666",
                 tips: "Arrive early for sunrise! The Visitor Center opens at 9:00 AM.",
@@ -752,7 +787,7 @@
                 altitude: "6,800 ft",
                 tiktok: "https://www.tiktok.com/discover/seven-falls-colorado-springs",
                 vidId: "VTzVxWHVhmQ",
-                times: "9:00 AM - 7:00 PM",
+                times: "Morning",
                 website: "https://www.sevenfalls.com/",
                 phone: "(855) 498-7558",
                 tips: "Park at Norris Penrose Event Center (1045 Lower Gold Camp Rd) for the free shuttle. No parking at falls!",
@@ -765,8 +800,8 @@
             },
             {
                 id: "cave_winds",
-                date: "Tuesday, May 26",
-                title: "Cave of the Winds",
+                date: "Monday, May 25",
+                title: "Cave of the Winds & Lunch",
                 costStr: "Discovery: $29 | Lantern: $35",
                 resStr: "Strongly recommended.",
                 weather: "🌤️ Mostly Sunny, 72°/48°",
@@ -774,7 +809,7 @@
                 altitude: "7,000 ft",
                 tiktok: "https://www.tiktok.com/discover/cave-of-the-winds-colorado",
                 vidId: "8DWiM4ap9JY",
-                times: "9:00 AM - 6:00 PM (Tours every 20-30m)",
+                times: "Afternoon",
                 website: "https://caveofthewinds.com",
                 phone: "(719) 685-5444",
                 tips: "Booking your specific tour time online ensures you won't have to wait around for an open slot.",
@@ -782,34 +817,36 @@
                 thrillNum: 7,
                 tasks: [
                     { id: "cw_res", label: 'Book <a href="https://online.caveofthewinds.com/SelectDate.aspx?TrackingType=Customer&ActivityID=433" target="_blank" style="color:var(--primary);text-decoration:underline;">Discovery Tour</a> slot' },
-                    { id: "cw_jacket", label: "Remind everyone to bring light jackets (caves are cool)" }
+                    { id: "mon_lunch", label: "Lunch plan after Cave of the Winds" },
+                    { id: "mon_dinner", label: "Dinner by Badi" }
                 ]
             },
             {
-                id: "zoo",
-                date: "Wednesday, May 27",
-                title: "Cheyenne Mountain Zoo",
-                costStr: "Morn: $39.75 | Aft (2-3pm): $29.75",
-                resStr: "YES. 100% REQUIRED.",
-                weather: "⛈️ PM Thunderstorms, 65°/44°",
-                clothing: "Very comfortable shoes (steep hills!), breathable layers",
-                altitude: "6,800 ft",
-                tiktok: "https://www.tiktok.com/discover/cheyenne-mountain-zoo",
-                vidId: "vsCnokd9J5k",
-                times: "9:00 AM - 5:00 PM",
-                website: "https://cmzoo.org",
-                phone: "(719) 633-9925",
-                tips: "Walk-up tickets are NOT sold at the gate. Must purchase timed e-tickets.",
-                costNum: 40,
-                thrillNum: 5,
+                id: "royal_gorge",
+                date: "Tuesday, May 26",
+                title: "Royal Gorge",
+                costStr: "Bridge: $29 | Train: $79-$249",
+                resStr: "Train: Highly Recommended",
+                weather: "⛅ Partly Cloudy, 74°/49°",
+                clothing: "Windbreaker, comfortable shoes, sunglasses",
+                altitude: "6,600 ft",
+                tiktok: "https://www.tiktok.com/discover/royal-gorge-train-colorado",
+                vidId: "RCSEk2bnSIw",
+                times: "Train: 9:00 AM | Park: Afternoon",
+                website: "https://royalgorgebridge.com",
+                phone: "(888) 333-4497",
+                tips: "Located in Cañon City (1-1.5 hr drive). Vista Dome train cars sell out weeks ahead!",
+                costNum: 108,
+                thrillNum: 8,
                 tasks: [
-                    { id: "zoo_res", label: 'Purchase <a href="https://4187a.blackbaudhosting.com/4187a/page.aspx?pid=196&tab=2&txobjid=58867acf-82ab-4dd3-8228-3b06e72c5c3d" target="_blank" style="color:var(--primary);text-decoration:underline;">timed e-tickets</a> online' },
-                    { id: "zoo_feed", label: "Plan budget for giraffe feeding" }
+                    { id: "rg_bridge", label: '<a href="https://royalgorgebridge.com/hours-pricing/" target="_blank" style="color:var(--primary);text-decoration:underline;">Buy Bridge tickets online</a> (Saves $3)' },
+                    { id: "rg_train", label: '<a href="https://royalgorgeroute.com/classes-of-service/vista-dome/" target="_blank" style="color:var(--primary);text-decoration:underline;">Book 9:00 AM train tickets</a>' },
+                    { id: "tue_dinner", label: "Dinner by Mom & Chuck" }
                 ]
             },
             {
                 id: "chill",
-                date: "Thursday, May 28",
+                date: "Wednesday, May 27",
                 title: "Chill Day!",
                 costStr: "FREE",
                 resStr: "None needed.",
@@ -826,30 +863,74 @@
                 thrillNum: 1,
                 tasks: [
                     { id: "chill_lunch", label: "Research local lunch spots" },
-                    { id: "chill_games", label: "Pack family games" }
+                    { id: "chill_games", label: "Pack family games" },
+                    { id: "wed_dinner", label: "Dinner with Matt’s family" }
                 ]
             },
             {
-                id: "royal_gorge",
-                date: "Friday, May 29",
-                title: "Royal Gorge Day",
-                costStr: "Bridge: $29 | Train: $79-$249",
-                resStr: "Train: Highly Recommended",
-                weather: "⛅ Partly Cloudy, 74°/49°",
-                clothing: "Windbreaker, comfortable shoes, sunglasses",
-                altitude: "6,600 ft",
-                tiktok: "https://www.tiktok.com/discover/royal-gorge-train-colorado",
-                vidId: "RCSEk2bnSIw",
-                times: "Park: 9am-7pm | Train: 9, 12:30, 3:30, 6:30",
-                website: "https://royalgorgebridge.com",
-                phone: "(888) 333-4497",
-                tips: "Located in Cañon City (1-1.5 hr drive). Vista Dome train cars sell out weeks ahead!",
-                costNum: 108,
-                thrillNum: 8,
+                id: "zoo",
+                date: "Thursday, May 28",
+                title: "Cheyenne Mountain Zoo & Lunch",
+                costStr: "Morn: $39.75 | Aft (2-3pm): $29.75",
+                resStr: "YES. 100% REQUIRED.",
+                weather: "⛈️ PM Thunderstorms, 65°/44°",
+                clothing: "Very comfortable shoes (steep hills!), breathable layers",
+                altitude: "6,800 ft",
+                tiktok: "https://www.tiktok.com/discover/cheyenne-mountain-zoo",
+                vidId: "vsCnokd9J5k",
+                times: "9:00 AM - 5:00 PM",
+                website: "https://cmzoo.org",
+                phone: "(719) 633-9925",
+                tips: "Walk-up tickets are NOT sold at the gate. Must purchase timed e-tickets.",
+                costNum: 40,
+                thrillNum: 5,
                 tasks: [
-                    { id: "rg_bridge", label: '<a href="https://royalgorgebridge.com/hours-pricing/" target="_blank" style="color:var(--primary);text-decoration:underline;">Buy Bridge tickets online</a> (Saves $3)' },
-                    { id: "rg_train", label: '<a href="https://royalgorgeroute.com/classes-of-service/vista-dome/" target="_blank" style="color:var(--primary);text-decoration:underline;">Book train tickets (Vista Dome?)</a>' },
-                    { id: "rg_drive", label: "Plan 1.5hr drive playlist!" }
+                    { id: "zoo_res", label: 'Purchase <a href="https://4187a.blackbaudhosting.com/4187a/page.aspx?pid=196&tab=2&txobjid=58867acf-82ab-4dd3-8228-3b06e72c5c3d" target="_blank" style="color:var(--primary);text-decoration:underline;">timed e-tickets</a> online' },
+                    { id: "zoo_feed", label: "Plan budget for giraffe feeding" },
+                    { id: "thu_dinner", label: "Dinner by Matt & Emily" }
+                ]
+            },
+            {
+                id: "open_day",
+                date: "Friday, May 29",
+                title: "Open Day! (Free time)",
+                costStr: "FREE",
+                resStr: "None needed.",
+                weather: "☀️ Sunny, 75°/50°",
+                clothing: "Casual",
+                altitude: "6,035 ft (Colorado Springs avg)",
+                tiktok: "https://www.tiktok.com/discover/colorado-springs",
+                vidId: "og9bUIM6S1E",
+                times: "All Day",
+                website: "#",
+                phone: "N/A",
+                tips: "Relax and enjoy your free time before our last night!",
+                costNum: 0,
+                thrillNum: 1,
+                tasks: [
+                    { id: "fri_dinner", label: "Evening: Not Specified" }
+                ]
+            },
+            {
+                id: "departure",
+                date: "Saturday, May 30",
+                title: "Departure Day",
+                costStr: "FREE",
+                resStr: "None needed.",
+                weather: "⛅ Check Forecast",
+                clothing: "Travel wear",
+                altitude: "6,035 ft (Colorado Springs avg)",
+                tiktok: "https://www.tiktok.com/discover/colorado-springs",
+                vidId: "og9bUIM6S1E",
+                times: "Morning",
+                website: "#",
+                phone: "N/A",
+                tips: "Pack up, check out, and head home safely!",
+                costNum: 0,
+                thrillNum: 1,
+                tasks: [
+                    { id: "dep_pack", label: "Ensure nothing is left behind" },
+                    { id: "dep_goodbye", label: "Goodbye!" }
                 ]
             },
             {
@@ -891,7 +972,7 @@
             `).join('');
 
                 html += `
-                <div class="card day-card">
+                <div class="card day-card" id="card_${day.id}">
                     <div class="day-header">
                         <h2 class="day-title">${day.title}</h2>
                         <span class="day-date">${day.date}</span>
@@ -932,11 +1013,16 @@
                         </div>
                     </div>
 
-                    <div class="tiktok-embed-container" style="margin: 12px 0;">
-                        <iframe style="width: 100%; height: 200px; border: none; border-radius: 12px; background: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" 
-                                src="https://www.youtube-nocookie.com/embed/${day.vidId}?rel=0" 
-                                allow="fullscreen" 
-                                title="Video Preview"></iframe>
+                    <div class="video-section" style="margin: 12px 0;">
+                        <button onclick="toggleVideo('${day.id}')" style="width:100%; background:#f1f5f9; color:#475569; padding:10px; border-radius:8px; border:1px solid #cbd5e1; cursor:pointer; font-weight:bold; transition:all 0.2s;">
+                            🎬 Show Video Preview
+                        </button>
+                        <div class="tiktok-embed-container" id="video_${day.id}" style="display: none; margin-top: 10px;">
+                            <iframe loading="lazy" style="width: 100%; height: 200px; border: none; border-radius: 12px; background: #000; box-shadow: 0 4px 15px rgba(0,0,0,0.1);" 
+                                    src="https://www.youtube-nocookie.com/embed/${day.vidId}?rel=0" 
+                                    allow="fullscreen" 
+                                    title="Video Preview"></iframe>
+                        </div>
                     </div>
 
                     <div class="tips-section">
@@ -982,6 +1068,120 @@
 
             container.innerHTML = html;
             setupCharts();
+        }
+
+        function populateDropdown() {
+            const select = document.getElementById('viewFilter');
+            const uniqueDates = [...new Set(agendaData.map(d => d.date))];
+            
+            uniqueDates.forEach(dateStr => {
+                const opt = document.createElement('option');
+                opt.value = dateStr;
+                opt.text = dateStr;
+                select.appendChild(opt);
+            });
+        }
+
+        function renderBriefView() {
+            const container = document.getElementById('briefContainer');
+            let html = '<div class="card" style="background: linear-gradient(135deg, #0083B8 0%, #00a8e8 100%); color: white; padding: 20px; text-align: center; margin-bottom: 20px;"><h2 style="margin: 0;">📝 Trip Agenda Brief</h2><p style="margin: 5px 0 0 0; opacity: 0.9;">Saturday, May 23 – Saturday, May 30</p></div>';
+            
+            const uniqueDates = [...new Set(agendaData.map(d => d.date))];
+            
+            uniqueDates.forEach(dateStr => {
+                const dayActs = agendaData.filter(d => d.date === dateStr);
+                
+                html += `
+                <div class="card day-card" style="margin-bottom: 15px;">
+                    <div class="day-header" style="background: var(--light-bg); border-bottom: 2px solid #e2e8f0; padding: 15px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <h2 class="day-title" style="color: var(--primary); font-size: 1.4rem; margin: 0;">${dateStr}</h2>
+                        <button onclick="document.getElementById('viewFilter').value = '${dateStr}'; changeView('${dateStr}');" style="background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.85rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: opacity 0.2s;">View Details</button>
+                    </div>
+                    <div style="padding: 15px;">
+                `;
+                
+                dayActs.forEach((act, index) => {
+                    const isLast = index === dayActs.length - 1;
+                    const borderStyle = isLast ? 'none' : '1px dashed #cbd5e1';
+                    const paddingBottom = isLast ? '0' : '15px';
+                    const marginBottom = isLast ? '0' : '15px';
+                    
+                    html += `
+                        <div style="margin-bottom: ${marginBottom}; padding-bottom: ${paddingBottom}; border-bottom: ${borderStyle};">
+                            <h3 style="margin: 0 0 5px 0; color: #334155; font-size: 1.2rem;">${act.title}</h3>
+                            <div style="display: flex; flex-wrap: wrap; gap: 15px; font-size: 0.95rem; color: #475569;">
+                                <div><strong>🕒 Time:</strong> ${act.times}</div>
+                                <div><strong>💰 Cost:</strong> ${act.costStr}</div>
+                                <div><strong>🎫 Res:</strong> ${act.resStr}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `</div></div>`;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        window.changeView = function(val) {
+            const briefContainer = document.getElementById('briefContainer');
+            const daysContainer = document.getElementById('daysContainer');
+
+            if (val === 'brief') {
+                daysContainer.style.display = 'none';
+                briefContainer.style.display = 'block';
+                renderBriefView();
+                return;
+            } else {
+                daysContainer.style.display = 'block';
+                briefContainer.style.display = 'none';
+            }
+
+            agendaData.forEach(day => {
+                const card = document.getElementById(`card_${day.id}`);
+                if (!card) return;
+                
+                const sections = card.querySelector('.card-sections');
+                const infoGrid = card.querySelector('.info-grid');
+                const embed = card.querySelector('.video-section');
+                const chat = card.querySelector('.chat-section');
+                const tips = card.querySelector('.tips-section');
+                const analytics = card.querySelector('.activity-analytics');
+                
+                if (val === 'all') {
+                    card.style.display = 'block';
+                    if (sections) sections.style.display = 'flex';
+                    if (infoGrid) infoGrid.style.display = 'grid';
+                    if (embed) embed.style.display = 'block';
+                    if (chat) chat.style.display = 'block';
+                    if (tips) tips.style.display = 'flex';
+                    if (analytics) analytics.style.display = 'block';
+                } else if (val === 'tasks') {
+                    card.style.display = 'block';
+                    if (sections) sections.style.display = 'flex';
+                    if (infoGrid) infoGrid.style.display = 'none';
+                    if (embed) embed.style.display = 'none';
+                    if (chat) chat.style.display = 'none';
+                    if (tips) tips.style.display = 'none';
+                    if (analytics) analytics.style.display = 'none';
+                } else {
+                    card.style.display = (day.date === val) ? 'block' : 'none';
+                    if (sections) sections.style.display = 'flex';
+                    if (infoGrid) infoGrid.style.display = 'grid';
+                    if (embed) embed.style.display = 'block';
+                    if (chat) chat.style.display = 'block';
+                    if (tips) tips.style.display = 'flex';
+                    if (analytics) analytics.style.display = 'block';
+                }
+            });
+        }
+
+        window.toggleVideo = function(id) {
+            const container = document.getElementById(`video_${id}`);
+            if (container) {
+                container.style.display = (container.style.display === 'none') ? 'block' : 'none';
+            }
         }
 
         window.toggleTask = function (taskId, isChecked) {
@@ -1046,6 +1246,9 @@
             }
             
             renderCards();
+            populateDropdown();
+            document.getElementById('viewFilter').value = 'brief';
+            changeView('brief');
 
             // Listen for task changes
             onValue(ref(db, 'planTasks'), (snapshot) => {
