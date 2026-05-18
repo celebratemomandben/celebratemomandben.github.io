@@ -1055,7 +1055,10 @@
 
                         <div class="chat-section">
                             <h3 class="section-title">💬 Discussion</h3>
-                            <div class="chat-messages" id="chat_${day.id}"></div>
+                            <div class="chat-messages" id="chat_${day.id}" onscroll="checkScroll('${day.id}')"></div>
+                            <div id="scrollBtn_${day.id}" style="display: none; text-align: center; margin-bottom: 8px;">
+                                <button onclick="scrollToLatest('${day.id}')" style="background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 12px; font-size: 0.8rem; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: bold;">⬇️ View latest posts!</button>
+                            </div>
                             <div class="chat-input-row">
                                 <textarea id="input_${day.id}" placeholder="Thoughts on ${day.title}?"></textarea>
                                 <button onclick="sendMsg('${day.id}')">Send</button>
@@ -1238,6 +1241,23 @@
             return text.replace(urlRegex, '<a href="$1" target="_blank" style="text-decoration: underline; color: var(--primary);">link</a>');
         }
 
+        window.checkScroll = function(dayId) {
+            const chatBox = document.getElementById(`chat_${dayId}`);
+            const btn = document.getElementById(`scrollBtn_${dayId}`);
+            if (!chatBox || !btn) return;
+            
+            const isScrolledUp = (chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight) > 20;
+            btn.style.display = isScrolledUp ? 'block' : 'none';
+        }
+
+        window.scrollToLatest = function(dayId) {
+            const chatBox = document.getElementById(`chat_${dayId}`);
+            if (chatBox) {
+                chatBox.scrollTop = chatBox.scrollHeight;
+                checkScroll(dayId);
+            }
+        }
+
         function initData() {
             const greeting = document.getElementById('greetingBanner');
             if (greeting && currentUser.name) {
@@ -1303,6 +1323,9 @@
                     const data = snapshot.val() || {};
                     const chatBox = document.getElementById(`chat_${day.id}`);
                     if (chatBox) {
+                        const isFirstLoad = chatBox.innerHTML.trim() === '';
+                        const wasAtBottom = isFirstLoad || (chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight) <= 20;
+
                         chatBox.innerHTML = Object.entries(data).sort(([, a], [, b]) => a.timestamp - b.timestamp).map(([msgId, msg]) => {
                             let actions = '';
                             if (msg.user === currentUser.name || (currentUser.name && currentUser.name.toUpperCase() === 'CHUCK')) {
@@ -1322,7 +1345,14 @@
                         </div>
                         `;
                         }).join('');
-                        chatBox.scrollTop = chatBox.scrollHeight;
+
+                        if (wasAtBottom) {
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                            const btn = document.getElementById(`scrollBtn_${day.id}`);
+                            if (btn) btn.style.display = 'none';
+                        } else {
+                            if (window.checkScroll) window.checkScroll(day.id);
+                        }
                     }
                 });
             });
