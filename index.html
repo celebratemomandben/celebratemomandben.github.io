@@ -168,6 +168,8 @@
         .details-toggle-btn { background: transparent; border: 1px dashed #ccc; color: #666; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 8px; width: fit-content; }
         .details-toggle-btn:hover { background: #f1f5f9; border-color: var(--primary); color: var(--primary); transform: translateY(-1px); }
         .details-toggle-btn.active { background: #ebf4ff; border: 1px solid var(--primary); color: var(--primary); }
+        .show-plan-btn { background: var(--primary); border: 1px solid var(--primary); color: white !important; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 8px; width: fit-content; text-decoration: none !important; }
+        .show-plan-btn:hover { background: #006c99; border-color: #006c99; transform: translateY(-1px); color: white !important; }
         .day-vote-btn { margin-top: 8px; background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; font-size: 0.8rem; font-weight: bold; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255,255,255,0.3); }
         .day-vote-btn:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
         .day-vote-btn.voted { background: #ff4757; border-color: #ff4757; box-shadow: 0 0 10px rgba(255, 71, 87, 0.5); animation: pop 0.3s ease; }
@@ -184,6 +186,7 @@
             
             .row-agenda { border-right:none; border-bottom:1px solid #eee; padding: 10px 12px 5px 12px; }
             .details-toggle-btn { width: 100%; justify-content: center; padding: 8px; margin-bottom: 0px; background: #f8fafc; }
+            .show-plan-btn { width: 100%; justify-content: center; padding: 8px; margin-bottom: 0px; background: var(--primary); color: white !important; }
             
             .row-comments { flex:none; padding:10px 12px; }
             .agenda-table-headers { display:none !important; }
@@ -569,10 +572,15 @@
                         <div id="desc-sat" onclick="editConfigText('desc-sat')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Arrival Day</div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">✨</span> Hide Itinerary
-                        </button>
-                        <div class="agenda-details-wrapper expanded">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                                <span class="toggle-icon">👀</span> Show Itinerary
+                            </button>
+                            <a href="plan.html?view=Saturday, May 23" class="show-plan-btn">
+                                📅 Show Plan
+                            </a>
+                        </div>
+                        <div class="agenda-details-wrapper">
                             <div class="agenda-details-box" id="itin-sat" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
                             <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('sat')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
@@ -587,10 +595,15 @@
                         <div class="day-vote-btn" onclick="toggleDayVote('sun')" id="vote-btn-sun" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">✨</span> Hide Itinerary
-                        </button>
-                        <div class="agenda-details-wrapper expanded">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                                <span class="toggle-icon">👀</span> Show Itinerary
+                            </button>
+                            <a href="plan.html?view=Sunday, May 24" class="show-plan-btn">
+                                📅 Show Plan
+                            </a>
+                        </div>
+                        <div class="agenda-details-wrapper">
                             <div class="agenda-details-box" id="itin-sun" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
                             <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('sun')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
@@ -605,10 +618,15 @@
                         <div class="day-vote-btn" onclick="toggleDayVote('mon')" id="vote-btn-mon" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">✨</span> Hide Itinerary
-                        </button>
-                        <div class="agenda-details-wrapper expanded">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                                <span class="toggle-icon">👀</span> Show Itinerary
+                            </button>
+                            <a href="plan.html?view=Monday, May 25" class="show-plan-btn">
+                                📅 Show Plan
+                            </a>
+                        </div>
+                        <div class="agenda-details-wrapper">
                             <div class="agenda-details-box" id="itin-mon" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
                             <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('mon')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
@@ -623,10 +641,15 @@
                         <div class="day-vote-btn" onclick="toggleDayVote('tue')" id="vote-btn-tue" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">✨</span> Hide Itinerary
-                        </button>
-                        <div class="agenda-details-wrapper expanded">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                                <span class="toggle-icon">👀</span> Show Itinerary
+                            </button>
+                            <a href="plan.html?view=Tuesday, May 26" class="show-plan-btn">
+                                📅 Show Plan
+                            </a>
+                        </div>
+                        <div class="agenda-details-wrapper">
                             <div class="agenda-details-box" id="itin-tue" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
                             <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('tue')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
@@ -641,10 +664,15 @@
                         <div class="day-vote-btn" onclick="toggleDayVote('wed')" id="vote-btn-wed" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">✨</span> Hide Itinerary
-                        </button>
-                        <div class="agenda-details-wrapper expanded">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                                <span class="toggle-icon">👀</span> Show Itinerary
+                            </button>
+                            <a href="plan.html?view=Wednesday, May 27" class="show-plan-btn">
+                                📅 Show Plan
+                            </a>
+                        </div>
+                        <div class="agenda-details-wrapper">
                             <div class="agenda-details-box" id="itin-wed" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
                             <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('wed')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
@@ -659,10 +687,15 @@
                         <div class="day-vote-btn" onclick="toggleDayVote('thu')" id="vote-btn-thu" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">✨</span> Hide Itinerary
-                        </button>
-                        <div class="agenda-details-wrapper expanded">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                                <span class="toggle-icon">👀</span> Show Itinerary
+                            </button>
+                            <a href="plan.html?view=Thursday, May 28" class="show-plan-btn">
+                                📅 Show Plan
+                            </a>
+                        </div>
+                        <div class="agenda-details-wrapper">
                             <div class="agenda-details-box" id="itin-thu" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
                             <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('thu')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
@@ -677,10 +710,15 @@
                         <div class="day-vote-btn" onclick="toggleDayVote('fri')" id="vote-btn-fri" title="Love this day plan?"><span class="icon">🔥</span><span class="count">0</span></div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">✨</span> Hide Itinerary
-                        </button>
-                        <div class="agenda-details-wrapper expanded">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                                <span class="toggle-icon">👀</span> Show Itinerary
+                            </button>
+                            <a href="plan.html?view=Friday, May 29" class="show-plan-btn">
+                                📅 Show Plan
+                            </a>
+                        </div>
+                        <div class="agenda-details-wrapper">
                             <div class="agenda-details-box" id="itin-fri" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
                             <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('fri')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
@@ -694,10 +732,15 @@
                         <div id="desc-sat2" onclick="editConfigText('desc-sat2')" style="font-size:0.65rem; color:rgba(255,255,255,0.85); margin-top:4px; font-weight:normal; line-height:1.2; cursor:pointer;">Departure Day</div>
                     </div>
                     <div class="row-agenda">
-                        <button class="details-toggle-btn active" onclick="toggleDetails(this)">
-                            <span class="toggle-icon">✨</span> Hide Itinerary
-                        </button>
-                        <div class="agenda-details-wrapper expanded">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <button class="details-toggle-btn" onclick="toggleDetails(this)">
+                                <span class="toggle-icon">👀</span> Show Itinerary
+                            </button>
+                            <a href="plan.html?view=Saturday, May 30" class="show-plan-btn">
+                                📅 Show Plan
+                            </a>
+                        </div>
+                        <div class="agenda-details-wrapper">
                             <div class="agenda-details-box" id="itin-sat2" style="display:flex; flex-direction:column; gap:8px; background:transparent; padding:0; border:none; box-shadow:none;"></div>
                             <div style="text-align:right; margin-top:4px;" class="admin-only"><button onclick="addItinerary('sat2')" style="font-size:0.7rem; background:#fff; border:1px solid #ccc; border-radius:4px; padding:3px 8px; cursor:pointer; color:#555; box-shadow:0 1px 2px rgba(0,0,0,0.05);">+ Add Detail</button></div>
                         </div>
@@ -1223,11 +1266,10 @@ window.submitVotes = function() {
 
   window.toggleDetails = (btn) => {
       btn.classList.toggle('active');
-      const wrapper = btn.nextElementSibling;
+      const wrapper = btn.closest('.row-agenda').querySelector('.agenda-details-wrapper');
       const icon = btn.querySelector('.toggle-icon');
       if (wrapper.classList.contains('expanded')) {
           wrapper.classList.remove('expanded');
-          icon.textContent = '👀';
           btn.innerHTML = `<span class="toggle-icon">👀</span> Show Itinerary`;
       } else {
           wrapper.classList.add('expanded');

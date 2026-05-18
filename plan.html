@@ -215,6 +215,9 @@
             text-transform: uppercase;
             box-shadow: 0 4px 10px rgba(0, 131, 184, 0.3);
         }
+        
+        .brief-return-btn { background: #ebf4ff; border: 1px solid var(--primary); color: var(--primary); padding: 6px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 800; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .brief-return-btn:hover { background: var(--primary); color: white; transform: translateY(-1px); }
 
         .info-grid {
             display: grid;
@@ -974,8 +977,13 @@
                 html += `
                 <div class="card day-card" id="card_${day.id}">
                     <div class="day-header">
-                        <h2 class="day-title">${day.title}</h2>
-                        <span class="day-date">${day.date}</span>
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <h2 class="day-title" style="margin: 0;">${day.title}</h2>
+                            <span class="day-date" style="align-self: flex-start;">${day.date}</span>
+                        </div>
+                        <button onclick="document.getElementById('viewFilter').value = 'brief'; changeView('brief');" class="brief-return-btn">
+                            ⬅️ Return to Agenda Brief
+                        </button>
                     </div>
                     
                     <div class="info-grid">
@@ -1267,8 +1275,17 @@
             
             renderCards();
             populateDropdown();
-            document.getElementById('viewFilter').value = 'brief';
-            changeView('brief');
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const viewParam = urlParams.get('view');
+            
+            if (viewParam) {
+                document.getElementById('viewFilter').value = viewParam;
+                changeView(viewParam);
+            } else {
+                document.getElementById('viewFilter').value = 'brief';
+                changeView('brief');
+            }
 
             // Listen for task changes
             onValue(ref(db, 'planTasks'), (snapshot) => {
