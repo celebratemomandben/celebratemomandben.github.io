@@ -839,7 +839,7 @@
                 costNum: 108,
                 thrillNum: 8,
                 tasks: [
-                    { id: "rg_bridge", label: '<a href="https://royalgorgebridge.com/hours-pricing/" target="_blank" style="color:var(--primary);text-decoration:underline;">Buy Bridge tickets online</a> (Saves $3)' },
+                    { id: "rg_bridge", label: '<a href="https://tickets.royalgorgebridge.com/WebStore/shop/ViewItems.aspx?CG=RGBTIX&C=GA&_gl=1*1310rjy*_gcl_au*MjAzNzMxMjI0LjE3NzkwNjk5MDE.*_ga*MzcxOTU1ODIyLjE3NzkwNjk5MDA.*_ga_1P090W599G*czE3NzkwNjk5MjckbzEkZzAkdDE3NzkwNjk5MjkkajU4JGwwJGgw*_ga_4S1FLBSTV1*czE3NzkwNjk5MDEkbzEkZzEkdDE3NzkwNjk5MjkkajMyJGwwJGgw*_ga_1799786730*czE3NzkwNjk5MjgkbzEkZzAkdDE3NzkwNjk5MjkkajU5JGwwJGgw" target="_blank" style="color:var(--primary);text-decoration:underline;">Buy Bridge General Admission tickets online</a> (Saves $3)' },
                     { id: "rg_train", label: '<a href="https://royalgorgeroute.com/classes-of-service/vista-dome/" target="_blank" style="color:var(--primary);text-decoration:underline;">Book 9:00 AM train tickets</a>' },
                     { id: "tue_dinner", label: "Dinner by Mom & Chuck" }
                 ]
@@ -1305,16 +1305,20 @@
                     if (chatBox) {
                         chatBox.innerHTML = Object.entries(data).sort(([, a], [, b]) => a.timestamp - b.timestamp).map(([msgId, msg]) => {
                             let actions = '';
-                            if (msg.user === currentUser.name) {
+                            if (msg.user === currentUser.name || (currentUser.name && currentUser.name.toUpperCase() === 'CHUCK')) {
                                 actions = `<a class="msg-action" onclick="editMsg('${day.id}', '${msgId}', '${msg.text.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">✎ Edit</a><a class="msg-action" onclick="deleteMsg('${day.id}', '${msgId}')">🗑️ Del</a>`;
                             }
+                            const timeString = msg.timestamp ? new Date(msg.timestamp).toLocaleString([], {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'}) : '';
                             return `
                         <div class="chat-msg">
-                            <div class="author">
-                                <span>${msg.user}</span>
+                            <div class="author" style="display:flex; justify-content:space-between; align-items:baseline;">
+                                <div>
+                                    <span style="font-weight:bold;">${msg.user}</span>
+                                    <span style="font-size:0.75rem; color:#94a3b8; margin-left:8px; font-weight:normal;">${timeString}</span>
+                                </div>
                                 <div>${actions}</div>
                             </div>
-                            <div>${linkify(msg.text)}</div>
+                            <div style="margin-top:4px;">${linkify(msg.text)}</div>
                         </div>
                         `;
                         }).join('');
